@@ -1,5 +1,9 @@
 package com.example.Broken_Hammer.repository;
 
+import java.sql.SQLException;
+import java.util.Enumeration;
+import java.util.Map;
+
 public interface UserRepository {
-    void addUser(String login, String password, String role);
+    void addUser(Map<String, String[]> stringMap) throws SQLException;
 }

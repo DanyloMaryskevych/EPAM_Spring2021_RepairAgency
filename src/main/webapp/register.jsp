@@ -20,7 +20,7 @@
     Enter login: <input type="text" name="login"><br>
     Enter password: <input type="password" name="password1"><br>
     Confirm password: <input type="password" name="password2"><br>
-    <p>Would you like to register as:</p>
+    <p>Would you like to continue as:</p>
     <div>
         <input type="radio" name="role" value="Customer" id="customer">
         <label for="customer">Customer</label>
