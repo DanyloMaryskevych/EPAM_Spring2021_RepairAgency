@@ -35,25 +35,15 @@ public class LoginServlet extends HttpServlet {
 
         String role =  userDAO.checkUser(user);
 
-        HttpSession session = request.getSession();
-        session.setAttribute("username", login);
-        session.setAttribute("role", role);
+        if (role == null) response.sendRedirect("login.jsp");
+        else {
+            HttpSession session = request.getSession();
+            session.setAttribute("username", login);
+            session.setAttribute("role", role);
 
-        switch (role) {
-            case "Customer": {
-                response.sendRedirect("welcome_customer.jsp");
-                break;
-            }
-            case "Workman": {
-                response.sendRedirect("welcome_workman.jsp");
-                break;
-            }
-            default: {
-                session.removeAttribute("username");
-                session.removeAttribute("role");
-                session.invalidate();
-                response.sendRedirect("login.jsp");
-            }
+            if (role.equals("Customer")) response.sendRedirect("welcome_customer.jsp");
+            else if (role.equals("Workman")) response.sendRedirect("welcome_workman.jsp");
         }
+
     }
 }

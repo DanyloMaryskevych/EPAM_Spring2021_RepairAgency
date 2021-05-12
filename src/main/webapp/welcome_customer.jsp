@@ -9,6 +9,8 @@
 <html>
 <head>
     <title>Welcome</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
 
@@ -21,7 +23,11 @@
 %>
 
 <p>Hello, ${username}</p>
-Would you like to make some order?
+<p>Would you like to make some order?</p><br>
+
+<form action="logout">
+    <input class="m-4 btn btn-warning" type="submit" value="Logout">
+</form>
 
 </body>
 </html>
