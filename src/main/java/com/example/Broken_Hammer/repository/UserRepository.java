@@ -5,5 +5,5 @@ import java.util.Enumeration;
 import java.util.Map;
 
 public interface UserRepository {
-    void addUser(Map<String, String[]> stringMap) throws SQLException;
+    boolean addUser(Map<String, String[]> stringMap) throws SQLException;
 }

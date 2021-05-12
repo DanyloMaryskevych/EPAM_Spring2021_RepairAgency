@@ -22,8 +22,8 @@ public class UserDAO implements UserRepository {
     }
 
     @Override
-    public void addUser(Map<String, String[]> parametersMap) throws SQLException {
-        if (!confirmPassword(parametersMap)) throw new SQLException();
+    public boolean addUser(Map<String, String[]> parametersMap) throws SQLException {
+        if (!confirmPassword(parametersMap)) return false;
 
         String sql = "insert into users values(default, ?, ?, ?)";
 
@@ -39,7 +39,10 @@ public class UserDAO implements UserRepository {
 
         } catch (SQLException | NamingException e) {
             e.printStackTrace();
+            return false;
         }
+
+        return true;
     }
 
     private boolean confirmPassword(Map<String, String[]> parametersMap) {
