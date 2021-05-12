@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<!--============================================================= Configuration file for Tomcat 6 Data source and connection pool configuration (The default Tomcat's DBCP is used) =============================================================-->
+
+<Context>
+    <Resource url="jdbc:mysql://localhost/broken_hammer?useSSL=false"
+              defaultTransactionIsolation="READ_COMMITTED"
+              defaultAutoCommit="true" driverClassName="com.mysql.cj.jdbc.Driver"
+              username="root" password="password"
+              maxWait="10000" maxIdle="30" maxTotal="8" type="javax.sql.DataSource"
+              auth="Container" name="jdbc/mysql"/>
+</Context>
