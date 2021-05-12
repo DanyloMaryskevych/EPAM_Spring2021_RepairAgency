@@ -1,0 +1,16 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: danyl
+  Date: 12/05/2021
+  Time: 20:19
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+Login page
+</body>
+</html>
