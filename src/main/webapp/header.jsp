@@ -23,7 +23,7 @@
             <!-- Center elements -->
             <div class="col">
                 <div class="d-flex justify-content-center">
-                    <h1 style="font-family: 'Akaya Telivigala', cursive; font-size: 36px">Broken Hammer</h1>
+                    <h1 class="mt-2" style="font-family: 'Akaya Telivigala', cursive; font-size: 36px">Broken Hammer</h1>
                 </div>
             </div>
 
@@ -32,10 +32,24 @@
                 <div class="d-flex justify-content-end">
                     <c:choose>
                         <c:when test="${username != null}">
-                            Hello, ${username}
-                            <form action="logout">
-                                <input class="m-4 btn btn-warning" type="submit" value="Logout">
-                            </form>
+
+                            <div class="row align-items-center w-50">
+                                <div class="col-8">
+                                    <p class="m-0">Hello, ${username}!</p>
+                                </div>
+
+                                <div class="col-2">
+                                    <div class="d-flex">
+                                        <form class="m-0" action="logout">
+                                            <div class="form-group">
+                                                <input class="btn btn-warning" type="submit" value="Logout">
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+
                         </c:when>
                         <c:otherwise>
                             <div class="w-auto my-auto d-none d-sm-flex">
@@ -44,7 +58,7 @@
                                     <li style="margin-left: 5px" class="nav-item active">
 
                                         <!-- Sign in trigger modal -->
-                                        <button type="button" class="nav-link mr-4 btn btn-sm" data-toggle="modal"
+                                        <button style="font-size: 1rem; border: none" type="button" class="nav-link mr-4 btn btn-sm" data-toggle="modal"
                                                 data-target="#SignInModal">
                                             Sign in
                                         </button>
@@ -63,6 +77,7 @@
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
+                                                        <%--Header end--%>
 
                                                         <%--Body--%>
                                                     <div class="modal-body">
@@ -85,16 +100,18 @@
 
                                                         </form>
                                                     </div>
+                                                        <%--Body end--%>
+
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <!-- Sign in Modal end-->
                                     </li>
 
                                     <li style="margin-left: 5px" class="nav-item active">
 
                                         <!-- Sign up trigger modal -->
-                                        <button style="background-color: #33cabb; color: aliceblue; font-weight: bold; border: none"
+                                        <button style="background-color: #33cabb; color: aliceblue; font-weight: bold; font-size: 1rem; border: none"
                                                 type="button" class="nav-link btn btn-primary btn-sm"
                                                 data-toggle="modal"
                                                 data-target="#SignUpModal">
@@ -116,7 +133,9 @@
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
+                                                        <%--Header end--%>
 
+                                                        <%--Body--%>
                                                     <div class="modal-body">
                                                         <form class="m-2" action="register" method="post">
                                                             <label class="form-text text-muted"
@@ -157,13 +176,12 @@
                                                             </div>
                                                         </form>
                                                     </div>
+                                                        <%--Body end--%>
+
                                                 </div>
                                             </div>
                                         </div>
-
-
-                                            <%--<a style="background-color: #33cabb;color: aliceblue; font-weight: bold; border: none"
-                                                   class="nav-link btn btn-primary btn-sm" href="register">Sign up</a>--%>
+                                        <!-- Sign up Modal end-->
                                     </li>
 
                                 </ul>
