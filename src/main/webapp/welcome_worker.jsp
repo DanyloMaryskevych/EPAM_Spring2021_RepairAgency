@@ -17,16 +17,13 @@
 <%
     response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 
-//    if (session.getAttribute("username") == null || !session.getAttribute("role").equals("Workman")) {
-//        response.sendRedirect("login.jsp");
-//    }
     if (session.getAttribute("id") != session.getId() || !session.getAttribute("role").equals("Worker")) {
         response.sendRedirect("login.jsp");
     }
 %>
 
 <p>Hello, ${username}</p>
-
+<button><a href="index.jsp"></a></button>
 <p>Your tasks for today:</p><br>
 
 <form action="logout">

@@ -21,16 +21,14 @@
         response.sendRedirect("login.jsp");
     }
 %>
-
-<p class="m-2">Hello, ${username}</p>
+<%@ include file="header.jsp" %>
+<%--<p class="m-2">Hello, ${username}</p>--%>
 <div class="m-2">
     <p>Would you like to make some order?</p>
     <button class="btn btn-success">New order</button>
 </div>
 
-<form action="logout">
-    <input class="m-4 btn btn-warning" type="submit" value="Logout">
-</form>
+
 
 </body>
 </html>

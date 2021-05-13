@@ -1,5 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<!DOCTYPE html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%--<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>--%>
+<%--<!DOCTYPE html>--%>
 <html>
 <head>
     <title>Home</title>
@@ -8,10 +9,10 @@
 </head>
 <body>
 
-<h1 class="text-center">Repair Agency "Broken Hammer"</h1>
+<%--<h1 class="text-center">Repair Agency "Broken Hammer"</h1>--%>
+<%@ include file="header.jsp" %>
 
-<button class="m-2"><a href="login">Sign in</a></button>
-<button class="m-2"><a href="register">Sign up</a></button>
+
 
 </body>
 </html>
