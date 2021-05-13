@@ -25,8 +25,8 @@
         <input type="radio" name="role" value="Customer" id="customer">
         <label for="customer">Customer</label>
 
-        <input type="radio" name="role" value="Workman" id="workman">
-        <label for="workman">Workman</label>
+        <input type="radio" name="role" value="Worker" id="worker">
+        <label for="worker">Worker</label>
     </div>
     <input type="submit" value="Sign up">
 </form>

@@ -17,13 +17,16 @@
 <%
     response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 
-    if (session.getAttribute("username") == null) {
+    if (session.getAttribute("id") != session.getId() || !session.getAttribute("role").equals("Customer")) {
         response.sendRedirect("login.jsp");
     }
 %>
 
-<p>Hello, ${username}</p>
-<p>Would you like to make some order?</p><br>
+<p class="m-2">Hello, ${username}</p>
+<div class="m-2">
+    <p>Would you like to make some order?</p>
+    <button class="btn btn-success">New order</button>
+</div>
 
 <form action="logout">
     <input class="m-4 btn btn-warning" type="submit" value="Logout">

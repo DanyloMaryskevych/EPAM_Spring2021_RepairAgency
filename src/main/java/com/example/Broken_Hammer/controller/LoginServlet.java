@@ -38,11 +38,13 @@ public class LoginServlet extends HttpServlet {
         if (role == null) response.sendRedirect("login.jsp");
         else {
             HttpSession session = request.getSession();
+            session.setAttribute("id", session.getId());
+            System.out.println(session.getId());
             session.setAttribute("username", login);
             session.setAttribute("role", role);
 
             if (role.equals("Customer")) response.sendRedirect("welcome_customer.jsp");
-            else if (role.equals("Workman")) response.sendRedirect("welcome_workman.jsp");
+            else if (role.equals("Worker")) response.sendRedirect("welcome_worker.jsp");
         }
 
     }

@@ -10,6 +10,7 @@ public class LogoutServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+        session.removeAttribute("id");
         session.removeAttribute("username");
         session.removeAttribute("role");
         session.invalidate();

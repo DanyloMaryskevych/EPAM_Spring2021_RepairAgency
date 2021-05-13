@@ -9,7 +9,7 @@ public class User {
     private Role role;
 
     enum Role {
-        CUSTOMER, WORKMAN, ADMIN
+        CUSTOMER, WORKER, ADMIN
     }
 
     public User() {

@@ -5,7 +5,6 @@ import com.example.Broken_Hammer.entity.User;
 import com.example.Broken_Hammer.repository.UserRepository;
 
 import javax.naming.NamingException;
-import javax.sql.rowset.spi.SyncResolver;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
