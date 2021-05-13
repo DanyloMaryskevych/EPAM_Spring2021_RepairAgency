@@ -11,8 +11,8 @@
                     <!--Links-->
                     <div class="w-auto my-auto d-none d-sm-flex">
                         <ul class="navbar-nav mr-auto">
-                            <li style="margin-left: 5px"  class="nav-item active">
-                                <a class="nav-link btn btn-light" href="index.jsp" >Home</a>
+                            <li style="margin-left: 5px" class="nav-item active">
+                                <a class="nav-link btn btn-light" href="index.jsp">Home</a>
                             </li>
                         </ul>
                     </div>
@@ -23,7 +23,7 @@
             <!-- Center elements -->
             <div class="col">
                 <div class="d-flex justify-content-center">
-                    <h1 style="font-family: 'Akaya Telivigala', cursive; font-size: 48px">Broken Hammer</h1>
+                    <h1 style="font-family: 'Akaya Telivigala', cursive; font-size: 36px">Broken Hammer</h1>
                 </div>
             </div>
 
@@ -38,8 +38,137 @@
                             </form>
                         </c:when>
                         <c:otherwise>
-                            <button class="m-2"><a href="login">Sign in</a></button>
-                            <button class="m-2"><a href="register">Sign up</a></button>
+                            <div class="w-auto my-auto d-none d-sm-flex">
+                                <ul class="navbar-nav mr-auto">
+
+                                    <li style="margin-left: 5px" class="nav-item active">
+
+                                        <!-- Sign in trigger modal -->
+                                        <button type="button" class="nav-link mr-4 btn btn-sm" data-toggle="modal"
+                                                data-target="#SignInModal">
+                                            Sign in
+                                        </button>
+
+                                        <!-- Sign in Modal -->
+                                        <div class="modal fade" id="SignInModal" tabindex="-1" role="dialog"
+                                             aria-labelledby="SignInModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+
+                                                        <%--Header--%>
+                                                    <div class="modal-header">
+                                                        <h5 class="text-center" id="SignInModalLabel">Login</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+
+                                                        <%--Body--%>
+                                                    <div class="modal-body">
+                                                        <form action="login" method="post">
+                                                            <label class="form-text text-muted"
+                                                                   for="login">Login</label>
+                                                            <input class="form-control" type="text" name="login"
+                                                                   id="login">
+
+                                                            <label class="mt-3 form-text text-muted"
+                                                                   for="password">Password</label>
+                                                            <input class="form-control" type="password" name="password"
+                                                                   id="password">
+
+                                                            <hr>
+                                                            <div class="row">
+                                                                <input class="mt-3 ml-3 mr-3 col btn btn-success"
+                                                                       type="submit" value="Login">
+                                                            </div>
+
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </li>
+
+                                    <li style="margin-left: 5px" class="nav-item active">
+
+                                        <!-- Sign up trigger modal -->
+                                        <button style="background-color: #33cabb; color: aliceblue; font-weight: bold; border: none"
+                                                type="button" class="nav-link btn btn-primary btn-sm"
+                                                data-toggle="modal"
+                                                data-target="#SignUpModal">
+                                            Sign up
+                                        </button>
+
+                                        <!-- Sign up Modal -->
+                                        <div class="modal fade" id="SignUpModal" tabindex="-1" role="dialog"
+                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+
+                                                        <%--Header--%>
+                                                    <div class="modal-header">
+                                                        <h5 class="text-center" id="exampleModalLabel">Create
+                                                            Account</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+
+                                                    <div class="modal-body">
+                                                        <form class="m-2" action="register" method="post">
+                                                            <label class="form-text text-muted"
+                                                                   for="new_login">Login</label>
+                                                            <input class="form-control" type="text" name="login"
+                                                                   id="new_login">
+
+                                                            <label class="form-text text-muted"
+                                                                   for="new_password1">Password</label>
+                                                            <input class="form-control" type="password" name="password1"
+                                                                   id="new_password1">
+
+                                                            <label class="form-text text-muted"
+                                                                   for="new_password2">Confirm Password</label>
+                                                            <input class="form-control" type="password" name="password2"
+                                                                   id="new_password2">
+
+                                                            <p class="mt-3">Continue as:</p>
+
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="role"
+                                                                       value="Customer" id="customer">
+                                                                <label class="form-check-label"
+                                                                       for="customer">Customer</label>
+                                                            </div>
+
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" name="role"
+                                                                       value="Worker" id="worker">
+                                                                <label class="form-check-label"
+                                                                       for="worker">Worker</label>
+                                                            </div>
+
+                                                            <hr>
+                                                            <div class="row">
+                                                                <input class="mt-3 ml-3 mr-3 col btn btn-success"
+                                                                       type="submit" value="Register">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                            <%--<a style="background-color: #33cabb;color: aliceblue; font-weight: bold; border: none"
+                                                   class="nav-link btn btn-primary btn-sm" href="register">Sign up</a>--%>
+                                    </li>
+
+                                </ul>
+                            </div>
+
                         </c:otherwise>
                     </c:choose>
                 </div>

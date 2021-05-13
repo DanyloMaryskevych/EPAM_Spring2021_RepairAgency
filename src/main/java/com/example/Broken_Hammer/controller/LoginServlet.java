@@ -23,7 +23,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.sendRedirect("login.jsp");
+        response.sendRedirect("index.jsp");
     }
 
     @Override
@@ -35,7 +35,7 @@ public class LoginServlet extends HttpServlet {
 
         String role =  userDAO.checkUser(user);
 
-        if (role == null) response.sendRedirect("login.jsp");
+        if (role == null) response.sendRedirect("index.jsp");
         else {
             HttpSession session = request.getSession();
             session.setAttribute("id", session.getId());

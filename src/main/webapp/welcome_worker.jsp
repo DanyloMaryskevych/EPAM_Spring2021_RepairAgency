@@ -18,7 +18,7 @@
     response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 
     if (session.getAttribute("id") != session.getId() || !session.getAttribute("role").equals("Worker")) {
-        response.sendRedirect("login.jsp");
+        response.sendRedirect("index.jsp");
     }
 %>
 

@@ -3,7 +3,7 @@
 <!--============================================================= Configuration file for Tomcat 6 Data source and connection pool configuration (The default Tomcat's DBCP is used) =============================================================-->
 
 <Context>
-    <Resource url="jdbc:mysql://localhost/broken_hammer?useSSL=false"
+    <Resource url="jdbc:mysql://localhost/broken_hammer?useSSL=false&amp;allowPublicKeyRetrieval=true"
               defaultTransactionIsolation="READ_COMMITTED"
               defaultAutoCommit="true" driverClassName="com.mysql.cj.jdbc.Driver"
               username="root" password="password"

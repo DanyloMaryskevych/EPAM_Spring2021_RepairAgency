@@ -9,6 +9,7 @@
       <working-dir>$ProjectFileDir$</working-dir>
       <driver-properties>
         <property name="serverTimezone" value="UTC" />
+        <property name="allowPublicKeyRetrieval" value="TRUE" />
       </driver-properties>
     </data-source>
   </component>

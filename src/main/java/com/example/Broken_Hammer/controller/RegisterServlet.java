@@ -21,20 +21,17 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.sendRedirect("register.jsp");
+        response.sendRedirect("index.jsp");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        boolean flag = false;
-
         try {
-            flag = userDAO.addUser(request.getParameterMap());
+            userDAO.addUser(request.getParameterMap());
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
 
-        if (flag) response.sendRedirect("index.jsp");
-        else response.sendRedirect("register.jsp");
+        response.sendRedirect("index.jsp");
     }
 }
