@@ -13,8 +13,8 @@ import java.util.Map;
 
 public class UserDAO implements UserRepository {
     private static final String LOGIN = "login";
-    private static final String FIRST_PASSWORD = "password1";
-    private static final String SECOND_PASSWORD = "password2";
+    private static final String FIRST_PASSWORD = "password";
+    private static final String SECOND_PASSWORD = "password1";
     private static final String ROLE = "role";
 
     private final DBManager dbManager;

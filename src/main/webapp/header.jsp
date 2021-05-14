@@ -144,14 +144,14 @@
                                                                    id="new_login">
 
                                                             <label class="form-text text-muted"
-                                                                   for="new_password1">Password</label>
-                                                            <input class="form-control" type="password" name="password1"
-                                                                   id="new_password1">
+                                                                   for="new_password">Password</label>
+                                                            <input class="form-control" type="password" name="password"
+                                                                   id="new_password">
 
                                                             <label class="form-text text-muted"
-                                                                   for="new_password2">Confirm Password</label>
-                                                            <input class="form-control" type="password" name="password2"
-                                                                   id="new_password2">
+                                                                   for="new_password1">Confirm Password</label>
+                                                            <input class="form-control" type="password" name="password1"
+                                                                   id="new_password1">
 
                                                             <p class="mt-3">Continue as:</p>
 
