@@ -22,12 +22,10 @@
     }
 %>
 
+<%@ include file="header.jsp" %>
+
 <p>Hello, ${username}</p>
-<button><a href="index.jsp"></a></button>
 <p>Your tasks for today:</p><br>
 
-<form action="logout">
-    <input class="m-4 btn btn-warning" type="submit" value="Logout">
-</form>
 </body>
 </html>

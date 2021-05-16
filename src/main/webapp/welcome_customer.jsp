@@ -22,13 +22,11 @@
     }
 %>
 <%@ include file="header.jsp" %>
-<%--<p class="m-2">Hello, ${username}</p>--%>
+
 <div class="m-2">
     <p>Would you like to make some order?</p>
     <button class="btn btn-success">New order</button>
 </div>
-
-
 
 </body>
 </html>

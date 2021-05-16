@@ -10,11 +10,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UserDAO implements UserRepository {
     private static final String LOGIN = "login";
-    private static final String FIRST_PASSWORD = "password";
-    private static final String SECOND_PASSWORD = "password1";
+    private static final String PASSWORD = "password";
     private static final String ROLE = "role";
 
     private final DBManager dbManager;
@@ -24,9 +25,7 @@ public class UserDAO implements UserRepository {
     }
 
     @Override
-    public boolean addUser(Map<String, String[]> parametersMap) throws SQLException {
-        if (!confirmPassword(parametersMap)) return false;
-
+    public boolean addUser(Map<String, String[]> parametersMap) {
         String sql = "insert into users values(default, ?, ?, ?)";
 
         try(Connection connection = dbManager.getConnection();
@@ -34,7 +33,7 @@ public class UserDAO implements UserRepository {
 
             int k = 0;
             statement.setString(++k, parametersMap.get(LOGIN)[0]);
-            statement.setString(++k, parametersMap.get(FIRST_PASSWORD)[0]);
+            statement.setString(++k, parametersMap.get(PASSWORD)[0]);
             statement.setString(++k, parametersMap.get(ROLE)[0]);
 
             statement.execute();
@@ -47,9 +46,45 @@ public class UserDAO implements UserRepository {
         return true;
     }
 
-    private boolean confirmPassword(Map<String, String[]> parametersMap) {
-        return parametersMap.get(FIRST_PASSWORD)[0].equals(parametersMap.get(SECOND_PASSWORD)[0]);
+    // Registration validation:
+    public boolean checkLogin(String login) {
+        String sql = "select * from users where login = ?";
+
+        ResultSet resultSet = null;
+
+        try(Connection connection = dbManager.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, login);
+            statement.execute();
+
+            resultSet = statement.getResultSet();
+
+            if (resultSet.next()) {
+                return false;
+            }
+
+        } catch (SQLException | NamingException e) {
+            e.printStackTrace();
+        } finally {
+            close(resultSet);
+        }
+
+        return true;
     }
+
+    public boolean passwordsEquality(String password, String password1) {
+        return password.equals(password1);
+    }
+
+    public boolean validatePassword(String p1) {
+        Pattern pattern = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$");
+        Matcher matcher = pattern.matcher(p1);
+
+        return matcher.find();
+
+    }
+
 
     public String checkUser(User user) {
         String sql = "select * from users where login = ? and password = ?";
@@ -72,15 +107,22 @@ public class UserDAO implements UserRepository {
         } catch (SQLException | NamingException e) {
             e.printStackTrace();
         } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            close(resultSet);
         }
 
         return null;
+    }
+
+
+
+    // Privat methods
+    private void close(AutoCloseable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

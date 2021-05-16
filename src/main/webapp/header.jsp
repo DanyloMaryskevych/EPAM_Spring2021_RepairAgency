@@ -23,7 +23,8 @@
             <!-- Center elements -->
             <div class="col">
                 <div class="d-flex justify-content-center">
-                    <h1 class="mt-2" style="font-family: 'Akaya Telivigala', cursive; font-size: 36px">Broken Hammer</h1>
+                    <h1 class="mt-2" style="font-family: 'Akaya Telivigala', cursive; font-size: 36px">Broken
+                        Hammer</h1>
                 </div>
             </div>
 
@@ -58,7 +59,8 @@
                                     <li style="margin-left: 5px" class="nav-item active">
 
                                         <!-- Sign in trigger modal -->
-                                        <button style="font-size: 1rem; border: none" type="button" class="nav-link mr-4 btn btn-sm" data-toggle="modal"
+                                        <button style="font-size: 1rem; border: none" type="button"
+                                                class="nav-link mr-4 btn btn-sm" data-toggle="modal"
                                                 data-target="#SignInModal">
                                             Sign in
                                         </button>
@@ -113,9 +115,10 @@
                                         <!-- Sign up trigger modal -->
                                         <button style="background-color: #33cabb; color: aliceblue; font-weight: bold; font-size: 1rem; border: none"
                                                 type="button" class="nav-link btn btn-primary btn-sm"
-                                                data-toggle="modal"
-                                                data-target="#SignUpModal">
-                                            Sign up
+<%--                                                data-toggle="modal"--%>
+<%--                                                data-target="#SignUpModal"--%>
+                                        >
+                                            <a style="color: aliceblue" href="registration.jsp">Sign up</a>
                                         </button>
 
                                         <!-- Sign up Modal -->
@@ -137,36 +140,58 @@
 
                                                         <%--Body--%>
                                                     <div class="modal-body">
-                                                        <form class="m-2" action="register" method="post">
-                                                            <label class="form-text text-muted"
-                                                                   for="new_login">Login</label>
-                                                            <input class="form-control" type="text" name="login"
-                                                                   id="new_login">
+                                                        <form class="needs-validation m-2" novalidate action="register"
+                                                              method="post">
 
-                                                            <label class="form-text text-muted"
-                                                                   for="new_password">Password</label>
-                                                            <input class="form-control" type="password" name="password"
-                                                                   id="new_password">
+                                                            <div>
+                                                                <label class="form-text text-muted"
+                                                                       for="new_login">Login</label>
+                                                                <input class="form-control" type="text" name="login"
+                                                                       id="new_login" required>
+                                                                <div class="invalid-feedback">
+                                                                    Please choose a login.
+                                                                </div>
+                                                            </div>
 
-                                                            <label class="form-text text-muted"
-                                                                   for="new_password1">Confirm Password</label>
-                                                            <input class="form-control" type="password" name="password1"
-                                                                   id="new_password1">
+                                                            <div>
+                                                                <label class="form-text text-muted"
+                                                                       for="new_password">Password</label>
+                                                                <input class="form-control" type="password"
+                                                                       name="password"
+                                                                       id="new_password" required>
+                                                                <div class="invalid-feedback">
+                                                                    Please provide a valid password
+                                                                </div>
+                                                            </div>
+
+                                                            <div>
+                                                                <label class="form-text text-muted"
+                                                                       for="new_password1">Confirm Password</label>
+                                                                <input class="form-control" type="password"
+                                                                       name="password1"
+                                                                       id="new_password1" required>
+                                                                <div class="invalid-feedback">
+                                                                    Please provide a valid password
+                                                                </div>
+                                                            </div>
 
                                                             <p class="mt-3">Continue as:</p>
 
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="radio" name="role"
-                                                                       value="Customer" id="customer">
-                                                                <label class="form-check-label"
+                                                            <div class="custom-control custom-radio">
+                                                                <input type="radio" class="custom-control-input"
+                                                                       id="customer" name="role" value="Customer"
+                                                                       required>
+                                                                <label class="custom-control-label"
                                                                        for="customer">Customer</label>
                                                             </div>
-
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="radio" name="role"
-                                                                       value="Worker" id="worker">
-                                                                <label class="form-check-label"
+                                                            <div class="custom-control custom-radio mb-3">
+                                                                <input type="radio" class="custom-control-input"
+                                                                       id="worker" name="role" value="Worker" required>
+                                                                <label class="custom-control-label"
                                                                        for="worker">Worker</label>
+                                                                <div class="invalid-feedback">
+                                                                    Please choose your role
+                                                                </div>
                                                             </div>
 
                                                             <hr>
@@ -175,6 +200,29 @@
                                                                        type="submit" value="Register">
                                                             </div>
                                                         </form>
+
+                                                        <script>
+                                                            // Example starter JavaScript for disabling form submissions if there are invalid fields
+                                                            (function () {
+                                                                'use strict';
+                                                                window.addEventListener('load', function () {
+                                                                    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                                                                    var forms = document.getElementsByClassName('needs-validation');
+                                                                    // Loop over them and prevent submission
+                                                                    var validation = Array.prototype.filter.call(forms, function (form) {
+                                                                        form.addEventListener('submit', function (event) {
+                                                                            if (form.checkValidity() === false) {
+                                                                                event.preventDefault();
+                                                                                event.stopPropagation();
+                                                                            }
+                                                                            form.classList.add('was-validated');
+                                                                        }, false);
+                                                                    });
+                                                                }, false);
+                                                            })();
+                                                        </script>
+
+
                                                     </div>
                                                         <%--Body end--%>
 
