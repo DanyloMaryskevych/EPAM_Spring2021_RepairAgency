@@ -1,7 +1,6 @@
 package com.example.Broken_Hammer.dao;
 
 import com.example.Broken_Hammer.DBManager;
-import com.example.Broken_Hammer.entity.User;
 import com.example.Broken_Hammer.repository.UserRepository;
 
 import javax.naming.NamingException;
@@ -85,8 +84,7 @@ public class UserDAO implements UserRepository {
 
     }
 
-
-    public String checkUser(User user) {
+    public String checkIfUserExist(String login, String password) {
         String sql = "select * from users where login = ? and password = ?";
 
         ResultSet resultSet = null;
@@ -94,14 +92,14 @@ public class UserDAO implements UserRepository {
         try(Connection connection = dbManager.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setString(1, user.getLogin());
-            statement.setString(2, user.getPassword());
+            statement.setString(1, login);
+            statement.setString(2, password);
             statement.execute();
 
             resultSet = statement.getResultSet();
 
             if (resultSet.next()) {
-                return resultSet.getString("role");
+                return resultSet.getString(ROLE);
             }
 
         } catch (SQLException | NamingException e) {

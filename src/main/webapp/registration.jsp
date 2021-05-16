@@ -17,7 +17,6 @@
 
 <%@ include file="header.jsp" %>
 
-
 <div style="width: 100%" class="row justify-content-md-center mt-5">
     <div class="col col-lg-3">
         <h1 class="text-center mb-4">Registration</h1>
@@ -92,15 +91,6 @@
         </form>
     </div>
 </div>
-
-<%--<script>--%>
-<%--    function function1()--%>
-<%--    {--%>
-<%--        <c:set var="message" value="Hello"/>--%>
-<%--        var message = '<c:out value="${message}"/>';--%>
-<%--    }--%>
-<%--</script>--%>
-
 
 <script>
     // Example starter JavaScript for disabling form submissions if there are invalid fields

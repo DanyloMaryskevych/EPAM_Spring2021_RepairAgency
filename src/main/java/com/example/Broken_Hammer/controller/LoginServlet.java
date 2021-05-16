@@ -1,17 +1,14 @@
 package com.example.Broken_Hammer.controller;
 
-import com.example.Broken_Hammer.DBManager;
 import com.example.Broken_Hammer.dao.UserDAO;
 import com.example.Broken_Hammer.entity.User;
 
-import javax.naming.NamingException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Map;
+
+import static com.example.Broken_Hammer.Constants.*;
 
 @WebServlet(name = "LoginServlet", value = "/login")
 public class LoginServlet extends HttpServlet {
@@ -24,28 +21,26 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.sendRedirect("index.jsp");
+        response.sendRedirect("login.jsp");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         User user = new User();
-        String login = request.getParameter("login");
+        String login = request.getParameter(LOGIN);
         user.setLogin(login);
-        user.setPassword(request.getParameter("password"));
+        user.setPassword(request.getParameter(PASSWORD));
 
-        String role =  userDAO.checkUser(user);
+        String role = (String) request.getAttribute(ROLE);
 
-        if (role == null) response.sendRedirect("index.jsp");
-        else {
-            HttpSession session = request.getSession();
-            session.setAttribute("id", session.getId());
-            session.setAttribute("username", login);
-            session.setAttribute("role", role);
+        HttpSession session = request.getSession();
+        session.setAttribute("id", session.getId());
+        session.setAttribute("username", login);
+        session.setAttribute("role", role);
 
-            if (role.equals("Customer")) response.sendRedirect("welcome_customer.jsp");
-            else if (role.equals("Worker")) response.sendRedirect("welcome_worker.jsp");
-        }
+        if (role.equals("Customer")) response.sendRedirect("welcome_customer.jsp");
+        else if (role.equals("Worker")) response.sendRedirect("welcome_worker.jsp");
+
 
     }
 }
