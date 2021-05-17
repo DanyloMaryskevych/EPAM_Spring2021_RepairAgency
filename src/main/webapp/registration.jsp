@@ -1,12 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: danyl
-  Date: 15/05/2021
-  Time: 21:36
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <html>
 <head>
     <title>Registration</title>
@@ -27,9 +20,9 @@
                 <label class="form-text text-muted"
                        for="new_login">Login</label>
                 <input class="form-control" type="text" name="login"
-                       id="new_login" required>
+                       id="new_login" required pattern="^[a-z0-9]{3,20}$">
                 <div class="invalid-feedback">
-                    Please choose a login.
+                    Login should be 3-20 characters long and contains letters and digits only.
                 </div>
             </div>
             <div>
@@ -42,7 +35,8 @@
                 <input class="form-control" type="password"
                        name="password"
                        id="new_password" required>
-                <small class="text-muted">Please, provide a password minimum 8 characters, at least one letter and one number</small>
+                <small class="text-muted">Please, provide a password minimum 8 characters, at least one letter and one
+                    number</small>
                 <div class="invalid-feedback">
                     Please provide a valid password
                 </div>
@@ -98,9 +92,9 @@
         'use strict';
         window.addEventListener('load', function () {
             // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms = document.getElementsByClassName('needs-validation');
+            const forms = document.getElementsByClassName('needs-validation');
             // Loop over them and prevent submission
-            var validation = Array.prototype.filter.call(forms, function (form) {
+            const validation = Array.prototype.filter.call(forms, function (form) {
                 form.addEventListener('submit', function (event) {
                     if (form.checkValidity() === false) {
                         event.preventDefault();
