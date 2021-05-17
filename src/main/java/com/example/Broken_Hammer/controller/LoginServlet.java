@@ -32,7 +32,5 @@ public class LoginServlet extends HttpServlet {
 
         if (role.equals("Customer")) response.sendRedirect("welcome_customer.jsp");
         else if (role.equals("Worker")) response.sendRedirect("welcome_worker.jsp");
-
-
     }
 }

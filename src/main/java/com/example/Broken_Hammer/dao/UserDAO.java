@@ -24,7 +24,7 @@ public class UserDAO implements UserRepository {
     }
 
     @Override
-    public boolean addUser(Map<String, String[]> parametersMap) {
+    public void addUser(Map<String, String[]> parametersMap) {
         String sql = "insert into users values(default, ?, ?, ?)";
 
         try(Connection connection = dbManager.getConnection();
@@ -39,10 +39,8 @@ public class UserDAO implements UserRepository {
 
         } catch (SQLException | NamingException e) {
             e.printStackTrace();
-            return false;
         }
 
-        return true;
     }
 
     // Registration validation:
@@ -114,7 +112,7 @@ public class UserDAO implements UserRepository {
 
 
     // Privat methods
-    private void close(AutoCloseable closeable) {
+    public static void close(AutoCloseable closeable) {
         if (closeable != null) {
             try {
                 closeable.close();
