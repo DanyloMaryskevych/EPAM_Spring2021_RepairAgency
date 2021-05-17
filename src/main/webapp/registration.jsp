@@ -20,9 +20,9 @@
                 <label class="form-text text-muted"
                        for="new_login">Login</label>
                 <input class="form-control" type="text" name="login"
-                       id="new_login" required pattern="^[a-z0-9]{3,20}$">
+                       id="new_login" required pattern="^[a-zA-Z]{3,20}$">
                 <div class="invalid-feedback">
-                    Login should be 3-20 characters long and contains letters and digits only.
+                    Login should be 3-20 characters long and contains letters only.
                 </div>
             </div>
             <div>

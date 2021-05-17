@@ -4,13 +4,11 @@ import com.example.Broken_Hammer.DBManager;
 import com.example.Broken_Hammer.repository.UserRepository;
 
 import javax.naming.NamingException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 public class UserDAO implements UserRepository {
     private static final String LOGIN = "login";
@@ -18,27 +16,67 @@ public class UserDAO implements UserRepository {
     private static final String ROLE = "role";
 
     private final DBManager dbManager;
+    private final CustomerDAO customerDAO;
+    private final WorkerDAO workerDAO;
 
     public UserDAO() {
         dbManager = new DBManager();
+        customerDAO = new CustomerDAO();
+        workerDAO = new WorkerDAO();
     }
 
     @Override
     public void addUser(Map<String, String[]> parametersMap) {
-        String sql = "insert into users values(default, ?, ?, ?)";
+        Connection connection = null;
 
-        try(Connection connection = dbManager.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql)) {
+        String sql = "insert into users values(default, ?, ?, ?)";
+        String role = parametersMap.get(ROLE)[0];
+
+        ResultSet resultSet = null;
+
+        try {
+            connection = dbManager.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            connection.setAutoCommit(false);
+            connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
             int k = 0;
             statement.setString(++k, parametersMap.get(LOGIN)[0]);
             statement.setString(++k, parametersMap.get(PASSWORD)[0]);
-            statement.setString(++k, parametersMap.get(ROLE)[0]);
+            statement.setString(++k, role);
 
             statement.execute();
 
+            if (!role.equals("Admin")) {
+                resultSet = statement.getGeneratedKeys();
+                if (resultSet.next()) {
+                    switch (parametersMap.get(ROLE)[0]) {
+                        case "Customer" : {
+                            customerDAO.addCustomer(connection, resultSet.getInt(1));
+                            break;
+                        }
+                        case "Worker" : {
+                            workerDAO.addWorker(connection, resultSet.getInt(1));
+                            break;
+                        }
+                        default:
+                            System.out.println("wrong role");
+                    }
+                }
+            }
+
+            connection.commit();
         } catch (SQLException | NamingException e) {
+            try {
+                assert connection != null;
+                connection.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
             e.printStackTrace();
+        } finally {
+            close(resultSet);
         }
 
     }

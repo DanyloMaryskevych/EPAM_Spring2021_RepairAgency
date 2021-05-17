@@ -4,7 +4,10 @@ import com.example.Broken_Hammer.DBManager;
 import com.example.Broken_Hammer.repository.CustomerRepository;
 
 import javax.naming.NamingException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static com.example.Broken_Hammer.dao.UserDAO.close;
 
@@ -16,8 +19,17 @@ public class CustomerDAO implements CustomerRepository {
     }
 
     @Override
-    public void addCustomer() {
+    public void addCustomer(Connection connection, int id) {
+        String sql = "insert into customers_data values (?, default)";
 
+        try(PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, id);
+            statement.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

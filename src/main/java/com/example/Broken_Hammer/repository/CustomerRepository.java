@@ -1,9 +1,10 @@
 package com.example.Broken_Hammer.repository;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 public interface CustomerRepository {
-    void addCustomer();
+    void addCustomer(Connection connection, int id);
 
     void deposit(int id, int amount);
 

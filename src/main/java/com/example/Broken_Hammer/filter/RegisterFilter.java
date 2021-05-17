@@ -3,7 +3,7 @@ package com.example.Broken_Hammer.filter;
 import com.example.Broken_Hammer.dao.UserDAO;
 
 import javax.servlet.*;
-import javax.servlet.annotation.*;
+import javax.servlet.annotation.WebFilter;
 import java.io.IOException;
 
 import static com.example.Broken_Hammer.Constants.*;
