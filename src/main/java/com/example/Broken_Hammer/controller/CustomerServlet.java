@@ -25,14 +25,13 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-
         request.setAttribute("workers_list", userDAO.getWorkers());
 
         Integer userID = (Integer) session.getAttribute("userID");
 
         if (userID == null) response.sendRedirect("login.jsp");
         else {
-            request.setAttribute("orders_list", orderDAO.getOrdersByUserId(userID));
+            request.setAttribute("orders_list", orderDAO.getOrdersByCustomersId(userID));
 
             RequestDispatcher dispatcher = request.getRequestDispatcher("/welcome_customer.jsp");
             dispatcher.forward(request, response);

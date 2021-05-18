@@ -1,6 +1,7 @@
 package com.example.Broken_Hammer.controller;
 
 import com.example.Broken_Hammer.dao.OrderDAO;
+import com.example.Broken_Hammer.entity.Order;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -19,7 +20,15 @@ public class OrderServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("Order doGet()");
+        int orderID = Integer.parseInt(request.getParameter("orderID"));
+
+        Order order = orderDAO.getOrderForCustomerById(orderID);
+        order.setId(orderID);
+        String worker = orderDAO.getWorker(orderID);
+
+        request.setAttribute("temp_order", order);
+        request.setAttribute("temp_worker", worker);
+        request.getRequestDispatcher("order.jsp").forward(request, response);
     }
 
     @Override
