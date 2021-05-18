@@ -33,43 +33,46 @@
                 </button>
             </div>
 
-            <div class="modal-body">
-                <form action="order" method="post">
+            <div class="modal-body pb-0">
+                <form action="order" method="post" class="needs-validation" novalidate>
                     <div class="form-group">
                         <label class="form-text text-muted" for="title">Title</label>
-                        <input type="text" class="form-control" id="title" name="title">
+                        <input type="text" class="form-control" id="title" name="title" required>
+                        <div class="invalid-feedback">
+                            Please provide some title
+                        </div>
 
                         <label class="mt-2 form-text text-muted" for="description">Description</label>
-                        <textarea class="form-control" id="description" name="description"></textarea>
+                        <textarea class="form-control" id="description" name="description" required></textarea>
+                        <div class="invalid-feedback">
+                            Please provide some description
+                        </div>
 
-                        <div class="mt-3">
-                            <label for="workers">Expected worker:</label>
-                            <small class="form-text text-muted">You can choose the worker you
+                        <div class="mt-5">
+                            <label for="workers">Expected worker (optional)</label>
+                            <small class="form-text text-muted mb-1">You can choose the worker you
                                 recommend to do your task</small>
 
-                                <div class="row w-50">
-                                    <div class="col">
-                                        <div class="input-group mb-3">
-                                            <select class="custom-select" id="workers" name="expectedWorker">
-                                                <option selected value="0">Choose...</option>
-                                                <%--@elvariable id="workers_list" type="java.util.List"--%>
-                                                <c:forEach var="temp_worker" items="${workers_list}">
-                                                    <option value="${temp_worker.id}"> ${temp_worker.login} </option>
-                                                </c:forEach>
-                                            </select>
-                                        </div>
+                            <div class="row w-50">
+                                <div class="col">
+                                    <div class="input-group mb-3">
+                                        <select class="custom-select" id="workers" name="expectedWorker">
+                                            <option selected value="0">Choose...</option>
+                                            <%--@elvariable id="workers_list" type="java.util.List"--%>
+                                            <c:forEach var="temp_worker" items="${workers_list}">
+                                                <option value="${temp_worker.id}"> ${temp_worker.login} </option>
+                                            </c:forEach>
+                                        </select>
                                     </div>
-
                                 </div>
+
+                            </div>
 
                         </div>
                     </div>
 
-                    <%--                    <input class="btn btn-success" type="submit" value="Save">--%>
-                    <div class="modal-footer">
+                    <div class="modal-footer pb-0">
                         <input class="btn btn-success" type="submit" value="Save">
-                        <%--                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>--%>
-                        <%--                        <button type="button" class="btn btn-primary">Save changes</button>--%>
                     </div>
                 </form>
             </div>
@@ -78,6 +81,71 @@
         </div>
     </div>
 </div>
+
+<div class="m-4 w-50">
+    <h5>My Orders</h5>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Performance status</th>
+                <th>Payment status</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <%--@elvariable id="orders_list" type="java.util.List"--%>
+            <c:forEach var="order" items="${orders_list}">
+                <tr>
+
+                    <c:url var="orderLink" value="order">
+                        <c:param name="orderID" value="${order.id}"/>
+                    </c:url>
+
+                    <td>
+                        <a style="text-decoration: none" href="${orderLink}">
+                            <button class="btn btn-light">
+                                    ${order.title}
+                            </button>
+                        </a>
+                    </td>
+                    <td>${order.performanceStatus}</td>
+                    <td>${order.paymentStatus}</td>
+                    <c:choose>
+                        <c:when test="${order.price == 0}">
+                            <td>Not specified</td>
+                        </c:when>
+                        <c:otherwise>
+                            <td>${order.price} $</td>
+                        </c:otherwise>
+                    </c:choose>
+                </tr>
+            </c:forEach>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

@@ -10,6 +10,8 @@ public class Order {
     private String title;
     private String description;
     private int expectedWorker;
+    private String paymentStatus;
+    private String performanceStatus;
     private int price;
     private int rating;
     private String comment;
@@ -68,6 +70,22 @@ public class Order {
 
     public void setExpectedWorker(int expectedWorker) {
         this.expectedWorker = expectedWorker;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getPerformanceStatus() {
+        return performanceStatus;
+    }
+
+    public void setPerformanceStatus(String performanceStatus) {
+        this.performanceStatus = performanceStatus;
     }
 
     public int getPrice() {
