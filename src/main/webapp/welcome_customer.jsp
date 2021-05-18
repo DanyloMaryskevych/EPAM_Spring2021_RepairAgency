@@ -43,7 +43,6 @@
                         <textarea class="form-control" id="description" name="description"></textarea>
 
                         <div class="mt-3">
-                            <%--                            <div class="col align-self-end">--%>
                             <label for="workers">Expected worker:</label>
                             <small class="form-text text-muted">You can choose the worker you
                                 recommend to do your task</small>
@@ -51,7 +50,7 @@
                                 <div class="row w-50">
                                     <div class="col">
                                         <div class="input-group mb-3">
-                                            <select class="custom-select" id="workers" name="selectedWorker">
+                                            <select class="custom-select" id="workers" name="expectedWorker">
                                                 <option selected value="0">Choose...</option>
                                                 <%--@elvariable id="workers_list" type="java.util.List"--%>
                                                 <c:forEach var="temp_worker" items="${workers_list}">
@@ -63,7 +62,6 @@
 
                                 </div>
 
-                            <%--                            </div>--%>
                         </div>
                     </div>
 

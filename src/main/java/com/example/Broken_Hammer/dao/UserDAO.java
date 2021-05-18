@@ -190,4 +190,28 @@ public class UserDAO implements UserRepository {
             }
         }
     }
+
+    public int getId(String login) {
+        String sql = "select id from users where login = ?";
+        ResultSet resultSet = null;
+
+        try(Connection connection = dbManager.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, login);
+
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt("id");
+            }
+
+        } catch (SQLException | NamingException e) {
+            e.printStackTrace();
+        } finally {
+            close(resultSet);
+        }
+
+        return 0;
+    }
 }

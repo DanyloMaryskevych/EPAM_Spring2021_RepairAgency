@@ -1,5 +1,7 @@
 package com.example.Broken_Hammer.repository;
 
+import java.util.Map;
+
 public interface OrderRepository {
-    void addOrder(int customerId, String title, String description, int expectedWorker);
+    void addOrder(int userID, Map<String, String[]> parametersMap);
 }

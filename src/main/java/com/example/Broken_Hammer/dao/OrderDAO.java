@@ -7,6 +7,7 @@ import javax.naming.NamingException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Map;
 
 public class OrderDAO implements OrderRepository {
     private final DBManager dbManager;
@@ -16,18 +17,17 @@ public class OrderDAO implements OrderRepository {
     }
 
     @Override
-    public void addOrder(int customerId, String title, String description, int expectedWorker) {
-        String sql = "insert into orders values (default, ?, default, default,\n" +
-                "?, ?, ?, default, default, default)";
+    public void addOrder(int userID, Map<String, String[]> parametersMap) {
+        String sql = "insert into orders (customer_id, title, description, expected_worker) value (?, ?, ?, ?)";
 
         try(Connection connection = dbManager.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql)) {
 
             int k = 0;
-            statement.setInt(++k, customerId);
-            statement.setString(++k, title);
-            statement.setString(++k, description);
-            statement.setInt(++k, expectedWorker);
+            statement.setInt(++k, userID);
+            statement.setString(++k, parametersMap.get("title")[0]);
+            statement.setString(++k, parametersMap.get("description")[0]);
+            statement.setInt(++k, Integer.parseInt(parametersMap.get("expectedWorker")[0]));
 
             statement.execute();
 
