@@ -42,30 +42,41 @@
                         <label class="mt-2 form-text text-muted" for="description">Description</label>
                         <textarea class="form-control" id="description" name="description"></textarea>
 
-                        <div class="row w-50">
-                            <div class="col">
-                                <label for="workers">Workers:</label>
-                                <div class="input-group mb-3">
-                                    <select class="custom-select" id="workers" name="selectedWorker">
-                                        <option selected>Choose...</option>
-                                        <%--@elvariable id="workers_list" type="java.util.List"--%>
-                                        <c:forEach var="temp_worker" items="${workers_list}">
-                                            <option value="${temp_worker.id}"> ${temp_worker.login} </option>
-                                        </c:forEach>
-                                    </select>
+                        <div class="mt-3">
+                            <%--                            <div class="col align-self-end">--%>
+                            <label for="workers">Expected worker:</label>
+                            <small class="form-text text-muted">You can choose the worker you
+                                recommend to do your task</small>
+
+                                <div class="row w-50">
+                                    <div class="col">
+                                        <div class="input-group mb-3">
+                                            <select class="custom-select" id="workers" name="selectedWorker">
+                                                <option selected value="0">Choose...</option>
+                                                <%--@elvariable id="workers_list" type="java.util.List"--%>
+                                                <c:forEach var="temp_worker" items="${workers_list}">
+                                                    <option value="${temp_worker.id}"> ${temp_worker.login} </option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
+                                    </div>
+
                                 </div>
-                            </div>
+
+                            <%--                            </div>--%>
                         </div>
                     </div>
 
-                    <input type="submit" value="Save">
+                    <%--                    <input class="btn btn-success" type="submit" value="Save">--%>
+                    <div class="modal-footer">
+                        <input class="btn btn-success" type="submit" value="Save">
+                        <%--                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>--%>
+                        <%--                        <button type="button" class="btn btn-primary">Save changes</button>--%>
+                    </div>
                 </form>
             </div>
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
+
         </div>
     </div>
 </div>

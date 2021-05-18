@@ -24,7 +24,6 @@ public class CustomerServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("Customer doGet()");
         request.setAttribute("workers_list", userDAO.getWorkers());
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/welcome_customer.jsp");
@@ -33,10 +32,5 @@ public class CustomerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("Customer doPost()");
-
-        doGet(request, response);
-
-//        response.sendRedirect("welcome_customer.jsp");
     }
 }
