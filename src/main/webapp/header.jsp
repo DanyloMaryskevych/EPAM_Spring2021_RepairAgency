@@ -60,7 +60,7 @@
 
 
                                             <a style="text-decoration:none; font-size: 1rem"
-                                               class="nav-link mr-4 btn btn-sm" href="login.jsp">
+                                               class="nav-link mr-4 btn btn-sm" href="login">
 <%--                                                <button style="font-size: 1rem; border: none" type="button"--%>
 <%--                                                        class="nav-link mr-4 btn btn-sm"></button>--%>
                                                 Sign in

@@ -2,6 +2,9 @@ package com.example.Broken_Hammer.controller;
 
 import com.example.Broken_Hammer.entity.User;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
@@ -17,7 +20,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         User user = new User();
         String login = request.getParameter(LOGIN);
         user.setLogin(login);
@@ -30,7 +33,8 @@ public class LoginServlet extends HttpServlet {
         session.setAttribute("username", login);
         session.setAttribute("role", role);
 
-        if (role.equals("Customer")) response.sendRedirect("welcome_customer.jsp");
+        if (role.equals("Customer")) response.sendRedirect("customer");
         else if (role.equals("Worker")) response.sendRedirect("welcome_worker.jsp");
+
     }
 }

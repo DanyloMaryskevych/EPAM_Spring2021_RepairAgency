@@ -1,10 +1,13 @@
 package com.example.Broken_Hammer.dao;
 
 import com.example.Broken_Hammer.DBManager;
+import com.example.Broken_Hammer.entity.User;
 import com.example.Broken_Hammer.repository.UserRepository;
 
 import javax.naming.NamingException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -79,6 +82,34 @@ public class UserDAO implements UserRepository {
             close(resultSet);
         }
 
+    }
+
+    public List<User> getWorkers() {
+        String sql = "select id, login from users where role = 'Worker'";
+        List<User> workers = new ArrayList<>();
+
+        ResultSet resultSet = null;
+
+        try(Connection connection = dbManager.getConnection();
+        Statement statement = connection.createStatement()) {
+
+            resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                User user = new User();
+                user.setLogin(resultSet.getString("login"));
+                user.setId(resultSet.getLong("id"));
+
+                workers.add(user);
+            }
+
+        } catch (SQLException | NamingException e) {
+            e.printStackTrace();
+        } finally {
+            close(resultSet);
+        }
+
+        return workers;
     }
 
     // Registration validation:

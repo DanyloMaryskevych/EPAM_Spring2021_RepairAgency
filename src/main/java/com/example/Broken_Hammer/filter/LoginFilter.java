@@ -4,6 +4,8 @@ import com.example.Broken_Hammer.dao.UserDAO;
 
 import javax.servlet.*;
 import javax.servlet.annotation.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.example.Broken_Hammer.Constants.*;
@@ -22,19 +24,23 @@ public class LoginFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
-        String login = request.getParameter(LOGIN);
-        String password = request.getParameter(PASSWORD);
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-        String userRole = userDAO.checkIfUserExist(login, password);
+        if(httpRequest.getMethod().equalsIgnoreCase("POST")) {
+            String login = request.getParameter(LOGIN);
+            String password = request.getParameter(PASSWORD);
 
-        if (userRole != null) {
-            request.setAttribute(ROLE, userRole);
-            chain.doFilter(request, response);
+            String userRole = userDAO.checkIfUserExist(login, password);
+
+            if (userRole != null) {
+                request.setAttribute(ROLE, userRole);
+                chain.doFilter(request, response);
+            }
+            else {
+                request.setAttribute(USER_VALIDATION_ERROR, USER_VALIDATION_MESSAGE);
+            }
         }
-        else {
-            request.setAttribute(USER_VALIDATION_ERROR, USER_VALIDATION_MESSAGE);
-            RequestDispatcher rd = request.getRequestDispatcher(JSP_PAGE);
-            rd.include(request, response);
-        }
+        RequestDispatcher rd = request.getRequestDispatcher(JSP_PAGE);
+        rd.include(request, response);
     }
 }
