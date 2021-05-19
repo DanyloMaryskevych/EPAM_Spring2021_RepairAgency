@@ -56,7 +56,7 @@
                             <div class="row w-50">
                                 <div class="col">
                                     <div class="input-group mb-3">
-                                        <select class="custom-select" id="workers" name="expectedWorker">
+                                        <select class="custom-select" id="workers" name="expected_worker">
                                             <option selected value="0">Choose...</option>
                                             <%--@elvariable id="workers_list" type="java.util.List"--%>
                                             <c:forEach var="temp_worker" items="${workers_list}">
@@ -72,11 +72,11 @@
                     </div>
 
                     <div class="modal-footer pb-0">
+                        <input class="invisible" name="status" value="new_order">
                         <input class="btn btn-success" type="submit" value="Save">
                     </div>
                 </form>
             </div>
-
 
         </div>
     </div>

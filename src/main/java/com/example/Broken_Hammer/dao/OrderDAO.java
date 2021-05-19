@@ -40,7 +40,7 @@ public class OrderDAO implements OrderRepository {
     @Override
     public void addOrder(int userID, Map<String, String[]> parametersMap) {
         String sql = "insert into " + ORDERS_TABLE + " (" +
-                 CUSTOMER_ID_COLUMN + ", " +
+                CUSTOMER_ID_COLUMN + ", " +
                 TITLE_COLUMN + ", " +
                 DESCRIPTION_COLUMN + ", " +
                 EXPECTED_WORKER_ID_COLUMN +
@@ -152,6 +152,22 @@ public class OrderDAO implements OrderRepository {
         }
 
         return null;
+    }
+
+    public void updatePaymentStatus(String status, int orderID) {
+        String sql = "update orders set payment_status = ? where id = ?";
+
+        try(Connection connection = dbManager.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, status);
+            statement.setInt(2, orderID);
+
+            statement.execute();
+
+        } catch (SQLException | NamingException e) {
+            e.printStackTrace();
+        }
     }
 
 }

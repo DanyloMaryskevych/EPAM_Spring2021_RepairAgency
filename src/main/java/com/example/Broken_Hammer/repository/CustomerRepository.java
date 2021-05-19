@@ -8,7 +8,7 @@ public interface CustomerRepository {
 
     void deposit(int id, int amount);
 
-    void withdraw(int id, int amount) throws SQLException;
+    void withdraw(int userID, int orderID, int amount) throws SQLException;
 
     int getBalance(int id);
 }

@@ -31,6 +31,7 @@ public class CustomerServlet extends HttpServlet {
 
         if (userID == null) response.sendRedirect("login.jsp");
         else {
+            request.setAttribute("balance", customerDAO.getBalance(userID));
             request.setAttribute("orders_list", orderDAO.getOrdersByCustomersId(userID));
 
             RequestDispatcher dispatcher = request.getRequestDispatcher("/welcome_customer.jsp");

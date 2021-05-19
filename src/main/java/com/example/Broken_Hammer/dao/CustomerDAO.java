@@ -13,9 +13,11 @@ import static com.example.Broken_Hammer.dao.UserDAO.close;
 
 public class CustomerDAO implements CustomerRepository {
     private final DBManager dbManager;
+    private final OrderDAO orderDAO;
 
     public CustomerDAO() {
         dbManager = new DBManager();
+        orderDAO = new OrderDAO();
     }
 
     @Override
@@ -34,16 +36,38 @@ public class CustomerDAO implements CustomerRepository {
 
     @Override
     public void deposit(int id, int amount) {
-        updateWallet(id, amount, true);
+        try(Connection connection = dbManager.getConnection()) {
+            updateWallet(connection, id, amount, true);
+        } catch (SQLException | NamingException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void withdraw(int id, int amount) throws SQLException {
-        int currentBalance = getBalance(id);
+    public void withdraw(int userID, int orderID, int amount) throws SQLException {
+        int currentBalance = getBalance(userID);
 
         if (amount > currentBalance) throw new SQLException();
         else {
-            updateWallet(id, amount, false);
+            Connection connection = null;
+
+            try {
+                connection = dbManager.getConnection();
+                connection.setAutoCommit(false);
+                connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+                updateWallet(connection, userID, amount, false);
+                orderDAO.updatePaymentStatus("Paid", orderID);
+
+                connection.commit();
+            } catch (Exception e) {
+                if (connection != null) {
+                    connection.rollback();
+                }
+                e.printStackTrace();
+            } finally {
+                close(connection);
+            }
         }
     }
 
@@ -73,13 +97,12 @@ public class CustomerDAO implements CustomerRepository {
         return balance;
     }
 
-    private void updateWallet(int id, int amount, boolean add) {
+    private void updateWallet(Connection connection, int id, int amount, boolean add) {
         String flag = add ? "+" : "-";
 
         String sql = "update customers_data set balance = balance " + flag + " ? where customer_id = ?";
 
-        try (Connection connection = dbManager.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try ( PreparedStatement statement = connection.prepareStatement(sql)) {
 
             int k = 0;
             statement.setInt(++k, amount);
@@ -87,16 +110,10 @@ public class CustomerDAO implements CustomerRepository {
 
             statement.execute();
 
-        } catch (SQLException | NamingException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
-    }
-
-    public static void main(String[] args) {
-        CustomerDAO customerDAO = new CustomerDAO();
-
-        System.out.println(customerDAO.getBalance(1));
     }
 
 }

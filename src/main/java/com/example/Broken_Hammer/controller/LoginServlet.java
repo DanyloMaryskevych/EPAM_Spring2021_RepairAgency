@@ -1,5 +1,6 @@
 package com.example.Broken_Hammer.controller;
 
+import com.example.Broken_Hammer.dao.CustomerDAO;
 import com.example.Broken_Hammer.dao.UserDAO;
 import com.example.Broken_Hammer.entity.User;
 
@@ -39,7 +40,9 @@ public class LoginServlet extends HttpServlet {
         session.setAttribute("userID", id);
         session.setAttribute("role", role);
 
-        if (role.equals("Customer")) response.sendRedirect("customer");
+        if (role.equals("Customer")) {
+            response.sendRedirect("customer");
+        }
         else if (role.equals("Worker")) response.sendRedirect("welcome_worker.jsp");
 
     }
