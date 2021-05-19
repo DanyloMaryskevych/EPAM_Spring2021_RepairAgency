@@ -29,14 +29,12 @@ public class CustomerServlet extends HttpServlet {
 
         Integer userID = (Integer) session.getAttribute("userID");
 
-        if (userID == null) response.sendRedirect("login.jsp");
-        else {
+//        if (userID == null) response.sendRedirect("login.jsp");
             request.setAttribute("balance", customerDAO.getBalance(userID));
             request.setAttribute("orders_list", orderDAO.getOrdersByCustomersId(userID));
 
             RequestDispatcher dispatcher = request.getRequestDispatcher("/welcome_customer.jsp");
             dispatcher.forward(request, response);
-        }
     }
 
     @Override
