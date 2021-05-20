@@ -62,17 +62,20 @@ public class OrderDAO implements OrderRepository {
         }
     }
 
-    public List<Order> getOrdersByCustomersId(int id) {
+    public List<Order> getOrdersByCustomersId(int id, int start, int limit) {
         List<Order> orders = new ArrayList<>();
         ResultSet resultSet = null;
 
         String sql = "select id, worker_id, title, description, payment_status, " +
-                "performance_status, price from orders where customer_id = ? order by id desc";
+                "performance_status, price from orders where customer_id = ? order by id desc limit ?, ?";
 
         try(Connection connection = dbManager.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, id);
+            int k = 0;
+            statement.setInt(++k, id);
+            statement.setInt(++k, start);
+            statement.setInt(++k, limit);
 
             resultSet = statement.executeQuery();
 
@@ -97,6 +100,31 @@ public class OrderDAO implements OrderRepository {
         }
 
         return orders;
+    }
+
+    public int amountOfPages(int limit, int userID) {
+        String sql = "select ceiling(count(id) / ?)  as pages from orders where customer_id = ?";
+        ResultSet resultSet = null;
+
+        try(Connection connection = dbManager.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, limit);
+            statement.setInt(2, userID);
+
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt("pages");
+            }
+
+        } catch (SQLException | NamingException e) {
+            e.printStackTrace();
+        } finally {
+            close(resultSet);
+        }
+
+        return 1;
     }
 
     public Order getOrderForCustomerById(int orderId) {

@@ -28,9 +28,15 @@ public class CustomerServlet extends HttpServlet {
         request.setAttribute("workers_list", userDAO.getWorkers());
 
         Integer userID = (Integer) session.getAttribute("userID");
+        int limit = 7;
 
         request.setAttribute("balance", customerDAO.getBalance(userID));
-        request.setAttribute("orders_list", orderDAO.getOrdersByCustomersId(userID));
+        int startPage = Integer.parseInt(request.getParameter("page"));
+        int start = (startPage - 1) * limit;
+        int pages = orderDAO.amountOfPages(limit, userID);
+
+        request.setAttribute("pages", pages);
+        request.setAttribute("orders_list", orderDAO.getOrdersByCustomersId(userID, start, limit));
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/welcome_customer.jsp");
         dispatcher.forward(request, response);

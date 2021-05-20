@@ -53,7 +53,7 @@ public class OrderServlet extends HttpServlet {
         switch (status) {
             case "new_order" : {
                 orderDAO.addOrder(userID, request.getParameterMap());
-                response.sendRedirect("customer");
+                response.sendRedirect("customer?page=1");
                 break;
             }
             case "paid" : {
