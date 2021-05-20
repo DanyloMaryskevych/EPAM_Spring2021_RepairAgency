@@ -101,7 +101,7 @@ public class OrderDAO implements OrderRepository {
 
     public Order getOrderForCustomerById(int orderId) {
         String sql = "select title, description, payment_status, performance_status," +
-                " price from orders where id = ?;";
+                " price, rating, comment from orders where id = ?;";
         Order order = null;
         ResultSet resultSet = null;
 
@@ -119,6 +119,8 @@ public class OrderDAO implements OrderRepository {
                 order.setPaymentStatus(resultSet.getString(PAYMENT_STATUS_COLUMN));
                 order.setPerformanceStatus(resultSet.getString(PERFORMANCE_STATUS_COLUMN));
                 order.setPrice(resultSet.getInt(PRICE_COLUMN));
+                order.setRating(resultSet.getInt(RATING_COLUMN));
+                order.setComment(resultSet.getString(COMMENT_COLUMN));
             }
 
         } catch (SQLException | NamingException e) {
@@ -162,6 +164,24 @@ public class OrderDAO implements OrderRepository {
 
             statement.setString(1, status);
             statement.setInt(2, orderID);
+
+            statement.execute();
+
+        } catch (SQLException | NamingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateFeedback(int rating, String comment, int orderID) {
+        String sql = "update orders set rating = ?, comment = ? where id = ?";
+
+        try(Connection connection = dbManager.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            int k = 0;
+            statement.setInt(++k, rating);
+            statement.setString(++k, comment);
+            statement.setInt(++k, orderID);
 
             statement.execute();
 

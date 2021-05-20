@@ -68,6 +68,16 @@ public class OrderServlet extends HttpServlet {
                 response.sendRedirect("order?orderID=" + orderID + "&payment=" + payment);
                 break;
             }
+            case "feedback": {
+                int rating = Integer.parseInt(request.getParameter("rating"));
+                String comment = request.getParameter("comment");
+                int orderID = Integer.parseInt(request.getParameter("orderID"));
+
+                orderDAO.updateFeedback(rating, comment, orderID);
+
+                response.sendRedirect("order?orderID=" + orderID);
+                break;
+            }
         }
 
     }

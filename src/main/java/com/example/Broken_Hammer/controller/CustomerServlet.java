@@ -16,7 +16,7 @@ public class CustomerServlet extends HttpServlet {
     private OrderDAO orderDAO;
 
     @Override
-    public void init() throws ServletException {
+    public void init() {
         customerDAO = new CustomerDAO();
         userDAO = new UserDAO();
         orderDAO = new OrderDAO();
@@ -29,15 +29,10 @@ public class CustomerServlet extends HttpServlet {
 
         Integer userID = (Integer) session.getAttribute("userID");
 
-//        if (userID == null) response.sendRedirect("login.jsp");
-            request.setAttribute("balance", customerDAO.getBalance(userID));
-            request.setAttribute("orders_list", orderDAO.getOrdersByCustomersId(userID));
+        request.setAttribute("balance", customerDAO.getBalance(userID));
+        request.setAttribute("orders_list", orderDAO.getOrdersByCustomersId(userID));
 
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/welcome_customer.jsp");
-            dispatcher.forward(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/welcome_customer.jsp");
+        dispatcher.forward(request, response);
     }
 }
