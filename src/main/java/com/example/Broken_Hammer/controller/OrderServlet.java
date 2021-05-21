@@ -3,6 +3,7 @@ package com.example.Broken_Hammer.controller;
 import com.example.Broken_Hammer.dao.CustomerDAO;
 import com.example.Broken_Hammer.dao.OrderDAO;
 import com.example.Broken_Hammer.entity.Order;
+import com.example.Broken_Hammer.entity.Worker;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -31,7 +32,9 @@ public class OrderServlet extends HttpServlet {
         Order order = orderDAO.getOrderForCustomerById(orderID);
         order.setId(orderID);
 
-        String worker = orderDAO.getWorker(orderID);
+        Worker worker = orderDAO.getWorker(orderID);
+        System.out.println(worker.getLogin());
+        System.out.println(worker.getId());
         Integer userID = (Integer) session.getAttribute("userID");
         request.setAttribute("balance", customerDAO.getBalance(userID));
 
@@ -72,8 +75,9 @@ public class OrderServlet extends HttpServlet {
                 int rating = Integer.parseInt(request.getParameter("rating"));
                 String comment = request.getParameter("comment");
                 int orderID = Integer.parseInt(request.getParameter("orderID"));
+                int workerID = Integer.parseInt(request.getParameter("workerID"));
 
-                orderDAO.updateFeedback(rating, comment, orderID);
+                orderDAO.updateFeedback(rating, comment, orderID, workerID);
 
                 response.sendRedirect("order?orderID=" + orderID);
                 break;

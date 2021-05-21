@@ -5,6 +5,8 @@
     <title>Order</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="CSS/rating.css">
 </head>
 <body>
@@ -19,6 +21,7 @@
 <%@ include file="header.jsp" %>
 
 <%--@elvariable id="temp_order" type="com.example.Broken_Hammer.entity.Order"--%>
+<%--@elvariable id="temp_worker" type="com.example.Broken_Hammer.entity.Worker"--%>
 
 <div class="container">
 
@@ -98,10 +101,11 @@
                 <div class="col">Worker</div>
                 <div class="col d-flex align-items-center">
                     <c:choose>
-                        <c:when test="${temp_worker == null}">
+
+                        <c:when test="${temp_worker.login == null}">
                             <span class="badge badge-pill badge-secondary">Not specified</span>
                         </c:when>
-                        <c:otherwise>${temp_worker}</c:otherwise>
+                        <c:otherwise>${temp_worker.login}</c:otherwise>
                     </c:choose>
                 </div>
             </div>
@@ -240,6 +244,7 @@
                         <hr>
                         <input class="invisible" name="status" value="feedback">
                         <input class="invisible" name="orderID" value="${temp_order.id}">
+                        <input class="invisible" name="workerID" value="${temp_worker.id}">
 
                         <div class="row">
                             <input type="submit" class="mt-3 ml-3 mr-3 col btn btn-success" value="Send">
@@ -254,6 +259,7 @@
 
 </div>
 
+<%@ include file="footer.jsp" %>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

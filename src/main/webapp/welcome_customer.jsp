@@ -85,7 +85,7 @@
         </div>
     </div>
 
-    <div class="m-4 w-50">
+    <div class="m-4 w-75">
         <h5>My Orders</h5>
         <table class="table table-hover">
             <thead>

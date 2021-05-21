@@ -1,7 +1,8 @@
 package com.example.Broken_Hammer.entity;
 
 public class Worker {
-    private int worker_id;
+    private String login;
+    private int id;
     private String bio;
     private int ordersAmount;
     private double average;
@@ -9,11 +10,20 @@ public class Worker {
     private int positiveGrades;
     private int negativeGrades;
 
-    public Worker() {
+    public String getLogin() {
+        return login;
     }
 
-    public int getWorker_id() {
-        return worker_id;
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getBio() {

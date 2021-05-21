@@ -2,6 +2,7 @@ package com.example.Broken_Hammer.dao;
 
 import com.example.Broken_Hammer.DBManager;
 import com.example.Broken_Hammer.entity.Order;
+import com.example.Broken_Hammer.entity.Worker;
 import com.example.Broken_Hammer.repository.OrderRepository;
 
 import javax.naming.NamingException;
@@ -32,9 +33,11 @@ public class OrderDAO implements OrderRepository {
 
 
     private final DBManager dbManager;
+    private final WorkerDAO workerDAO;
 
     public OrderDAO() {
         dbManager  = new DBManager();
+        workerDAO = new WorkerDAO();
     }
 
     @Override
@@ -160,9 +163,10 @@ public class OrderDAO implements OrderRepository {
         return order;
     }
 
-    public String getWorker(int orderId) {
-        String sql = "select login from users join orders on worker_id = users.id where orders.id = ?";
+    public Worker getWorker(int orderId) {
+        String sql = "select login, users.id from users join orders on worker_id = users.id where orders.id = ?";
         ResultSet resultSet = null;
+        Worker worker = null;
 
         try(Connection connection = dbManager.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -172,7 +176,11 @@ public class OrderDAO implements OrderRepository {
             resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                return resultSet.getString("login");
+                worker = new Worker();
+
+                worker.setId(resultSet.getInt("id"));
+                worker.setLogin(resultSet.getString("login"));
+                return worker;
             }
 
         } catch (SQLException | NamingException e) {
@@ -200,21 +208,32 @@ public class OrderDAO implements OrderRepository {
         }
     }
 
-    public void updateFeedback(int rating, String comment, int orderID) {
+    public void updateFeedback(int rating, String comment, int orderID, int workerID) {
         String sql = "update orders set rating = ?, comment = ? where id = ?";
+        Connection connection = null;
 
-        try(Connection connection = dbManager.getConnection();
-        PreparedStatement statement = connection.prepareStatement(sql)) {
+        try {
+            connection = dbManager.getConnection();
+            connection.setAutoCommit(false);
+            connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
+            PreparedStatement statement = connection.prepareStatement(sql);
             int k = 0;
             statement.setInt(++k, rating);
             statement.setString(++k, comment);
             statement.setInt(++k, orderID);
 
             statement.execute();
+            workerDAO.updateWorkerAfterFeedback(connection, rating, workerID);
 
+            connection.commit();
         } catch (SQLException | NamingException e) {
-            e.printStackTrace();
+            try {
+                assert connection != null;
+                connection.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
