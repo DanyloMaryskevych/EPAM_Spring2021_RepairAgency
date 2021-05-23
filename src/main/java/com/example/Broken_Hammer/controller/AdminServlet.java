@@ -1,43 +1,41 @@
 package com.example.Broken_Hammer.controller;
 
-import com.example.Broken_Hammer.dao.CustomerDAO;
 import com.example.Broken_Hammer.dao.OrderDAO;
-import com.example.Broken_Hammer.dao.UserDAO;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 
-@WebServlet(name = "CustomerServlet", value = "/customer")
-public class CustomerServlet extends HttpServlet {
-    private CustomerDAO customerDAO;
-    private UserDAO userDAO;
+@WebServlet(name = "AdminServlet", value = "/admin")
+public class AdminServlet extends HttpServlet {
     private OrderDAO orderDAO;
 
     @Override
-    public void init() {
-        customerDAO = new CustomerDAO();
-        userDAO = new UserDAO();
+    public void init() throws ServletException {
         orderDAO = new OrderDAO();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        request.setAttribute("workers_list", userDAO.getWorkers());
 
-        Integer userID = (Integer) session.getAttribute("userID");
+        String sort = request.getParameter("sort");
+        String order = request.getParameter("order");
 
-        request.setAttribute("balance", customerDAO.getBalance(userID));
         int startPage = Integer.parseInt(request.getParameter("page"));
         int start = (startPage - 1) * OrderDAO.LIMIT;
-        int pages = orderDAO.amountOfPages("Customer", userID);
+        int pages = orderDAO.amountOfPages("Admin", 0);
 
         request.setAttribute("pages", pages);
-        request.setAttribute("orders_list", orderDAO.getOrdersByCustomersId(userID, start));
+        request.setAttribute("orders_list", orderDAO.getAllOrders(sort, order, start));
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/orders.jsp");
         dispatcher.forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
     }
 }

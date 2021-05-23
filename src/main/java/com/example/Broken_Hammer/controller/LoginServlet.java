@@ -40,10 +40,17 @@ public class LoginServlet extends HttpServlet {
         session.setAttribute("userID", id);
         session.setAttribute("role", role);
 
-        if (role.equals("Customer")) {
-            response.sendRedirect("customer?page=1");
+        switch (role) {
+            case "Customer":
+                response.sendRedirect("customer?page=1");
+                break;
+            case "Worker":
+                response.sendRedirect("welcome_worker.jsp");
+                break;
+            case "Admin":
+                response.sendRedirect("admin?page=1&sort=data&order=desc");
+                break;
         }
-        else if (role.equals("Worker")) response.sendRedirect("welcome_worker.jsp");
 
     }
 }

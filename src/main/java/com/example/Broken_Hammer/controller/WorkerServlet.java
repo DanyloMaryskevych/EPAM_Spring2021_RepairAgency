@@ -21,13 +21,9 @@ public class WorkerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String sort = request.getParameter("sort_by");
-
-        System.out.println(sort);
-
         List<Worker> workers = workerDAO.getWorkers(sort);
 
         request.setAttribute("bh_workers_list", workers);
-
         request.getRequestDispatcher("/workers.jsp").forward(request, response);
     }
 

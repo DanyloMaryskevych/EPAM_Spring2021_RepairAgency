@@ -46,9 +46,6 @@ public class WorkerDAO implements WorkerRepository {
         try (Connection connection = dbManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            //statement.setString(1, sort);
-            System.out.println(sql);
-
             resultSet = statement.executeQuery();
 
             while (resultSet.next()) {

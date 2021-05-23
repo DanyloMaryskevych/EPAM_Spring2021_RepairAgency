@@ -14,7 +14,7 @@
 <%
     response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 
-    if (session.getAttribute("id") != session.getId() || !session.getAttribute("role").equals("Customer")) {
+    if (session.getAttribute("id") != session.getId()) {
         response.sendRedirect("index.jsp");
     }
 %>
@@ -22,6 +22,7 @@
 
 <%--@elvariable id="temp_order" type="com.example.Broken_Hammer.entity.Order"--%>
 <%--@elvariable id="temp_worker" type="com.example.Broken_Hammer.entity.Worker"--%>
+<%--@elvariable id="role" type="java.lang.String"--%>
 
 <div class="container">
 
@@ -52,8 +53,8 @@
 
             <%--Performance status--%>
             <div class="row">
-                <div class="col">Performance status</div>
-                <div class="col d-flex align-items-center">
+                <div class="col-6">Performance status</div>
+                <div class="col-3 d-flex align-items-center">
                     <c:choose>
                         <c:when test="${temp_order.performanceStatus == 'Not started'}">
                             <c:set value="badge-secondary" var="badge_class"/>
@@ -70,6 +71,12 @@
                         </c:when>
                     </c:choose>
                     <span class="badge badge-pill ${badge_class}">${temp_order.performanceStatus}</span>
+                </div>
+
+                <div class="col-3">
+                    <c:if test="${role == 'Admin'}">
+                        <button class="btn btn-sm btn-danger">Reject</button>
+                    </c:if>
                 </div>
             </div>
 
@@ -112,11 +119,49 @@
 
             <%--Price--%>
             <div class="row mt-3">
-                <div class="col">Price</div>
-                <div class="col d-flex align-items-center">
+                <div class="col-6">Price</div>
+                <div class="col-6 d-flex align-items-center">
                     <c:choose>
                         <c:when test="${temp_order.price == 0}">
                             <span class="badge badge-pill badge-secondary">Not specified</span>
+
+                            <div>
+                                <c:if test="${role == 'Admin'}">
+                                    <button class="ml-5 btn btn-sm btn-success" data-toggle="modal"
+                                            data-target="#exampleModal">
+                                        Set Price
+                                    </button>
+                                </c:if>
+                            </div>
+
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="price">Modal title</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="post" action="order">
+                                                <div class="form-group">
+                                                    <label for="price_set">Enter the price: </label>
+                                                    <input name="price" class="form-control" type="text" id="price_set">
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <input class="invisible" name="status" value="price">
+                                                    <input class="invisible" name="orderID" value="${temp_order.id}">
+                                                    <input type="submit" class="btn btn-primary" value="Save">
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
                         </c:when>
                         <c:otherwise>
                             ${temp_order.price}$
@@ -150,9 +195,9 @@
                                             </div>
 
                                             <div class="modal-footer">
-                                                <input class="invisible" name="status" value="paid">
-                                                <input class="invisible" name="price" value="${temp_order.price}">
-                                                <input class="invisible" name="orderID" value="${temp_order.id}">
+                                                <input class="invisible disabled" name="status" value="paid">
+                                                <input class="invisible disabled" name="price" value="${temp_order.price}">
+                                                <input class="invisible disabled" name="orderID" value="${temp_order.id}">
                                                 <button class="btn btn-danger" data-dismiss="modal">No</button>
                                                 <input type="submit" value="Yes" class="btn btn-success"/>
                                             </div>
@@ -194,7 +239,8 @@
                     <div class="row">
                         <div class="mt-2 mb-2 col-1 d-flex align-items-center">
                             <c:forEach begin="1" end="${temp_order.rating}" varStatus="loop">
-                                <img width="35" height="35" src="https://truebluetour.com/wp-content/uploads/2017/10/PNGPIX-COM-Star-Vector-PNG-Transparent-Image.png">
+                                <img width="35" height="35"
+                                     src="https://truebluetour.com/wp-content/uploads/2017/10/PNGPIX-COM-Star-Vector-PNG-Transparent-Image.png">
                             </c:forEach>
                         </div>
                     </div>

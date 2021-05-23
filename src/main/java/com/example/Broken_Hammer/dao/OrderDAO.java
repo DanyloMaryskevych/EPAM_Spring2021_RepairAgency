@@ -17,6 +17,7 @@ import java.util.Map;
 import static com.example.Broken_Hammer.dao.UserDAO.close;
 
 public class OrderDAO implements OrderRepository {
+    public static final int LIMIT = 7;
     public static final String ORDERS_TABLE = "orders";
     public static final String ID_COLUMN = "id";
     public static final String CUSTOMER_ID_COLUMN = "customer_id";
@@ -65,12 +66,12 @@ public class OrderDAO implements OrderRepository {
         }
     }
 
-    public List<Order> getOrdersByCustomersId(int id, int start, int limit) {
+    public List<Order> getOrdersByCustomersId(int id, int start) {
         List<Order> orders = new ArrayList<>();
         ResultSet resultSet = null;
 
         String sql = "select id, worker_id, title, description, payment_status, " +
-                "performance_status, price from orders where customer_id = ? order by id desc limit ?, ?";
+                "performance_status, price from orders where customer_id = ? order by id desc limit ?, " + LIMIT;
 
         try(Connection connection = dbManager.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -78,20 +79,19 @@ public class OrderDAO implements OrderRepository {
             int k = 0;
             statement.setInt(++k, id);
             statement.setInt(++k, start);
-            statement.setInt(++k, limit);
 
             resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
                 Order order = new Order();
 
-                order.setId(resultSet.getInt("id"));
-                order.setWorkerId(resultSet.getInt("worker_id"));
-                order.setTitle(resultSet.getString("title"));
-                order.setDescription(resultSet.getString("description"));
-                order.setPaymentStatus(resultSet.getString("payment_status"));
-                order.setPerformanceStatus(resultSet.getString("performance_status"));
-                order.setPrice(resultSet.getInt("price"));
+                order.setId(resultSet.getInt(ID_COLUMN));
+                order.setWorkerId(resultSet.getInt(WORKER_ID_COLUMN));
+                order.setTitle(resultSet.getString(TITLE_COLUMN));
+                order.setDescription(resultSet.getString(DESCRIPTION_COLUMN));
+                order.setPaymentStatus(resultSet.getString(PAYMENT_STATUS_COLUMN));
+                order.setPerformanceStatus(resultSet.getString(PERFORMANCE_STATUS_COLUMN));
+                order.setPrice(resultSet.getInt(PRICE_COLUMN));
 
                 orders.add(order);
             }
@@ -105,15 +105,53 @@ public class OrderDAO implements OrderRepository {
         return orders;
     }
 
-    public int amountOfPages(int limit, int userID) {
-        String sql = "select ceiling(count(id) / ?)  as pages from orders where customer_id = ?";
+    public List<Order> getAllOrders(String sort, String order, int start) {
+        List<Order> orders = new ArrayList<>();
+        ResultSet resultSet = null;
+
+        String sql = "select id, date, worker_id, title, description, payment_status, " +
+                "performance_status, price from orders order by ? " + order + " limit ?, " + LIMIT;
+
+        try(Connection connection = dbManager.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, sort);
+            statement.setInt(2, start);
+
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Order orderObj = new Order();
+
+                orderObj.setId(resultSet.getInt(ID_COLUMN));
+                orderObj.setTitle(resultSet.getString(TITLE_COLUMN));
+                orderObj.setDescription(resultSet.getString(DESCRIPTION_COLUMN));
+                orderObj.setDate(resultSet.getDate(DATE_COLUMN));
+                orderObj.setWorkerId(resultSet.getInt(WORKER_ID_COLUMN));
+                orderObj.setPaymentStatus(resultSet.getString(PAYMENT_STATUS_COLUMN));
+                orderObj.setPerformanceStatus(resultSet.getString(PERFORMANCE_STATUS_COLUMN));
+                orderObj.setPrice(resultSet.getInt(PRICE_COLUMN));
+
+                orders.add(orderObj);
+            }
+
+        } catch (SQLException | NamingException e) {
+            e.printStackTrace();
+        } finally {
+            close(resultSet);
+        }
+
+        return orders;
+    }
+
+    public int amountOfPages(String role, int userID) {
+        String sql = amountOfPagesSQLQuery(role, userID);
         ResultSet resultSet = null;
 
         try(Connection connection = dbManager.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, limit);
-            statement.setInt(2, userID);
+            statement.setInt(1, LIMIT);
 
             resultSet = statement.executeQuery();
 
@@ -128,6 +166,25 @@ public class OrderDAO implements OrderRepository {
         }
 
         return 1;
+    }
+
+    private String amountOfPagesSQLQuery(String role, int id) {
+        StringBuilder sql = new StringBuilder("select ceiling(count(id) / ?) as pages from orders");
+
+        if (role.equals("Admin")) return sql.toString();
+
+        switch (role) {
+            case "Customer": {
+                sql.append(" where customer_id = ").append(id);
+                break;
+            }
+            case "Worker": {
+                sql.append(" where worker_id = ").append(id);
+                break;
+            }
+        }
+
+        return sql.toString();
     }
 
     public Order getOrderForCustomerById(int orderId) {
@@ -201,6 +258,23 @@ public class OrderDAO implements OrderRepository {
             statement.setString(1, status);
             statement.setInt(2, orderID);
 
+            statement.execute();
+
+        } catch (SQLException | NamingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePrice(int price, int orderID) {
+        String sql = "update orders set price = ?,\n" +
+                "payment_status = 'Waiting for payment'\n" +
+                "where id = ?";
+
+        try(Connection connection = dbManager.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, price);
+            statement.setInt(2, orderID);
             statement.execute();
 
         } catch (SQLException | NamingException e) {

@@ -33,8 +33,6 @@ public class OrderServlet extends HttpServlet {
         order.setId(orderID);
 
         Worker worker = orderDAO.getWorker(orderID);
-        System.out.println(worker.getLogin());
-        System.out.println(worker.getId());
         Integer userID = (Integer) session.getAttribute("userID");
         request.setAttribute("balance", customerDAO.getBalance(userID));
 
@@ -43,11 +41,11 @@ public class OrderServlet extends HttpServlet {
         request.setAttribute("payment", payment);
         request.setAttribute("temp_order", order);
         request.setAttribute("temp_worker", worker);
-        request.getRequestDispatcher("order.jsp").forward(request, response);
+        request.getRequestDispatcher("temp_order.jsp").forward(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         Integer userID = (Integer) session.getAttribute("userID");
 
@@ -81,6 +79,13 @@ public class OrderServlet extends HttpServlet {
 
                 response.sendRedirect("order?orderID=" + orderID);
                 break;
+            }
+            case "price": {
+                int orderID = Integer.parseInt(request.getParameter("orderID"));
+                int price = Integer.parseInt(request.getParameter("price"));
+
+                orderDAO.updatePrice(price, orderID);
+                response.sendRedirect("order?orderID=" + orderID);
             }
         }
 
