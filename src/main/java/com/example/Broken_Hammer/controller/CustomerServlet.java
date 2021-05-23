@@ -25,7 +25,6 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        request.setAttribute("workers_list", userDAO.getWorkers());
 
         Integer userID = (Integer) session.getAttribute("userID");
 
@@ -34,6 +33,7 @@ public class CustomerServlet extends HttpServlet {
         int start = (startPage - 1) * OrderDAO.LIMIT;
         int pages = orderDAO.amountOfPages("Customer", userID);
 
+        request.setAttribute("workers_list", userDAO.getWorkers());
         request.setAttribute("pages", pages);
         request.setAttribute("orders_list", orderDAO.getOrdersByCustomersId(userID, start));
 

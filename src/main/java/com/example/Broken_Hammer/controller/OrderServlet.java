@@ -2,6 +2,8 @@ package com.example.Broken_Hammer.controller;
 
 import com.example.Broken_Hammer.dao.CustomerDAO;
 import com.example.Broken_Hammer.dao.OrderDAO;
+import com.example.Broken_Hammer.dao.UserDAO;
+import com.example.Broken_Hammer.dao.WorkerDAO;
 import com.example.Broken_Hammer.entity.Order;
 import com.example.Broken_Hammer.entity.Worker;
 
@@ -10,17 +12,20 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Map;
 
 @WebServlet(name = "OrderServlet", value = "/order")
 public class OrderServlet extends HttpServlet {
     private OrderDAO orderDAO;
     private CustomerDAO customerDAO;
+    private UserDAO userDAO;
+    private WorkerDAO workerDAO;
 
     @Override
     public void init() throws ServletException {
         orderDAO = new OrderDAO();
         customerDAO = new CustomerDAO();
+        userDAO = new UserDAO();
+        workerDAO = new WorkerDAO();
     }
 
     @Override
@@ -29,7 +34,7 @@ public class OrderServlet extends HttpServlet {
 
         int orderID = Integer.parseInt(request.getParameter("orderID"));
 
-        Order order = orderDAO.getOrderForCustomerById(orderID);
+        Order order = orderDAO.getOrderById(orderID);
         order.setId(orderID);
 
         Worker worker = orderDAO.getWorker(orderID);
@@ -38,6 +43,8 @@ public class OrderServlet extends HttpServlet {
 
         String payment = request.getParameter("payment");
 
+        request.setAttribute("expected_worker", workerDAO.getWorkerById(order.getExpectedWorker()));
+        request.setAttribute("workers_list", userDAO.getWorkers());
         request.setAttribute("payment", payment);
         request.setAttribute("temp_order", order);
         request.setAttribute("temp_worker", worker);
@@ -86,6 +93,15 @@ public class OrderServlet extends HttpServlet {
 
                 orderDAO.updatePrice(price, orderID);
                 response.sendRedirect("order?orderID=" + orderID);
+                break;
+            }
+            case "worker": {
+                int orderID = Integer.parseInt(request.getParameter("orderID"));
+                int workerID = Integer.parseInt(request.getParameter("workerID"));
+
+                orderDAO.updateWorkerForOrder(workerID, orderID);
+                response.sendRedirect("order?orderID=" + orderID);
+                break;
             }
         }
 

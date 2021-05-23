@@ -1,5 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <title>Order</title>
@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="CSS/rating.css">
+    <link rel="stylesheet" href="CSS/order_prop.css">
 </head>
 <body>
 
@@ -19,6 +20,17 @@
     }
 %>
 <%@ include file="header.jsp" %>
+
+<%--Constants--%>
+<c:set value="Admin" var="admin"/>
+<c:set value="Customer" var="customer"/>
+<c:set value="Worker" var="worker"/>
+
+<c:set value="Not started" var="not_started_perf_stat"/>
+<c:set value="In work" var="in_work_perf_stat"/>
+<c:set value="Done" var="done_perf_stat"/>
+<c:set value="Rejected" var="rejected_perf_stat"/>
+
 
 <%--@elvariable id="temp_order" type="com.example.Broken_Hammer.entity.Order"--%>
 <%--@elvariable id="temp_worker" type="com.example.Broken_Hammer.entity.Worker"--%>
@@ -53,31 +65,31 @@
 
             <%--Performance status--%>
             <div class="row">
-                <div class="col-6">Performance status</div>
-                <div class="col-3 d-flex align-items-center">
+                <div class="col">Performance status</div>
+                <div class="col d-flex align-items-center justify-content-between">
                     <c:choose>
-                        <c:when test="${temp_order.performanceStatus == 'Not started'}">
+                        <c:when test="${temp_order.performanceStatus == not_started_perf_stat}">
                             <c:set value="badge-secondary" var="badge_class"/>
                         </c:when>
-                        <c:when test="${temp_order.performanceStatus == 'In work'}">
+                        <c:when test="${temp_order.performanceStatus == in_work_perf_stat}">
                             <c:set value="badge-warning" var="badge_class"/>
                         </c:when>
-                        <c:when test="${temp_order.performanceStatus == 'Done'}">
+                        <c:when test="${temp_order.performanceStatus == done_perf_stat}">
                             <c:set value="badge-success" var="badge_class"/>
                             <c:set value="visible" var="feedback_button"/>
                         </c:when>
-                        <c:when test="${temp_order.performanceStatus == 'Rejected'}">
+                        <c:when test="${temp_order.performanceStatus == rejected_perf_stat}">
                             <c:set value="badge-danger" var="badge_class"/>
                         </c:when>
                     </c:choose>
                     <span class="badge badge-pill ${badge_class}">${temp_order.performanceStatus}</span>
-                </div>
 
-                <div class="col-3">
-                    <c:if test="${role == 'Admin'}">
+                    <c:if test="${role == admin && temp_order.performanceStatus == not_started_perf_stat}">
                         <button class="btn btn-sm btn-danger">Reject</button>
                     </c:if>
                 </div>
+
+
             </div>
 
             <%--Payment status--%>
@@ -106,11 +118,70 @@
             <%--Worker--%>
             <div class="row mt-3">
                 <div class="col">Worker</div>
-                <div class="col d-flex align-items-center">
+                <div class="col d-flex align-items-center justify-content-between">
                     <c:choose>
-
                         <c:when test="${temp_worker.login == null}">
-                            <span class="badge badge-pill badge-secondary">Not specified</span>
+                            <c:if test="${role == customer}">
+                                <span class="badge badge-pill badge-secondary">Not specified</span>
+                            </c:if>
+
+                            <c:if test="${role == admin}">
+                                <button class="btn btn-sm btn-info"
+                                data-toggle="modal" data-target="#set_worker">
+                                    Set Worker
+                                </button>
+
+                                <div class="modal fade" id="set_worker" aria-labelledby="set_worker_aria" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="set_worker_aria">Set worker</h5>
+                                            </div>
+
+                                            <div class="modal-body">
+                                                <div class="row mb-4">
+                                                    <div class="col-4 d-flex align-items-center">
+                                                        Expected worker:
+                                                    </div>
+                                                    <div class="col-3 d-flex align-items-center">
+                                                        ${expected_worker}
+                                                    </div>
+                                                    <div class="col-5">
+                                                        <form class="mb-0" method="post" action="order">
+                                                            <input class="invisible ghost" name="status" value="worker">
+                                                            <input class="invisible ghost" name="workerID" value="${temp_order.expectedWorker}">
+                                                            <input class="invisible ghost" name="orderID" value="${temp_order.id}">
+                                                            <input class="btn btn-success" type="submit" value="Confirm">
+                                                        </form>
+                                                    </div>
+                                                </div>
+
+                                                <form action="order" method="post">
+                                                    <div class="row w-50">
+                                                        <div class="col">
+                                                            <div class="input-group mb-3">
+                                                                Choose another
+                                                                <select class="custom-select" id="workers" name="workerID">
+                                                                        <%--<option selected value="0">Choose another</option>--%>
+                                                                        <%--@elvariable id="workers_list" type="java.util.List"--%>
+                                                                    <c:forEach var="temp_worker" items="${workers_list}">
+                                                                        <option value="${temp_worker.id}"> ${temp_worker.login} </option>
+                                                                    </c:forEach>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <input class="invisible ghost" name="status" value="worker">
+                                                    <input class="invisible ghost" name="orderID" value="${temp_order.id}">
+                                                    <input type="submit" class="btn btn-success" value="Save">
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:if>
                         </c:when>
                         <c:otherwise>${temp_worker.login}</c:otherwise>
                     </c:choose>
@@ -119,20 +190,21 @@
 
             <%--Price--%>
             <div class="row mt-3">
-                <div class="col-6">Price</div>
-                <div class="col-6 d-flex align-items-center">
+                <div class="col">Price</div>
+                <div class="col d-flex align-items-center">
                     <c:choose>
                         <c:when test="${temp_order.price == 0}">
-                            <span class="badge badge-pill badge-secondary">Not specified</span>
 
-                            <div>
-                                <c:if test="${role == 'Admin'}">
-                                    <button class="ml-5 btn btn-sm btn-success" data-toggle="modal"
-                                            data-target="#exampleModal">
-                                        Set Price
-                                    </button>
-                                </c:if>
-                            </div>
+                            <c:if test="${role == customer}">
+                                <span class="badge badge-pill badge-secondary">Not specified</span>
+                            </c:if>
+
+                            <c:if test="${role == admin}">
+                                <button class="btn btn-sm btn-success" data-toggle="modal"
+                                        data-target="#exampleModal">
+                                    Set Price
+                                </button>
+                            </c:if>
 
                             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                                  aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -152,8 +224,13 @@
                                                 </div>
 
                                                 <div class="modal-footer">
-                                                    <input class="invisible" name="status" value="price">
-                                                    <input class="invisible" name="orderID" value="${temp_order.id}">
+                                                    <label>
+                                                        <input class="invisible" name="status" value="price">
+                                                    </label>
+                                                    <label>
+                                                        <input class="invisible" name="orderID"
+                                                               value="${temp_order.id}">
+                                                    </label>
                                                     <input type="submit" class="btn btn-primary" value="Save">
                                                 </div>
                                             </form>
@@ -167,10 +244,12 @@
                             ${temp_order.price}$
 
                             <%--Pay button--%>
-                            <button class="btn btn-success btn-sm ml-3 ${button_v}"
-                                    data-toggle="modal" data-target="#payment">
-                                Pay
-                            </button>
+                            <c:if test="${role == customer}">
+                                <button class="btn btn-success btn-sm ml-3 ${button_v}"
+                                        data-toggle="modal" data-target="#payment">
+                                    Pay
+                                </button>
+                            </c:if>
 
                             <%--Image--%>
                             <img width="22" height="22" class="ml-3 ${image_v}"
@@ -195,9 +274,17 @@
                                             </div>
 
                                             <div class="modal-footer">
-                                                <input class="invisible disabled" name="status" value="paid">
-                                                <input class="invisible disabled" name="price" value="${temp_order.price}">
-                                                <input class="invisible disabled" name="orderID" value="${temp_order.id}">
+                                                <label>
+                                                    <input class="invisible disabled" name="status" value="paid">
+                                                </label>
+                                                <label>
+                                                    <input class="invisible disabled" name="price"
+                                                           value="${temp_order.price}">
+                                                </label>
+                                                <label>
+                                                    <input class="invisible disabled" name="orderID"
+                                                           value="${temp_order.id}">
+                                                </label>
                                                 <button class="btn btn-danger" data-dismiss="modal">No</button>
                                                 <input type="submit" value="Yes" class="btn btn-success"/>
                                             </div>
@@ -219,7 +306,7 @@
     <hr class="w-50 m-0 mt-3">
 
     <%--Description--%>
-    <div class="row w-50 mt-4">
+        <div class="row w-50 mt-4">
         <div class="col">
             <p class="font-italic">Description: </p>
             ${temp_order.description}

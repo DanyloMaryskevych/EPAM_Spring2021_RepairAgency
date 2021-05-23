@@ -89,4 +89,28 @@ public class WorkerDAO implements WorkerRepository {
         statement.execute();
 
     }
+
+    public String getWorkerById(int workerId) {
+        String sql = "select login from users where id = ?";
+        ResultSet resultSet = null;
+
+        try(Connection connection = dbManager.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, workerId);
+
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString(LOGIN_COLUMN);
+            }
+
+        } catch (SQLException | NamingException e) {
+            e.printStackTrace();
+        } finally {
+            close(resultSet);
+        }
+
+        return null;
+    }
+
 }
