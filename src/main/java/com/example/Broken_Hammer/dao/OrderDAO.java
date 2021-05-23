@@ -312,7 +312,7 @@ public class OrderDAO implements OrderRepository {
         }
     }
 
-    public void updateWorkerForOrder(int workerId, int orderId) {
+    public void updateWorker(int workerId, int orderId) {
         String sql = "update orders set worker_id = ? where id = ?";
 
         try(Connection connection = dbManager.getConnection();
@@ -321,6 +321,20 @@ public class OrderDAO implements OrderRepository {
             statement.setInt(1, workerId);
             statement.setInt(2, orderId);
 
+            statement.execute();
+
+        } catch (SQLException | NamingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateRejectedStatus(int orderID) {
+        String sql = "update orders set performance_status = 'Rejected' where id = ?";
+
+        try(Connection connection = dbManager.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, orderID);
             statement.execute();
 
         } catch (SQLException | NamingException e) {

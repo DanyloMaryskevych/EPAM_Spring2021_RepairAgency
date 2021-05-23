@@ -99,7 +99,13 @@ public class OrderServlet extends HttpServlet {
                 int orderID = Integer.parseInt(request.getParameter("orderID"));
                 int workerID = Integer.parseInt(request.getParameter("workerID"));
 
-                orderDAO.updateWorkerForOrder(workerID, orderID);
+                orderDAO.updateWorker(workerID, orderID);
+                response.sendRedirect("order?orderID=" + orderID);
+                break;
+            }
+            case "reject": {
+                int orderID = Integer.parseInt(request.getParameter("orderID"));
+                orderDAO.updateRejectedStatus(orderID);
                 response.sendRedirect("order?orderID=" + orderID);
                 break;
             }
