@@ -12,6 +12,7 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Map;
 
 @WebServlet(name = "OrderServlet", value = "/order")
 public class OrderServlet extends HttpServlet {
@@ -103,9 +104,11 @@ public class OrderServlet extends HttpServlet {
                 response.sendRedirect("order?orderID=" + orderID);
                 break;
             }
-            case "reject": {
+            case "performing": {
                 int orderID = Integer.parseInt(request.getParameter("orderID"));
-                orderDAO.updateRejectedStatus(orderID);
+                String performStatus = request.getParameter("perform_status");
+
+                orderDAO.updateRejectedStatus(performStatus, orderID);
                 response.sendRedirect("order?orderID=" + orderID);
                 break;
             }

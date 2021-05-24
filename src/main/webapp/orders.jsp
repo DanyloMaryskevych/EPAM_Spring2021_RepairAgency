@@ -28,7 +28,7 @@
             <button class="btn btn-success" data-toggle="modal" data-target="#new_order">New order</button>
         </div>
 
-        <%--    New order modal window--%>
+        <%--New order modal window--%>
         <div class="modal fade" id="new_order" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
 

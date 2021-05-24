@@ -66,12 +66,16 @@ public class OrderDAO implements OrderRepository {
         }
     }
 
-    public List<Order> getOrdersByCustomersId(int id, int start) {
+    public List<Order> getOrdersByUserId(String role, int id, int start) {
         List<Order> orders = new ArrayList<>();
         ResultSet resultSet = null;
 
+        String sqlRoleColumn = null;
+        if (role.equals("Customer")) sqlRoleColumn = CUSTOMER_ID_COLUMN;
+        else if (role.equals("Worker")) sqlRoleColumn = WORKER_ID_COLUMN;
+
         String sql = "select id, worker_id, title, description, payment_status, " +
-                "performance_status, price from orders where customer_id = ? order by id desc limit ?, " + LIMIT;
+                "performance_status, price from orders where " + sqlRoleColumn + " = ? order by id desc limit ?, " + LIMIT;
 
         try(Connection connection = dbManager.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -328,13 +332,14 @@ public class OrderDAO implements OrderRepository {
         }
     }
 
-    public void updateRejectedStatus(int orderID) {
-        String sql = "update orders set performance_status = 'Rejected' where id = ?";
+    public void updateRejectedStatus(String performStatus, int orderID) {
+        String sql = "update orders set performance_status = ? where id = ?";
 
         try(Connection connection = dbManager.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, orderID);
+            statement.setString(1, performStatus);
+            statement.setInt(2, orderID);
             statement.execute();
 
         } catch (SQLException | NamingException e) {
