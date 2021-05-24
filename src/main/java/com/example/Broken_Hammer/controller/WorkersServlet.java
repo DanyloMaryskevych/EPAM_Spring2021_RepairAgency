@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet(name = "OurWorkersServlet", value = "/workers")
-public class WorkerServlet extends HttpServlet {
+public class WorkersServlet extends HttpServlet {
     private WorkerDAO workerDAO;
 
     @Override

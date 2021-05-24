@@ -15,7 +15,7 @@
                                 <a class="nav-link btn btn-light" href="index.jsp">Home</a>
                             </li>
                             <li style="margin-left: 5px" class="nav-item active">
-                                <a class="nav-link btn btn-light" href="workers?sort_by=id">BH Workers</a>
+                                <a class="nav-link btn btn-light" href="workers?sort_by=orders_amount">BH Workers</a>
                             </li>
                             <c:choose>
                                 <c:when test="${role == 'Customer'}">

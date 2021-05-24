@@ -37,6 +37,8 @@ public class WorkerDAO implements WorkerRepository {
     }
 
     public List<Worker> getWorkers(String sort) {
+        if (sort.equals("rating")) sort = WILSON_SCORE_COLUMN;
+
         String sql = "select login, worker_id, bio, orders_amount, average, wilson_score " +
                 "from workers_data join users u on u.id = workers_data.worker_id order by " + sort + " desc ";
 
@@ -111,6 +113,20 @@ public class WorkerDAO implements WorkerRepository {
         }
 
         return null;
+    }
+
+    public void updateOrdersCounter(int workerID) {
+        String sql = "update workers_data set orders_amount = orders_amount + 1 where worker_id = ?";
+
+        try(Connection connection = dbManager.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, workerID);
+            statement.execute();
+
+        } catch (SQLException | NamingException e) {
+            e.printStackTrace();
+        }
     }
 
 }

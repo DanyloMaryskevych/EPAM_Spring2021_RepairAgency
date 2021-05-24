@@ -60,12 +60,12 @@ public class OrderServlet extends HttpServlet {
         String status = request.getParameter("status");
 
         switch (status) {
-            case "new_order" : {
+            case "new_order": {
                 orderDAO.addOrder(userID, request.getParameterMap());
-                response.sendRedirect("customer?page=1");
+                response.sendRedirect("profile?page=1");
                 break;
             }
-            case "paid" : {
+            case "paid": {
                 int orderID = Integer.parseInt(request.getParameter("orderID"));
                 int price = Integer.parseInt(request.getParameter("price"));
                 boolean payment = true;
@@ -109,6 +109,9 @@ public class OrderServlet extends HttpServlet {
                 String performStatus = request.getParameter("perform_status");
 
                 orderDAO.updateRejectedStatus(performStatus, orderID);
+
+                if (performStatus.equals("Done")) workerDAO.updateOrdersCounter((Integer) session.getAttribute("userID"));
+
                 response.sendRedirect("order?orderID=" + orderID);
                 break;
             }

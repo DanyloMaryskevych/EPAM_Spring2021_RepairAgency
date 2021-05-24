@@ -147,7 +147,7 @@
         <c:set value="${param.get('page')}" var="current_page"/>
 
         <%--First page--%>
-        <li class="page-item"><a class="page-link" href="customer?page=1">First</a></li>
+        <li class="page-item"><a class="page-link" href="profile?page=1">First</a></li>
 
         <%--Disable 'Previous' page--%>
         <c:if test="${current_page == 1}">
@@ -156,12 +156,12 @@
 
         <%--Previous page--%>
         <li class="page-item ${disabled_previous}">
-            <a class="page-link" href="customer?page=${current_page - 1}">Previous</a>
+            <a class="page-link" href="profile?page=${current_page - 1}">Previous</a>
         </li>
 
         <%--All pages--%>
         <c:forEach begin="1" end="${pages}" varStatus="loop">
-            <li class="page-item"><a class="page-link" href="customer?page=${loop.index}">${loop.index}</a></li>
+            <li class="page-item"><a class="page-link" href="profile?page=${loop.index}">${loop.index}</a></li>
         </c:forEach>
 
         <%--Disable 'Next' page--%>
@@ -171,11 +171,11 @@
 
         <%--Next page--%>
         <li class="page-item ${disabled_next}">
-            <a class="page-link" href="customer?page=${current_page + 1}">Next</a>
+            <a class="page-link" href="profile?page=${current_page + 1}">Next</a>
         </li>
 
         <%--Last page--%>
-        <li class="page-item"><a class="page-link" href="customer?page=${pages}">Last</a></li>
+        <li class="page-item"><a class="page-link" href="profile?page=${pages}">Last</a></li>
     </ul>
 </nav>
 

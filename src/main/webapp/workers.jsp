@@ -30,7 +30,7 @@
         </div>
 
         <div class="col-2">
-            <a href="workers?sort_by=average">
+            <a href="workers?sort_by=rating">
                 <button class="btn btn-secondary">Rating</button>
             </a>
         </div>
@@ -50,7 +50,14 @@
 
             <div class="col">
                 <span style="font-size: 2em; color: gold"><i class="fas fa-star"></i></span>
-                    <span style="font-size: 2em">${temp_worker.average}</span>
+                <c:choose>
+                    <c:when test="${temp_worker.average == 0}">
+                        <span style="font-size: 1.5em">None</span>
+                    </c:when>
+                    <c:otherwise>
+                        <span style="font-size: 2em">${temp_worker.average}</span>
+                    </c:otherwise>
+                </c:choose>
             </div>
 
         </div>
