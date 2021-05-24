@@ -41,13 +41,11 @@ public class LoginServlet extends HttpServlet {
         session.setAttribute("role", role);
 
         switch (role) {
-            case "Customer":
-                response.sendRedirect("customer?page=1");
+            case CUSTOMER:
+            case WORKER:
+                response.sendRedirect("profile?page=1");
                 break;
-            case "Worker":
-                response.sendRedirect("worker?page=1");
-                break;
-            case "Admin":
+            case ADMIN:
                 response.sendRedirect("admin?page=1&sort=data&order=desc");
                 break;
         }

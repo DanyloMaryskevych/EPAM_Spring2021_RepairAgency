@@ -141,7 +141,7 @@
 </div>
 
 <nav aria-label="Page navigation example">
-    <ul class="mt-5 pagination justify-content-center">
+    <ul class="mt-2 pagination justify-content-center">
 
         <%--Control current page--%>
         <c:set value="${param.get('page')}" var="current_page"/>

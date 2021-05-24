@@ -5,4 +5,8 @@ public interface Constants {
     String PASSWORD = "password";
     String CONFIRMED_PASSWORD = "password1";
     String ROLE = "role";
+
+    String ADMIN = "Admin";
+    String CUSTOMER = "Customer";
+    String WORKER = "Worker";
 }

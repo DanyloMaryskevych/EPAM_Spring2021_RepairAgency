@@ -20,7 +20,7 @@
                             <c:choose>
                                 <c:when test="${role == 'Customer'}">
                                     <li style="margin-left: 5px" class="nav-item active">
-                                        <a class="nav-link btn btn-light" href="customer?page=1">My Orders</a>
+                                        <a class="nav-link btn btn-light" href="profile?page=1">My Orders</a>
                                     </li>
                                 </c:when>
                             </c:choose>

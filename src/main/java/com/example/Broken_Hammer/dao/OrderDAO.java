@@ -17,7 +17,7 @@ import java.util.Map;
 import static com.example.Broken_Hammer.dao.UserDAO.close;
 
 public class OrderDAO implements OrderRepository {
-    public static final int LIMIT = 7;
+    public static final int LIMIT = 5;
     public static final String ORDERS_TABLE = "orders";
     public static final String ID_COLUMN = "id";
     public static final String CUSTOMER_ID_COLUMN = "customer_id";
