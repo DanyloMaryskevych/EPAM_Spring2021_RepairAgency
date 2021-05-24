@@ -59,9 +59,8 @@
         </c:when>
     </c:choose>
 
+    <%--Orders number and title--%>
     <div class="row mt-5 w-50">
-
-        <%--Orders number and title--%>
         <div class="col d-flex align-items-center">
             <h4>Order # ${temp_order.id}</h4>
         </div>
@@ -69,10 +68,11 @@
             <h3>&quot;${temp_order.title}&quot;</h3>
         </div>
     </div>
+
     <hr class="w-50 m-0 mt-3">
 
+    <%--Order Main Info--%>
     <div class="row w-50 mt-4">
-
         <div class="col">
 
             <%--Performance status--%>
@@ -88,7 +88,9 @@
                         </c:when>
                         <c:when test="${temp_order.performanceStatus == done_perf_stat}">
                             <c:set value="badge-success" var="badge_class"/>
-                            <c:set value="visible" var="feedback_button"/>
+                            <c:if test="${role == customer}">
+                                <c:set value="visible" var="feedback_button"/>
+                            </c:if>
                         </c:when>
                         <c:when test="${temp_order.performanceStatus == rejected_perf_stat}">
                             <c:set value="badge-danger" var="badge_class"/>
@@ -103,6 +105,7 @@
                             <jsp:param name="btn_text" value="Start"/>
                             <jsp:param name="title_text" value="Start working?"/>
                             <jsp:param name="orderID" value="${temp_order.id}"/>
+                            <jsp:param name="status" value="performing"/>
                             <jsp:param name="perform_status" value="${in_work_perf_stat}"/>
                         </jsp:include>
                     </c:if>
@@ -114,17 +117,20 @@
                             <jsp:param name="btn_text" value="Done"/>
                             <jsp:param name="title_text" value="Finish working?"/>
                             <jsp:param name="orderID" value="${temp_order.id}"/>
+                            <jsp:param name="status" value="performing"/>
                             <jsp:param name="perform_status" value="${done_perf_stat}"/>
                         </jsp:include>
                     </c:if>
 
                     <%--Reject performing button--%>
-                    <c:if test="${role == admin && temp_order.paymentStatus != paid_pay_stat}">
+                    <c:if test="${role == admin && temp_order.paymentStatus != paid_pay_stat
+                                    && temp_order.performanceStatus != rejected_perf_stat}">
                         <jsp:include page="fragments/performance_button.jsp">
                             <jsp:param name="btn_class" value="btn-danger"/>
                             <jsp:param name="btn_text" value="Reject"/>
                             <jsp:param name="title_text" value="Reject order?"/>
                             <jsp:param name="orderID" value="${temp_order.id}"/>
+                            <jsp:param name="status" value="performing"/>
                             <jsp:param name="perform_status" value="${rejected_perf_stat}"/>
                         </jsp:include>
                     </c:if>
@@ -181,38 +187,46 @@
                                             </div>
 
                                             <div class="modal-body">
-                                                <div class="row mb-4">
-                                                    <div class="col-4 d-flex align-items-center">
-                                                        Expected worker:
-                                                    </div>
-                                                    <div class="col-3 d-flex align-items-center">
-                                                            ${expected_worker}
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <form class="mb-0" method="post" action="order">
-                                                            <label>
-                                                                <input class="invisible ghost" name="status"
-                                                                       value="worker">
-                                                            </label>
-                                                            <label>
-                                                                <input class="invisible ghost" name="workerID"
-                                                                       value="${temp_order.expectedWorker}">
-                                                            </label>
-                                                            <label>
-                                                                <input class="invisible ghost" name="orderID"
-                                                                       value="${temp_order.id}">
-                                                            </label>
-                                                            <input class="btn btn-success" type="submit"
-                                                                   value="Confirm">
-                                                        </form>
-                                                    </div>
-                                                </div>
 
-                                                <form action="order" method="post">
-                                                    <div class="row w-50">
-                                                        <div class="col">
+                                                <c:if test="${temp_order.expectedWorker != 0}">
+                                                    <div class="row mb-4">
+                                                        <div class="col-4 d-flex align-items-center">
+                                                            Expected worker:
+                                                        </div>
+                                                        <div class="col-3 d-flex align-items-center">
+                                                                ${expected_worker}
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <form class="mb-0" method="post" action="order">
+                                                                <label>
+                                                                    <input class="invisible ghost" name="status"
+                                                                           value="worker">
+                                                                </label>
+                                                                <label>
+                                                                    <input class="invisible ghost" name="workerID"
+                                                                           value="${temp_order.expectedWorker}">
+                                                                </label>
+                                                                <label>
+                                                                    <input class="invisible ghost" name="orderID"
+                                                                           value="${temp_order.id}">
+                                                                </label>
+                                                                <input class="btn btn-success" type="submit"
+                                                                       value="Confirm">
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </c:if>
+
+                                                <form class="mb-0" action="order" method="post">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <div class="mb-3">
+                                                                Choose worker
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-5">
                                                             <div class="input-group mb-3">
-                                                                Choose another
                                                                 <label for="workers"></label>
                                                                 <select class="custom-select" id="workers"
                                                                         name="workerID">
@@ -225,16 +239,19 @@
                                                                 </select>
                                                             </div>
                                                         </div>
+
+                                                        <div class="col-3">
+                                                            <label>
+                                                                <input class="invisible ghost" name="status" value="worker">
+                                                            </label>
+                                                            <label>
+                                                                <input class="invisible ghost" name="orderID"
+                                                                       value="${temp_order.id}">
+                                                            </label>
+                                                            <input type="submit" class="btn btn-success" value="Save">
+                                                        </div>
                                                     </div>
 
-                                                    <label>
-                                                        <input class="invisible ghost" name="status" value="worker">
-                                                    </label>
-                                                    <label>
-                                                        <input class="invisible ghost" name="orderID"
-                                                               value="${temp_order.id}">
-                                                    </label>
-                                                    <input type="submit" class="btn btn-success" value="Save">
                                                 </form>
 
                                             </div>
@@ -261,34 +278,46 @@
 
                             <c:if test="${role == admin}">
                                 <button class="btn btn-sm btn-success" data-toggle="modal"
-                                        data-target="#exampleModal" ${disable_button}>
+                                        data-target="#price" ${disable_button}>
                                     Set Price
                                 </button>
-                            </c:if>
 
-                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade" id="price" tabindex="-1" role="dialog"
+                                 aria-labelledby="price_aria" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="price">Modal title</h5>
+                                            <h5 class="modal-title" id="price_aria">Price</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <div class="modal-body">
+                                        <div class="modal-body pb-0">
                                             <form method="post" action="order">
                                                 <div class="form-group">
-                                                    <label for="price_set">Enter the price: </label>
-                                                    <input name="price" class="form-control" type="text" id="price_set">
+                                                    <div class="row">
+                                                        <div class="col-4 d-flex align-items-center">
+                                                            <label class="pl-3 m-0" for="price_set">Enter the price: </label>
+                                                        </div>
+
+                                                        <div class="col-3">
+                                                            <input name="price" class="form-control" type="text" id="price_set">
+                                                        </div>
+
+                                                        <div class="col-2 d-flex align-items-center">
+                                                            <span style="font-size: 2em; color: green">
+                                                                <i class="fas fa-dollar-sign"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                 </div>
 
-                                                <div class="modal-footer">
+                                                <div class="modal-footer pb-0">
                                                     <label>
-                                                        <input class="invisible" name="status" value="price">
+                                                        <input class="invisible ghost" name="status" value="price">
                                                     </label>
                                                     <label>
-                                                        <input class="invisible" name="orderID"
+                                                        <input class="invisible ghost" name="orderID"
                                                                value="${temp_order.id}">
                                                     </label>
                                                     <input type="submit" class="btn btn-primary" value="Save">
@@ -299,61 +328,27 @@
                                     </div>
                                 </div>
                             </div>
+                            </c:if>
+
                         </c:when>
                         <c:otherwise>
                             ${temp_order.price}$
 
                             <%--Pay button--%>
                             <c:if test="${role == customer}">
-                                <button class="btn btn-success btn-sm ml-3 ${button_v}"
-                                        data-toggle="modal" data-target="#payment">
-                                    Pay
-                                </button>
+                                <jsp:include page="fragments/performance_button.jsp">
+                                    <jsp:param name="btn_class" value="btn-success ml-3 ${button_v}"/>
+                                    <jsp:param name="btn_text" value="Pay"/>
+                                    <jsp:param name="title_text" value="Confirm payment ${temp_order.price}$ ?"/>
+                                    <jsp:param name="orderID" value="${temp_order.id}"/>
+                                    <jsp:param name="status" value="paid"/>
+                                    <jsp:param name="price" value="${temp_order.price}"/>
+                                </jsp:include>
                             </c:if>
 
                             <%--Image--%>
                             <img style="width: 22px; height: 22px" class="ml-3 ${image_v}"
-                                 src="data:image/png;base64,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"
-                                 alt="hammer">
-
-                            <%--Modal window for paying--%>
-                            <div class="modal fade" id="payment" tabindex="-1" role="dialog"
-                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered bd-example-modal-sm" role="document">
-                                    <div class="modal-content">
-
-                                        <form action="order" method="post">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">
-                                                    Confirm payment: ${temp_order.price}$ ?
-                                                </h5>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-
-                                            <div class="modal-footer">
-                                                <label>
-                                                    <input class="invisible disabled" name="status" value="paid">
-                                                </label>
-                                                <label>
-                                                    <input class="invisible disabled" name="price"
-                                                           value="${temp_order.price}">
-                                                </label>
-                                                <label>
-                                                    <input class="invisible disabled" name="orderID"
-                                                           value="${temp_order.id}">
-                                                </label>
-                                                <button class="btn btn-danger" data-dismiss="modal">No</button>
-                                                <input type="submit" value="Yes" class="btn btn-success"/>
-                                            </div>
-
-                                        </form>
-
-                                    </div>
-                                </div>
-                            </div>
+                                 src="data:image/png;base64,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" alt="hammer">
 
                         </c:otherwise>
                     </c:choose>
@@ -361,8 +356,8 @@
             </div>
 
         </div>
-
     </div>
+
     <hr class="w-50 m-0 mt-3">
 
     <%--Description--%>
@@ -382,7 +377,7 @@
             <hr class="mt-3">
             <div class="row">
                 <div class="col">
-                    <p class="font-italic mb-0">My feedback: </p>
+                    <p class="font-italic mb-0">Feedback: </p>
 
                     <div class="row">
                         <div class="mt-2 mb-2 col-1 d-flex align-items-center">
@@ -403,7 +398,7 @@
         </c:if>
     </div>
 
-    <!--Feedback Modal -->
+    <!--Feedback Modal Window-->
     <div class="modal fade" id="feedback" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">

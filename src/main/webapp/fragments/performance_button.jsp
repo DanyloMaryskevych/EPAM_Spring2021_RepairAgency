@@ -18,15 +18,13 @@
 
             <div class="modal-footer">
                 <form action="order" method="post">
-                    <label>
-                        <input class="invisible ghost" name="orderID" value="${param.orderID}">
-                    </label>
-                    <label>
-                        <input class="invisible ghost" name="status" value="performing">
-                    </label>
-                    <label>
-                        <input class="invisible ghost" name="perform_status" value="${param.perform_status}">
-                    </label>
+                    <label><input class="invisible ghost" name="orderID" value="${param.orderID}"></label>
+                    <label><input class="invisible ghost" name="status" value="${param.status}"></label>
+
+                    <%--Parameners, depends on status--%>
+                    <label><input class="invisible ghost" name="perform_status" value="${param.perform_status}"></label>
+                    <label><input class="invisible ghost" name="price" value="${param.price}"></label>
+
                     <input type="submit" class="btn btn-success" value="Yes">
                 </form>
             </div>

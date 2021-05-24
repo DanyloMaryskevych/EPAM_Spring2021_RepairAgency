@@ -47,7 +47,9 @@
                             <div class="row align-items-center w-75">
                                 <div class="col-8">
                                     <p class="m-0">Hello, ${username}!</p>
-                                    <p class="m-0">Your balance ${balance}$</p>
+                                    <c:if test="${role == 'Customer'}">
+                                        <p class="m-0">Your balance ${balance}$</p>
+                                    </c:if>
                                 </div>
 
                                 <div class="col-2">
