@@ -33,13 +33,8 @@ public class OrderDAO implements OrderRepository {
     public static final String COMMENT_COLUMN = "comment";
 
 
-    private final DBManager dbManager;
-    private final WorkerDAO workerDAO;
-
-    public OrderDAO() {
-        dbManager  = new DBManager();
-        workerDAO = new WorkerDAO();
-    }
+    private final DBManager dbManager = DBManager.getDBManager();
+    private final WorkerDAO workerDAO = DAOFactory.getWorkerDAO();
 
     @Override
     public void addOrder(int userID, Map<String, String[]> parametersMap) {

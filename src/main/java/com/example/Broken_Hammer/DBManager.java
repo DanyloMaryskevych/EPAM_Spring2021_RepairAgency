@@ -24,4 +24,8 @@ public class DBManager {
     public Connection getConnection() throws NamingException, SQLException {
         return getDataSource().getConnection();
     }
+
+    public static DBManager getDBManager() {
+        return new DBManager();
+    }
 }

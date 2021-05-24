@@ -18,15 +18,9 @@ public class UserDAO implements UserRepository {
     private static final String PASSWORD = "password";
     private static final String ROLE = "role";
 
-    private final DBManager dbManager;
-    private final CustomerDAO customerDAO;
-    private final WorkerDAO workerDAO;
-
-    public UserDAO() {
-        dbManager = new DBManager();
-        customerDAO = new CustomerDAO();
-        workerDAO = new WorkerDAO();
-    }
+    private final DBManager dbManager = DBManager.getDBManager();
+    private final CustomerDAO customerDAO = DAOFactory.getCustomerDAO();
+    private final WorkerDAO workerDAO = DAOFactory.getWorkerDAO();
 
     @Override
     public void addUser(Map<String, String[]> parametersMap) {

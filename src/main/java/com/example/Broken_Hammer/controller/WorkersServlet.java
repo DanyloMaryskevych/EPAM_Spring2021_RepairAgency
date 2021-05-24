@@ -1,5 +1,6 @@
 package com.example.Broken_Hammer.controller;
 
+import com.example.Broken_Hammer.dao.DAOFactory;
 import com.example.Broken_Hammer.dao.WorkerDAO;
 import com.example.Broken_Hammer.entity.Worker;
 
@@ -11,12 +12,7 @@ import java.util.List;
 
 @WebServlet(name = "OurWorkersServlet", value = "/workers")
 public class WorkersServlet extends HttpServlet {
-    private WorkerDAO workerDAO;
-
-    @Override
-    public void init() {
-        workerDAO = new WorkerDAO();
-    }
+    private final WorkerDAO workerDAO = DAOFactory.getWorkerDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

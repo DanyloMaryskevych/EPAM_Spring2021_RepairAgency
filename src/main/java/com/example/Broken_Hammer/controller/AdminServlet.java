@@ -1,5 +1,6 @@
 package com.example.Broken_Hammer.controller;
 
+import com.example.Broken_Hammer.dao.DAOFactory;
 import com.example.Broken_Hammer.dao.OrderDAO;
 
 import javax.servlet.*;
@@ -9,23 +10,20 @@ import java.io.IOException;
 
 @WebServlet(name = "AdminServlet", value = "/admin")
 public class AdminServlet extends HttpServlet {
-    private OrderDAO orderDAO;
-
-    @Override
-    public void init() throws ServletException {
-        orderDAO = new OrderDAO();
-    }
+    private final OrderDAO orderDAO = DAOFactory.getOrderDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+
+        Integer userID = (Integer) session.getAttribute("role");
 
         String sort = request.getParameter("sort");
         String order = request.getParameter("order");
 
         int startPage = Integer.parseInt(request.getParameter("page"));
         int start = (startPage - 1) * OrderDAO.LIMIT;
-        int pages = orderDAO.amountOfPages("Admin", 0);
+        int pages = orderDAO.amountOfPages("Admin", userID);
 
         request.setAttribute("pages", pages);
         request.setAttribute("orders_list", orderDAO.getAllOrders(sort, order, start));

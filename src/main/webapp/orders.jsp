@@ -20,7 +20,7 @@
 <%@ include file="header.jsp" %>
 <%--@elvariable id="orders_list" type="com.example.Broken_Hammer.entity.Order"--%>
 
-<div style="min-height: 65%; min-width: 75%" class="container">
+<div style="min-height: 60%; min-width: 75%" class="container">
 
     <%--@elvariable id="role" type="java.lang.String"--%>
     <c:if test="${role == 'Customer'}">

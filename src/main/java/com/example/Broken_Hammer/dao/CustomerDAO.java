@@ -12,13 +12,8 @@ import java.sql.SQLException;
 import static com.example.Broken_Hammer.dao.UserDAO.close;
 
 public class CustomerDAO implements CustomerRepository {
-    private final DBManager dbManager;
-    private final OrderDAO orderDAO;
-
-    public CustomerDAO() {
-        dbManager = new DBManager();
-        orderDAO = new OrderDAO();
-    }
+    private final DBManager dbManager = DBManager.getDBManager();
+    private final OrderDAO orderDAO = DAOFactory.getOrderDAO();
 
     @Override
     public void addCustomer(Connection connection, int id) {

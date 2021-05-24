@@ -1,9 +1,6 @@
 package com.example.Broken_Hammer.controller;
 
-import com.example.Broken_Hammer.dao.CustomerDAO;
-import com.example.Broken_Hammer.dao.OrderDAO;
-import com.example.Broken_Hammer.dao.UserDAO;
-import com.example.Broken_Hammer.dao.WorkerDAO;
+import com.example.Broken_Hammer.dao.*;
 import com.example.Broken_Hammer.entity.Order;
 import com.example.Broken_Hammer.entity.Worker;
 
@@ -16,18 +13,10 @@ import java.util.Map;
 
 @WebServlet(name = "OrderServlet", value = "/order")
 public class OrderServlet extends HttpServlet {
-    private OrderDAO orderDAO;
-    private CustomerDAO customerDAO;
-    private UserDAO userDAO;
-    private WorkerDAO workerDAO;
-
-    @Override
-    public void init() throws ServletException {
-        orderDAO = new OrderDAO();
-        customerDAO = new CustomerDAO();
-        userDAO = new UserDAO();
-        workerDAO = new WorkerDAO();
-    }
+    private final CustomerDAO customerDAO = DAOFactory.getCustomerDAO();
+    private final UserDAO userDAO = DAOFactory.getUserDAO();
+    private final OrderDAO orderDAO = DAOFactory.getOrderDAO();
+    private final WorkerDAO workerDAO = DAOFactory.getWorkerDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

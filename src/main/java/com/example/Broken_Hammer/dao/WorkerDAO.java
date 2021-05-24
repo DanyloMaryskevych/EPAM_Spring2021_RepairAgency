@@ -22,11 +22,7 @@ public class WorkerDAO implements WorkerRepository {
     public static final String AVERAGE_COLUMN = "average";
     public static final String WILSON_SCORE_COLUMN = "wilson_score";
 
-    private final DBManager dbManager;
-
-    public WorkerDAO() {
-        dbManager = new DBManager();
-    }
+    private final DBManager dbManager = DBManager.getDBManager();
 
     @Override
     public void addWorker(Connection connection, int id) throws SQLException {

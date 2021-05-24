@@ -1,6 +1,7 @@
 package com.example.Broken_Hammer.controller;
 
 import com.example.Broken_Hammer.dao.CustomerDAO;
+import com.example.Broken_Hammer.dao.DAOFactory;
 import com.example.Broken_Hammer.dao.OrderDAO;
 import com.example.Broken_Hammer.dao.UserDAO;
 
@@ -13,16 +14,9 @@ import static com.example.Broken_Hammer.Constants.*;
 
 @WebServlet(name = "UserServlet", value = "/profile")
 public class UserServlet extends HttpServlet {
-    private CustomerDAO customerDAO;
-    private UserDAO userDAO;
-    private OrderDAO orderDAO;
-
-    @Override
-    public void init() {
-        customerDAO = new CustomerDAO();
-        userDAO = new UserDAO();
-        orderDAO = new OrderDAO();
-    }
+    private final CustomerDAO customerDAO = DAOFactory.getCustomerDAO();
+    private final UserDAO userDAO = DAOFactory.getUserDAO();
+    private final OrderDAO orderDAO = DAOFactory.getOrderDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
