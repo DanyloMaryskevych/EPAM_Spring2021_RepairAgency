@@ -14,16 +14,12 @@ public class AdminServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-
-        Integer userID = (Integer) session.getAttribute("role");
-
         String sort = request.getParameter("sort");
         String order = request.getParameter("order");
 
         int startPage = Integer.parseInt(request.getParameter("page"));
         int start = (startPage - 1) * OrderDAO.LIMIT;
-        int pages = orderDAO.amountOfPages("Admin", userID);
+        int pages = orderDAO.amountOfPages("Admin", 0);
 
         request.setAttribute("pages", pages);
         request.setAttribute("orders_list", orderDAO.getAllOrders(sort, order, start));

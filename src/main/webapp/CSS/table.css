@@ -1,0 +1,13 @@
+table,
+thead,
+tr,
+tbody,
+th,
+td {
+    text-align: center;
+}
+
+.span_tag {
+    font-size: 1.4rem;
+    font-weight: bold
+}

@@ -7,6 +7,7 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="CSS/table.css">
 </head>
 <body>
 
@@ -18,7 +19,14 @@
     }
 %>
 <%@ include file="header.jsp" %>
-<%--@elvariable id="orders_list" type="com.example.Broken_Hammer.entity.Order"--%>
+<%--@elvariable id="orders_list" type="com.example.Broken_Hammer.entity.OrderDTO"--%>
+
+<c:set value="Admin" var="admin"/>
+<c:set value="Customer" var="customer"/>
+<c:set value="Worker" var="worker"/>
+
+<c:set value="text-decoration: none" var="none_line"/>
+<c:set value="color: yellowgreen" var="color"/>
 
 <div style="min-height: 60%; min-width: 75%" class="container">
 
@@ -92,20 +100,54 @@
     </c:if>
 
     <div class="m-4 w-75">
-        <h5>My Orders</h5>
+        <h2 class="mb-3">Orders</h2>
         <table class="table table-hover">
             <thead>
             <tr>
                 <th>Title</th>
-                <th>Date</th>
-                <th>Performance status</th>
-                <th>Payment status</th>
-                <th>Price</th>
+                <th>
+                    Date
+                    <a style="${none_line}; ${color}" href="admin?page=1&sort=date&order=asc">
+                        <span class="span_tag">&uarr;</span>
+                    </a>
+                    <a style="${none_line}; ${color}" href="admin?page=1&sort=date&order=desc">
+                        <span class="span_tag">&darr;</span>
+                    </a>
+                </th>
+                <th>
+                    Performance status
+                    <a style="${none_line}; ${color}" href="admin?page=1&sort=performance_status&order=asc">
+                        <span class="span_tag">&uarr;</span>
+                    </a>
+                    <a style="${none_line}; ${color}" href="admin?page=1&sort=performance_status&order=desc">
+                        <span class="span_tag">&darr;</span>
+                    </a>
+                </th>
+                <th>
+                    Payment status
+                    <a style="${none_line}; ${color}" href="admin?page=1&sort=payment_status&order=asc">
+                        <span class="span_tag">&uarr;</span>
+                    </a>
+                    <a style="${none_line}; ${color}" href="admin?page=1&sort=payment_status&order=desc">
+                        <span class="span_tag">&darr;</span>
+                    </a>
+                </th>
+                <th>
+                    Price
+                    <a style="${none_line}; ${color}" href="admin?page=1&sort=price&order=asc">
+                        <span class="span_tag">&uarr;</span>
+                    </a>
+                    <a style="${none_line}; ${color}" href="admin?page=1&sort=price&order=desc">
+                        <span class="span_tag">&darr;</span>
+                    </a>
+                </th>
+                <c:if test="${role == admin}">
+                    <th>Worker</th>
+                </c:if>
             </tr>
             </thead>
 
             <tbody>
-
 
             <c:forEach var="order" items="${orders_list}">
                 <tr>
@@ -126,12 +168,22 @@
                     <td>${order.paymentStatus}</td>
                     <c:choose>
                         <c:when test="${order.price == 0}">
-                            <td>Not specified</td>
+                            <td>&mdash;</td>
                         </c:when>
                         <c:otherwise>
                             <td>${order.price} $</td>
                         </c:otherwise>
                     </c:choose>
+                    <c:if test="${role == admin}">
+                        <c:choose>
+                            <c:when test="${order.workerName == null}">
+                                <td>&mdash;</td>
+                            </c:when>
+                            <c:otherwise>
+                                <td>${order.workerName}</td>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
                 </tr>
             </c:forEach>
             </tbody>
@@ -141,13 +193,23 @@
 </div>
 
 <nav aria-label="Page navigation example">
+    <c:choose>
+        <c:when test="${role == customer || role == worker}">
+            <c:set value="profile" var="servlet"/>
+        </c:when>
+
+        <c:when test="${role == admin}">
+            <c:set value="admin" var="servlet"/>
+        </c:when>
+    </c:choose>
     <ul class="mt-2 pagination justify-content-center">
+        <%--@elvariable id="pages" type="java.lang.Integer"--%>
 
         <%--Control current page--%>
         <c:set value="${param.get('page')}" var="current_page"/>
 
         <%--First page--%>
-        <li class="page-item"><a class="page-link" href="profile?page=1">First</a></li>
+        <li class="page-item"><a class="page-link" href="${servlet}?page=1">First</a></li>
 
         <%--Disable 'Previous' page--%>
         <c:if test="${current_page == 1}">
@@ -156,12 +218,12 @@
 
         <%--Previous page--%>
         <li class="page-item ${disabled_previous}">
-            <a class="page-link" href="profile?page=${current_page - 1}">Previous</a>
+            <a class="page-link" href="${servlet}?page=${current_page - 1}">Previous</a>
         </li>
 
         <%--All pages--%>
         <c:forEach begin="1" end="${pages}" varStatus="loop">
-            <li class="page-item"><a class="page-link" href="profile?page=${loop.index}">${loop.index}</a></li>
+            <li class="page-item"><a class="page-link" href="${servlet}?page=${loop.index}">${loop.index}</a></li>
         </c:forEach>
 
         <%--Disable 'Next' page--%>
@@ -171,11 +233,11 @@
 
         <%--Next page--%>
         <li class="page-item ${disabled_next}">
-            <a class="page-link" href="profile?page=${current_page + 1}">Next</a>
+            <a class="page-link" href="${servlet}?page=${current_page + 1}">Next</a>
         </li>
 
         <%--Last page--%>
-        <li class="page-item"><a class="page-link" href="profile?page=${pages}">Last</a></li>
+        <li class="page-item"><a class="page-link" href="${servlet}?page=${pages}">Last</a></li>
     </ul>
 </nav>
 

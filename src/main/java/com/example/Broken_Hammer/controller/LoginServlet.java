@@ -42,7 +42,7 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("profile?page=1");
                 break;
             case ADMIN:
-                response.sendRedirect("admin?page=1&sort=data&order=desc");
+                response.sendRedirect("admin?page=1&sort=date&order=desc");
                 break;
         }
 

@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter(filterName = "CustomerFilter", urlPatterns = {"/customer", "/order"})
+@WebFilter(filterName = "CustomerFilter", urlPatterns = {"/profile", "/order"})
 public class CustomerFilter implements Filter {
 
     @Override

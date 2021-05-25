@@ -2,6 +2,7 @@ package com.example.Broken_Hammer.dao;
 
 import com.example.Broken_Hammer.DBManager;
 import com.example.Broken_Hammer.entity.Order;
+import com.example.Broken_Hammer.entity.OrderDTO;
 import com.example.Broken_Hammer.entity.Worker;
 import com.example.Broken_Hammer.repository.OrderRepository;
 
@@ -22,6 +23,7 @@ public class OrderDAO implements OrderRepository {
     public static final String ID_COLUMN = "id";
     public static final String CUSTOMER_ID_COLUMN = "customer_id";
     public static final String WORKER_ID_COLUMN = "worker_id";
+    public static final String WORKER_NAME_COLUMN = "worker_name";
     public static final String DATE_COLUMN = "date";
     public static final String TITLE_COLUMN = "title";
     public static final String DESCRIPTION_COLUMN = "description";
@@ -31,7 +33,6 @@ public class OrderDAO implements OrderRepository {
     public static final String PRICE_COLUMN = "price";
     public static final String RATING_COLUMN = "rating";
     public static final String COMMENT_COLUMN = "comment";
-
 
     private final DBManager dbManager = DBManager.getDBManager();
     private final WorkerDAO workerDAO = DAOFactory.getWorkerDAO();
@@ -104,34 +105,42 @@ public class OrderDAO implements OrderRepository {
         return orders;
     }
 
-    public List<Order> getAllOrders(String sort, String order, int start) {
-        List<Order> orders = new ArrayList<>();
+    public List<OrderDTO> getAllOrders(String sort, String order, int start) {
+        List<OrderDTO> orders = new ArrayList<>();
         ResultSet resultSet = null;
 
-        String sql = "select id, date, worker_id, title, description, payment_status, " +
-                "performance_status, price from orders order by ? " + order + " limit ?, " + LIMIT;
-
+        String sql = "select orders.id,\n" +
+                "       title,\n" +
+                "       date,\n" +
+                "       worker_id,\n" +
+                "       login as worker_name,\n" +
+                "       payment_status,\n" +
+                "       performance_status,\n" +
+                "       price\n" +
+                "from orders\n" +
+                "left join users u on worker_id = u.id\n" +
+                "order by " + sort + " " + order + " limit ?, " + LIMIT;
         try(Connection connection = dbManager.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setString(1, sort);
-            statement.setInt(2, start);
+//            statement.setString(1, sort);
+            statement.setInt(1, start);
 
             resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                Order orderObj = new Order();
+                OrderDTO orderDTO = new OrderDTO();
 
-                orderObj.setId(resultSet.getInt(ID_COLUMN));
-                orderObj.setTitle(resultSet.getString(TITLE_COLUMN));
-                orderObj.setDescription(resultSet.getString(DESCRIPTION_COLUMN));
-                orderObj.setDate(resultSet.getDate(DATE_COLUMN));
-                orderObj.setWorkerId(resultSet.getInt(WORKER_ID_COLUMN));
-                orderObj.setPaymentStatus(resultSet.getString(PAYMENT_STATUS_COLUMN));
-                orderObj.setPerformanceStatus(resultSet.getString(PERFORMANCE_STATUS_COLUMN));
-                orderObj.setPrice(resultSet.getInt(PRICE_COLUMN));
+                orderDTO.setId(resultSet.getInt(ID_COLUMN));
+                orderDTO.setTitle(resultSet.getString(TITLE_COLUMN));
+                orderDTO.setDate(resultSet.getDate(DATE_COLUMN));
+                orderDTO.setWorkerID(resultSet.getInt(WORKER_ID_COLUMN));
+                orderDTO.setWorkerName(resultSet.getString(WORKER_NAME_COLUMN));
+                orderDTO.setPaymentStatus(resultSet.getString(PAYMENT_STATUS_COLUMN));
+                orderDTO.setPerformanceStatus(resultSet.getString(PERFORMANCE_STATUS_COLUMN));
+                orderDTO.setPrice(resultSet.getInt(PRICE_COLUMN));
 
-                orders.add(orderObj);
+                orders.add(orderDTO);
             }
 
         } catch (SQLException | NamingException e) {
