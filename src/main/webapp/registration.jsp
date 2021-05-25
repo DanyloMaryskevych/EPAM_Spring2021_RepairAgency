@@ -12,7 +12,7 @@
 
 <%@ include file="header.jsp" %>
 
-<div style="width: 100%" class="row justify-content-md-center mt-5">
+<div style="width: 100%; padding-bottom: 130px" class="row justify-content-md-center mt-2">
     <div class="col col-lg-3">
         <h1 class="text-center mb-4">Registration</h1>
         <form class="needs-validation m-2" novalidate action="register"

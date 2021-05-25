@@ -27,11 +27,36 @@
 <c:set value="Customer" var="customer"/>
 <c:set value="Worker" var="worker"/>
 
-<div style="min-height: 60%; min-width: 75%" class="container">
+<%--Parameters--%>
+<c:set value="page" var="page_param"/>
+<c:set value="sort" var="sort_param"/>
+<c:set value="order" var="order_param"/>
+<c:set value="performance" var="performance_param"/>
+<c:set value="payment" var="payment_param"/>
+<c:set value="worker" var="worker_param"/>
 
-    <a><button>Done</button></a>
+<div style="min-height: 65%; min-width: 75%" class="container">
+
+    <c:if test="${role == admin}">
+        <c:url value="admin" var="filter_link">
+            <c:param name="${page_param}" value="${param.get(page_param)}"/>
+            <c:param name="${sort_param}" value="${param.get(sort_param)}"/>
+            <c:param name="${order_param}" value="${param.get(order_param)}"/>
+            <c:if test="${param.get(performance_param) != null}">
+                <c:set value="disabled" var="dis"/>
+                <c:param name="${performance_param}" value="${param.get(performance_param)}"/>
+            </c:if>
+            <c:if test="${param.get(payment_param) != null}">
+                <c:param name="${payment_param}" value="${param.get(payment_param)}"/>
+            </c:if>
+            <c:if test="${param.get(worker_param) != null}">
+                <c:param name="${worker_param}" value="${param.get(worker_param)}"/>
+            </c:if>
+        </c:url>
+    </c:if>
+
     <%--@elvariable id="role" type="java.lang.String"--%>
-    <c:if test="${role == 'Customer'}">
+    <c:if test="${role == customer}">
         <div class="m-2">
             <button class="btn btn-success" data-toggle="modal" data-target="#new_order">New order</button>
         </div>
@@ -100,7 +125,18 @@
     </c:if>
 
     <div class="m-4 w-75">
-        <h2 class="mb-3">Orders</h2>
+        <div class="row">
+            <div class="col">
+                <h2 class="mb-3">Orders</h2>
+            </div>
+            <c:if test="${role == admin}">
+                <div class="col">
+                    <a class="btn ${dis}" href="${filter_link}&performance=Done">
+                        <button class="btn btn-info btn-sm">Use Filters</button>
+                    </a>
+                </div>
+            </c:if>
+        </div>
         <table class="table table-hover">
             <thead>
             <tr>
@@ -198,11 +234,6 @@
 
         <c:when test="${role == admin}">
             <c:set value="admin" var="servlet"/>
-            <c:url var="link" value="admin">
-                <c:param name="page" value="1"/>
-                <c:param name="sort" value="${sort_param}"/>
-                <c:param name="order" value="${order_param}"/>
-            </c:url>
         </c:when>
     </c:choose>
     <ul class="mt-2 pagination justify-content-center">
@@ -212,9 +243,11 @@
         <c:set value="${param.get('page')}" var="current_page"/>
 
         <%--First page--%>
-        <li class="page-item">
-            <a class="page-link" href="${servlet}?page=1&sort=${sort_param}&order=${order_param}">First</a>
-        </li>
+        <jsp:include page="fragments/pagination.jsp">
+            <jsp:param name="servlet" value="${servlet}"/>
+            <jsp:param name="page" value="1"/>
+            <jsp:param name="name" value="First"/>
+        </jsp:include>
 
         <%--Disable 'Previous' page--%>
         <c:if test="${current_page == 1}">
@@ -222,13 +255,20 @@
         </c:if>
 
         <%--Previous page--%>
-        <li class="page-item ${disabled_previous}">
-            <a class="page-link" href="${servlet}?page=${current_page - 1}">Previous</a>
-        </li>
+        <jsp:include page="fragments/pagination.jsp">
+            <jsp:param name="disable_pr" value="${disabled_previous}"/>
+            <jsp:param name="servlet" value="${servlet}"/>
+            <jsp:param name="page" value="${current_page - 1}"/>
+            <jsp:param name="name" value="Previous"/>
+        </jsp:include>
 
         <%--All pages--%>
         <c:forEach begin="1" end="${pages}" varStatus="loop">
-            <li class="page-item"><a class="page-link" href="${servlet}?page=${loop.index}">${loop.index}</a></li>
+            <jsp:include page="fragments/pagination.jsp">
+                <jsp:param name="servlet" value="${servlet}"/>
+                <jsp:param name="page" value="${loop.index}"/>
+                <jsp:param name="name" value="${loop.index}"/>
+            </jsp:include>
         </c:forEach>
 
         <%--Disable 'Next' page--%>
@@ -237,12 +277,19 @@
         </c:if>
 
         <%--Next page--%>
-        <li class="page-item ${disabled_next}">
-            <a class="page-link" href="${servlet}?page=${current_page + 1}">Next</a>
-        </li>
+        <jsp:include page="fragments/pagination.jsp">
+            <jsp:param name="disable_next" value="${disabled_next}"/>
+            <jsp:param name="servlet" value="${servlet}"/>
+            <jsp:param name="page" value="${current_page + 1}"/>
+            <jsp:param name="name" value="Next"/>
+        </jsp:include>
 
         <%--Last page--%>
-        <li class="page-item"><a class="page-link" href="${servlet}?page=${pages}">Last</a></li>
+        <jsp:include page="fragments/pagination.jsp">
+            <jsp:param name="servlet" value="${servlet}"/>
+            <jsp:param name="page" value="${pages}"/>
+            <jsp:param name="name" value="Last"/>
+        </jsp:include>
     </ul>
 </nav>
 

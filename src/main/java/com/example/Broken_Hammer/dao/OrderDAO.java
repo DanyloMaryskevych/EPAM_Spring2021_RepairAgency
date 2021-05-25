@@ -105,7 +105,8 @@ public class OrderDAO implements OrderRepository {
         return orders;
     }
 
-    public List<OrderDTO> getAllOrders(String sort, String order, int start) {
+    public List<OrderDTO> getAllOrders(String sort, String order, int start,
+                                       Map<String, String> filtersMap) {
         List<OrderDTO> orders = new ArrayList<>();
         ResultSet resultSet = null;
 
@@ -119,6 +120,7 @@ public class OrderDAO implements OrderRepository {
                 "       price\n" +
                 "from orders\n" +
                 "left join users u on worker_id = u.id\n" +
+                "where 1=1 " + addFilters(filtersMap) +
                 "order by " + sort + " " + order + " limit ?, " + LIMIT;
         try(Connection connection = dbManager.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -149,6 +151,16 @@ public class OrderDAO implements OrderRepository {
         }
 
         return orders;
+    }
+
+    private String addFilters(Map<String, String> filtersMap) {
+        StringBuilder sb = new StringBuilder();
+        for (String s : filtersMap.keySet()) {
+            if (filtersMap.get(s) != null) {
+                sb.append("and ").append(s).append(" = '").append(filtersMap.get(s)).append("' ");
+            }
+        }
+        return sb.toString();
     }
 
     public int amountOfPages(String role, int userID) {
