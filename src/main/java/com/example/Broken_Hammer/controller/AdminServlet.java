@@ -21,6 +21,8 @@ public class AdminServlet extends HttpServlet {
         int start = (startPage - 1) * OrderDAO.LIMIT;
         int pages = orderDAO.amountOfPages("Admin", 0);
 
+        request.setAttribute("sort_param", sort);
+        request.setAttribute("order_param", order);
         request.setAttribute("pages", pages);
         request.setAttribute("orders_list", orderDAO.getAllOrders(sort, order, start));
 

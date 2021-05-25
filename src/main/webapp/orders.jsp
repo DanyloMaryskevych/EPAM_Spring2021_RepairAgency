@@ -1,3 +1,5 @@
+<%--@elvariable id="sort_param" type="java.lang.String"--%>
+<%--@elvariable id="order_param" type="java.lang.String"--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -25,11 +27,9 @@
 <c:set value="Customer" var="customer"/>
 <c:set value="Worker" var="worker"/>
 
-<c:set value="text-decoration: none" var="none_line"/>
-<c:set value="color: yellowgreen" var="color"/>
-
 <div style="min-height: 60%; min-width: 75%" class="container">
 
+    <a><button>Done</button></a>
     <%--@elvariable id="role" type="java.lang.String"--%>
     <c:if test="${role == 'Customer'}">
         <div class="m-2">
@@ -105,41 +105,37 @@
             <thead>
             <tr>
                 <th>Title</th>
-                <th>
-                    Date
-                    <a style="${none_line}; ${color}" href="admin?page=1&sort=date&order=asc">
-                        <span class="span_tag">&uarr;</span>
-                    </a>
-                    <a style="${none_line}; ${color}" href="admin?page=1&sort=date&order=desc">
-                        <span class="span_tag">&darr;</span>
-                    </a>
-                </th>
+                <c:if test="${role == admin}">
+                    <th>
+                        Date
+                        <jsp:include page="fragments/sorting_arrows.jsp">
+                            <jsp:param name="sort" value="date"/>
+                        </jsp:include>
+                    </th>
+                </c:if>
                 <th>
                     Performance status
-                    <a style="${none_line}; ${color}" href="admin?page=1&sort=performance_status&order=asc">
-                        <span class="span_tag">&uarr;</span>
-                    </a>
-                    <a style="${none_line}; ${color}" href="admin?page=1&sort=performance_status&order=desc">
-                        <span class="span_tag">&darr;</span>
-                    </a>
+                    <c:if test="${role == admin}">
+                        <jsp:include page="fragments/sorting_arrows.jsp">
+                            <jsp:param name="sort" value="performance_status"/>
+                        </jsp:include>
+                    </c:if>
                 </th>
                 <th>
                     Payment status
-                    <a style="${none_line}; ${color}" href="admin?page=1&sort=payment_status&order=asc">
-                        <span class="span_tag">&uarr;</span>
-                    </a>
-                    <a style="${none_line}; ${color}" href="admin?page=1&sort=payment_status&order=desc">
-                        <span class="span_tag">&darr;</span>
-                    </a>
+                    <c:if test="${role == admin}">
+                        <jsp:include page="fragments/sorting_arrows.jsp">
+                            <jsp:param name="sort" value="payment_status"/>
+                        </jsp:include>
+                    </c:if>
                 </th>
                 <th>
                     Price
-                    <a style="${none_line}; ${color}" href="admin?page=1&sort=price&order=asc">
-                        <span class="span_tag">&uarr;</span>
-                    </a>
-                    <a style="${none_line}; ${color}" href="admin?page=1&sort=price&order=desc">
-                        <span class="span_tag">&darr;</span>
-                    </a>
+                    <c:if test="${role == admin}">
+                        <jsp:include page="fragments/sorting_arrows.jsp">
+                            <jsp:param name="sort" value="price"/>
+                        </jsp:include>
+                    </c:if>
                 </th>
                 <c:if test="${role == admin}">
                     <th>Worker</th>
@@ -163,7 +159,9 @@
                             </button>
                         </a>
                     </td>
-                    <td>${order.date}</td>
+                    <c:if test="${role == admin}">
+                        <td>${order.date}</td>
+                    </c:if>
                     <td>${order.performanceStatus}</td>
                     <td>${order.paymentStatus}</td>
                     <c:choose>
@@ -200,6 +198,11 @@
 
         <c:when test="${role == admin}">
             <c:set value="admin" var="servlet"/>
+            <c:url var="link" value="admin">
+                <c:param name="page" value="1"/>
+                <c:param name="sort" value="${sort_param}"/>
+                <c:param name="order" value="${order_param}"/>
+            </c:url>
         </c:when>
     </c:choose>
     <ul class="mt-2 pagination justify-content-center">
@@ -209,7 +212,9 @@
         <c:set value="${param.get('page')}" var="current_page"/>
 
         <%--First page--%>
-        <li class="page-item"><a class="page-link" href="${servlet}?page=1">First</a></li>
+        <li class="page-item">
+            <a class="page-link" href="${servlet}?page=1&sort=${sort_param}&order=${order_param}">First</a>
+        </li>
 
         <%--Disable 'Previous' page--%>
         <c:if test="${current_page == 1}">

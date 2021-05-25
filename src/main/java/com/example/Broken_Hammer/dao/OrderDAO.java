@@ -123,7 +123,6 @@ public class OrderDAO implements OrderRepository {
         try(Connection connection = dbManager.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql)) {
 
-//            statement.setString(1, sort);
             statement.setInt(1, start);
 
             resultSet = statement.executeQuery();
