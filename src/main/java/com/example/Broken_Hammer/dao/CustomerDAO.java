@@ -52,7 +52,7 @@ public class CustomerDAO implements CustomerRepository {
                 connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
                 updateWallet(connection, userID, amount, false);
-                orderDAO.updatePaymentStatus("Paid", orderID);
+                orderDAO.updatePaymentStatus(3, orderID);
 
                 connection.commit();
             } catch (Exception e) {

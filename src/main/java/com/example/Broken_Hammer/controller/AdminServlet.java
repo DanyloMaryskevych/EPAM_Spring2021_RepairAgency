@@ -2,6 +2,7 @@ package com.example.Broken_Hammer.controller;
 
 import com.example.Broken_Hammer.dao.DAOFactory;
 import com.example.Broken_Hammer.dao.OrderDAO;
+import com.example.Broken_Hammer.entity.Role;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -26,7 +27,7 @@ public class AdminServlet extends HttpServlet {
         filtersMap.put("login", request.getParameter("worker"));
 
         int start = (startPage - 1) * OrderDAO.LIMIT;
-        int pages = orderDAO.amountOfPages("Admin", 0);
+        int pages = orderDAO.amountOfPages(Role.ADMIN, 0);
 
         request.setAttribute("sort_param", sort);
         request.setAttribute("order_param", order);
@@ -35,10 +36,5 @@ public class AdminServlet extends HttpServlet {
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/orders.jsp");
         dispatcher.forward(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
     }
 }

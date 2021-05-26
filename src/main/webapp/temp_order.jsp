@@ -15,7 +15,7 @@
 <%
     response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 
-    if (session.getAttribute("id") != session.getId()) {
+    if (session.getAttribute("session_id") != session.getId()) {
         response.sendRedirect("index.jsp");
     }
 %>
@@ -23,28 +23,27 @@
 
 <%--CONSTANTS--%>
 <%--Roles--%>
-<c:set value="Admin" var="admin"/>
-<c:set value="Customer" var="customer"/>
-<c:set value="Worker" var="worker"/>
+<c:set value="1" var="admin"/>
+<c:set value="2" var="customer"/>
+<c:set value="3" var="worker"/>
 
 <%--Statuses--%>
-<c:set value="Not started" var="not_started_perf_stat"/>
-<c:set value="In work" var="in_work_perf_stat"/>
-<c:set value="Done" var="done_perf_stat"/>
-<c:set value="Rejected" var="rejected_perf_stat"/>
+<c:set value="1" var="not_started_perf_stat"/>
+<c:set value="2" var="in_work_perf_stat"/>
+<c:set value="3" var="done_perf_stat"/>
+<c:set value="4" var="rejected_perf_stat"/>
 
-<c:set value="Waiting for price" var="price_pay_stat"/>
-<c:set value="Waiting for payment" var="payment_pay_stat"/>
-<c:set value="Paid" var="paid_pay_stat"/>
+<c:set value="1" var="price_pay_stat"/>
+<c:set value="2" var="payment_pay_stat"/>
+<c:set value="3" var="paid_pay_stat"/>
 
 <%--Other--%>
 <c:set value="badge_class" var="badge_class_var"/>
-<c:if test="${temp_order.performanceStatus == rejected_perf_stat}">
+<c:if test="${temp_order.performanceStatusId == rejected_perf_stat}">
     <c:set value="disabled" var="disable_button"/>
 </c:if>
-<%--@elvariable id="temp_order" type="com.example.Broken_Hammer.entity.Order"--%>
-<%--@elvariable id="temp_worker" type="com.example.Broken_Hammer.entity.Worker"--%>
-<%--@elvariable id="role" type="java.lang.String"--%>
+<%--@elvariable id="temp_order" type="com.example.Broken_Hammer.entity.OrderDTO"--%>
+<%--@elvariable id="role_id" type="java.lang.Integer"--%>
 <%--@elvariable id="expected_worker" type="java.lang.String"--%>
 <%--@elvariable id="payment" type="java.lang.String"--%>
 
@@ -80,26 +79,26 @@
                 <div class="col">Performance status</div>
                 <div class="col d-flex align-items-center justify-content-between">
                     <c:choose>
-                        <c:when test="${temp_order.performanceStatus == not_started_perf_stat}">
+                        <c:when test="${temp_order.performanceStatusId == not_started_perf_stat}">
                             <c:set value="badge-secondary" var="badge_class"/>
                         </c:when>
-                        <c:when test="${temp_order.performanceStatus == in_work_perf_stat}">
+                        <c:when test="${temp_order.performanceStatusId == in_work_perf_stat}">
                             <c:set value="badge-warning" var="badge_class"/>
                         </c:when>
-                        <c:when test="${temp_order.performanceStatus == done_perf_stat}">
+                        <c:when test="${temp_order.performanceStatusId == done_perf_stat}">
                             <c:set value="badge-success" var="badge_class"/>
-                            <c:if test="${role == customer}">
+                            <c:if test="${role_id == customer}">
                                 <c:set value="visible" var="feedback_button"/>
                             </c:if>
                         </c:when>
-                        <c:when test="${temp_order.performanceStatus == rejected_perf_stat}">
+                        <c:when test="${temp_order.performanceStatusId == rejected_perf_stat}">
                             <c:set value="badge-danger" var="badge_class"/>
                         </c:when>
                     </c:choose>
                     <span class="badge badge-pill ${badge_class}">${temp_order.performanceStatus}</span>
 
                     <%--Start performing button--%>
-                    <c:if test="${temp_order.performanceStatus == not_started_perf_stat && role == worker}">
+                    <c:if test="${temp_order.performanceStatusId == not_started_perf_stat && role_id == worker}">
                         <jsp:include page="fragments/performance_button.jsp">
                             <jsp:param name="btn_class" value="btn-warning"/>
                             <jsp:param name="btn_text" value="Start"/>
@@ -111,7 +110,7 @@
                     </c:if>
 
                     <%--Done performing button--%>
-                    <c:if test="${temp_order.performanceStatus == in_work_perf_stat && role == worker}">
+                    <c:if test="${temp_order.performanceStatusId == in_work_perf_stat && role_id == worker}">
                         <jsp:include page="fragments/performance_button.jsp">
                             <jsp:param name="btn_class" value="btn-success"/>
                             <jsp:param name="btn_text" value="Done"/>
@@ -123,8 +122,8 @@
                     </c:if>
 
                     <%--Reject performing button--%>
-                    <c:if test="${role == admin && temp_order.paymentStatus != paid_pay_stat
-                                    && temp_order.performanceStatus != rejected_perf_stat}">
+                    <c:if test="${role_id == admin && temp_order.paymentStatusId != paid_pay_stat
+                                    && temp_order.performanceStatusId != rejected_perf_stat}">
                         <jsp:include page="fragments/performance_button.jsp">
                             <jsp:param name="btn_class" value="btn-danger"/>
                             <jsp:param name="btn_text" value="Reject"/>
@@ -143,15 +142,15 @@
                 <div class="col">Payment status</div>
                 <div class="col d-flex align-items-center">
                     <c:choose>
-                        <c:when test="${temp_order.paymentStatus == price_pay_stat}">
+                        <c:when test="${temp_order.paymentStatusId == price_pay_stat}">
                             <c:set value="badge-secondary" var="badge_class"/>
                         </c:when>
-                        <c:when test="${temp_order.paymentStatus == payment_pay_stat}">
+                        <c:when test="${temp_order.paymentStatusId == payment_pay_stat}">
                             <c:set value="badge-warning" var="badge_class"/>
                             <c:set value="visible" var="button_v"/>
                             <c:set value="invisible" var="image_v"/>
                         </c:when>
-                        <c:when test="${temp_order.paymentStatus == paid_pay_stat}">
+                        <c:when test="${temp_order.paymentStatusId == paid_pay_stat}">
                             <c:set value="badge-success" var="badge_class"/>
                             <c:set value="d-none" var="button_v"/>
                             <c:set value="visible" var="image_v"/>
@@ -166,12 +165,12 @@
                 <div class="col">Worker</div>
                 <div class="col d-flex align-items-center justify-content-between">
                     <c:choose>
-                        <c:when test="${temp_worker.login == null}">
-                            <c:if test="${role == customer}">
+                        <c:when test="${temp_order.workerName == null}">
+                            <c:if test="${role_id == customer}">
                                 <span class="badge badge-pill badge-secondary">Not specified</span>
                             </c:if>
 
-                            <c:if test="${role == admin}">
+                            <c:if test="${role_id == admin}">
 
                                 <button class="btn btn-sm btn-info"
                                         data-toggle="modal" data-target="#set_worker" ${disable_button}>
@@ -188,7 +187,7 @@
 
                                             <div class="modal-body">
 
-                                                <c:if test="${temp_order.expectedWorker != 0}">
+                                                <c:if test="${temp_order.expectedWorkerID != 0}">
                                                     <div class="row mb-4">
                                                         <div class="col-4 d-flex align-items-center">
                                                             Expected worker:
@@ -204,7 +203,7 @@
                                                                 </label>
                                                                 <label>
                                                                     <input class="invisible ghost" name="workerID"
-                                                                           value="${temp_order.expectedWorker}">
+                                                                           value="${temp_order.expectedWorkerID}">
                                                                 </label>
                                                                 <label>
                                                                     <input class="invisible ghost" name="orderID"
@@ -260,7 +259,7 @@
                                 </div>
                             </c:if>
                         </c:when>
-                        <c:otherwise>${temp_worker.login}</c:otherwise>
+                        <c:otherwise>${temp_order.workerName}</c:otherwise>
                     </c:choose>
                 </div>
             </div>
@@ -272,11 +271,11 @@
                     <c:choose>
                         <c:when test="${temp_order.price == 0}">
 
-                            <c:if test="${role == customer}">
+                            <c:if test="${role_id == customer}">
                                 <span class="badge badge-pill badge-secondary">Not specified</span>
                             </c:if>
 
-                            <c:if test="${role == admin}">
+                            <c:if test="${role_id == admin}">
                                 <button class="btn btn-sm btn-success" data-toggle="modal"
                                         data-target="#price" ${disable_button}>
                                     Set Price
@@ -335,7 +334,7 @@
                             ${temp_order.price}$
 
                             <%--Pay button--%>
-                            <c:if test="${role == customer}">
+                            <c:if test="${role_id == customer}">
                                 <jsp:include page="fragments/performance_button.jsp">
                                     <jsp:param name="btn_class" value="btn-success ml-3 ${button_v}"/>
                                     <jsp:param name="btn_text" value="Pay"/>
@@ -439,7 +438,7 @@
                             <input class="invisible" name="orderID" value="${temp_order.id}">
                         </label>
                         <label>
-                            <input class="invisible" name="workerID" value="${temp_worker.id}">
+                            <input class="invisible" name="workerID" value="${temp_order.workerID}">
                         </label>
 
                         <div class="row">

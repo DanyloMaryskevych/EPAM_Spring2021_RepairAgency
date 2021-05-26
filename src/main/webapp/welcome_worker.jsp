@@ -10,7 +10,7 @@
 <%
     response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 
-    if (session.getAttribute("id") != session.getId() || !session.getAttribute("role").equals("Worker")) {
+    if (session.getAttribute("session_id") != session.getId() || !session.getAttribute("role").equals("Worker")) {
         response.sendRedirect("index.jsp");
     }
 %>

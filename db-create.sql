@@ -72,20 +72,29 @@ create table workers_data
 create table payment_status
 (
     id     int primary key auto_increment,
-    status enum ('Waiting for price', 'Waiting for payment', 'Paid')
+    payment_status enum ('Waiting for price', 'Waiting for payment', 'Paid')
 );
+
+insert into payment_status values (default, 'Waiting for price');
+insert into payment_status values (default, 'Waiting for payment');
+insert into payment_status values (default, 'Paid');
 
 create table performance_status
 (
     id     int primary key auto_increment,
-    status enum ('Not started', 'In work', 'Done', 'Rejected')
+    performance_status enum ('Not started', 'In work', 'Done', 'Rejected')
 );
+
+insert into performance_status values (default, 'Not started');
+insert into performance_status values (default, 'In work');
+insert into performance_status values (default, 'Done');
+insert into performance_status values (default, 'Rejected');
 
 create table `order`
 (
     id                    int PRIMARY KEY AUTO_INCREMENT,
     customer_id           int,
-    worker_id             int      default 0,
+    worker_id             int,
     date                  DATETIME default NOW(),
     title                 varchar(40),
     description           varchar(500),
@@ -108,12 +117,3 @@ create table `order`
 
 insert into user
 values (default, 'Admin', 'Admin', 1);
-insert into user
-values (default, 'Danylo', '1111', 2);
-insert into user
-values (default, 'Barnie', '1111', 3);
-
-insert into customers_data
-values (1, 1000);
-insert into workers_data
-values (2, default, default, default, default, default, default);

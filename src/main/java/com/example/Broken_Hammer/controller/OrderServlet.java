@@ -2,6 +2,7 @@ package com.example.Broken_Hammer.controller;
 
 import com.example.Broken_Hammer.dao.*;
 import com.example.Broken_Hammer.entity.Order;
+import com.example.Broken_Hammer.entity.OrderDTO;
 import com.example.Broken_Hammer.entity.Worker;
 
 import javax.servlet.*;
@@ -22,22 +23,17 @@ public class OrderServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
 
-        int orderID = Integer.parseInt(request.getParameter("orderID"));
+        OrderDTO order = orderDAO.getOrderById(Integer.parseInt(request.getParameter("orderID")));
 
-        Order order = orderDAO.getOrderById(orderID);
-        order.setId(orderID);
-
-        Worker worker = orderDAO.getWorker(orderID);
         Integer userID = (Integer) session.getAttribute("userID");
         request.setAttribute("balance", customerDAO.getBalance(userID));
 
         String payment = request.getParameter("payment");
 
-        request.setAttribute("expected_worker", workerDAO.getWorkerById(order.getExpectedWorker()));
+        request.setAttribute("expected_worker", workerDAO.getWorkerById(order.getExpectedWorkerID()));
         request.setAttribute("workers_list", userDAO.getWorkers());
         request.setAttribute("payment", payment);
         request.setAttribute("temp_order", order);
-        request.setAttribute("temp_worker", worker);
         request.getRequestDispatcher("temp_order.jsp").forward(request, response);
     }
 
@@ -95,11 +91,11 @@ public class OrderServlet extends HttpServlet {
             }
             case "performing": {
                 int orderID = Integer.parseInt(request.getParameter("orderID"));
-                String performStatus = request.getParameter("perform_status");
+                int performStatus = Integer.parseInt(request.getParameter("perform_status"));
 
                 orderDAO.updateRejectedStatus(performStatus, orderID);
 
-                if (performStatus.equals("Done")) workerDAO.updateOrdersCounter((Integer) session.getAttribute("userID"));
+                if (performStatus == 3) workerDAO.updateOrdersCounter((Integer) session.getAttribute("userID"));
 
                 response.sendRedirect("order?orderID=" + orderID);
                 break;

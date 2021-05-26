@@ -1,6 +1,7 @@
 package com.example.Broken_Hammer.dao;
 
 import com.example.Broken_Hammer.DBManager;
+import com.example.Broken_Hammer.entity.Role;
 import com.example.Broken_Hammer.entity.User;
 import com.example.Broken_Hammer.repository.UserRepository;
 
@@ -16,7 +17,7 @@ import java.util.regex.Pattern;
 public class UserDAO implements UserRepository {
     private static final String LOGIN = "login";
     private static final String PASSWORD = "password";
-    private static final String ROLE = "role";
+    private static final String ROLE_ID = "role_id";
 
     private final DBManager dbManager = DBManager.getDBManager();
     private final CustomerDAO customerDAO = DAOFactory.getCustomerDAO();
@@ -26,8 +27,9 @@ public class UserDAO implements UserRepository {
     public void addUser(Map<String, String[]> parametersMap) {
         Connection connection = null;
 
-        String sql = "insert into users values(default, ?, ?, ?)";
-        String role = parametersMap.get(ROLE)[0];
+        String sql = "insert into user values(default, ?, ?, ?)";
+        int role_id = Integer.parseInt(parametersMap.get(ROLE_ID)[0]);
+        Role role = Role.getRoleById(role_id);
 
         ResultSet resultSet = null;
 
@@ -41,24 +43,25 @@ public class UserDAO implements UserRepository {
             int k = 0;
             statement.setString(++k, parametersMap.get(LOGIN)[0]);
             statement.setString(++k, parametersMap.get(PASSWORD)[0]);
-            statement.setString(++k, role);
+            statement.setInt(++k, role_id);
 
             statement.execute();
 
-            if (!role.equals("Admin")) {
+            if (role != Role.ADMIN) {
                 resultSet = statement.getGeneratedKeys();
                 if (resultSet.next()) {
-                    switch (parametersMap.get(ROLE)[0]) {
-                        case "Customer" : {
+                    switch (role) {
+                        case CUSTOMER: {
                             customerDAO.addCustomer(connection, resultSet.getInt(1));
                             break;
                         }
-                        case "Worker" : {
+                        case WORKER: {
                             workerDAO.addWorker(connection, resultSet.getInt(1));
                             break;
                         }
                         default:
                             System.out.println("wrong role");
+                            throw new SQLException();
                     }
                 }
             }
@@ -79,7 +82,7 @@ public class UserDAO implements UserRepository {
     }
 
     public List<User> getWorkers() {
-        String sql = "select id, login from users where role = 'Worker'";
+        String sql = "select id, login from user where role_id = 3";
         List<User> workers = new ArrayList<>();
 
         ResultSet resultSet = null;
@@ -108,7 +111,7 @@ public class UserDAO implements UserRepository {
 
     // Registration validation:
     public boolean checkLogin(String login) {
-        String sql = "select * from users where login = ?";
+        String sql = "select * from user where login = ?";
 
         ResultSet resultSet = null;
 
@@ -146,7 +149,7 @@ public class UserDAO implements UserRepository {
     }
 
     public String checkIfUserExist(String login, String password) {
-        String sql = "select * from users where login = ? and password = ?";
+        String sql = "select * from user where login = ? and password = ?";
 
         ResultSet resultSet = null;
 
@@ -160,7 +163,7 @@ public class UserDAO implements UserRepository {
             resultSet = statement.getResultSet();
 
             if (resultSet.next()) {
-                return resultSet.getString(ROLE);
+                return resultSet.getString(ROLE_ID);
             }
 
         } catch (SQLException | NamingException e) {
@@ -186,7 +189,7 @@ public class UserDAO implements UserRepository {
     }
 
     public int getId(String login) {
-        String sql = "select id from users where login = ?";
+        String sql = "select id from user where login = ?";
         ResultSet resultSet = null;
 
         try(Connection connection = dbManager.getConnection();

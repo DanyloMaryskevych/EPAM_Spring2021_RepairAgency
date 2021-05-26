@@ -3,6 +3,7 @@ package com.example.Broken_Hammer.dao;
 import com.example.Broken_Hammer.DBManager;
 import com.example.Broken_Hammer.entity.Order;
 import com.example.Broken_Hammer.entity.OrderDTO;
+import com.example.Broken_Hammer.entity.Role;
 import com.example.Broken_Hammer.entity.Worker;
 import com.example.Broken_Hammer.repository.OrderRepository;
 
@@ -19,7 +20,7 @@ import static com.example.Broken_Hammer.dao.UserDAO.close;
 
 public class OrderDAO implements OrderRepository {
     public static final int LIMIT = 5;
-    public static final String ORDERS_TABLE = "orders";
+    public static final String ORDERS_TABLE = "`order`";
     public static final String ID_COLUMN = "id";
     public static final String CUSTOMER_ID_COLUMN = "customer_id";
     public static final String WORKER_ID_COLUMN = "worker_id";
@@ -27,9 +28,11 @@ public class OrderDAO implements OrderRepository {
     public static final String DATE_COLUMN = "date";
     public static final String TITLE_COLUMN = "title";
     public static final String DESCRIPTION_COLUMN = "description";
-    public static final String EXPECTED_WORKER_ID_COLUMN = "expected_worker";
+    public static final String EXPECTED_WORKER_ID_COLUMN = "expected_worker_id";
     public static final String PAYMENT_STATUS_COLUMN = "payment_status";
+    public static final String PAYMENT_STATUS_ID_COLUMN = "payment_status_id";
     public static final String PERFORMANCE_STATUS_COLUMN = "performance_status";
+    public static final String PERFORMANCE_STATUS_ID_COLUMN = "performance_status_id";
     public static final String PRICE_COLUMN = "price";
     public static final String RATING_COLUMN = "rating";
     public static final String COMMENT_COLUMN = "comment";
@@ -62,16 +65,19 @@ public class OrderDAO implements OrderRepository {
         }
     }
 
-    public List<Order> getOrdersByUserId(String role, int id, int start) {
+    public List<Order> getOrdersByUserId(Role role, int id, int start) {
         List<Order> orders = new ArrayList<>();
         ResultSet resultSet = null;
 
         String sqlRoleColumn = null;
-        if (role.equals("Customer")) sqlRoleColumn = CUSTOMER_ID_COLUMN;
-        else if (role.equals("Worker")) sqlRoleColumn = WORKER_ID_COLUMN;
+        if (role == Role.CUSTOMER) sqlRoleColumn = CUSTOMER_ID_COLUMN;
+        else if (role == Role.WORKER) sqlRoleColumn = WORKER_ID_COLUMN;
 
-        String sql = "select id, worker_id, title, description, payment_status, " +
-                "performance_status, price from orders where " + sqlRoleColumn + " = ? order by id desc limit ?, " + LIMIT;
+        String sql = "select `order`.id, worker_id, title, description, payment_status, " +
+                "performance_status, price from " + ORDERS_TABLE +" " +
+                "join payment_status on `order`.payment_status_id = payment_status.id\n" +
+                "join performance_status on `order`.performance_status_id = performance_status.id\n"+
+                "where " + sqlRoleColumn + " = ? order by id desc limit ?, " + LIMIT;
 
         try(Connection connection = dbManager.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -110,7 +116,7 @@ public class OrderDAO implements OrderRepository {
         List<OrderDTO> orders = new ArrayList<>();
         ResultSet resultSet = null;
 
-        String sql = "select orders.id,\n" +
+        String sql = "select " + ORDERS_TABLE +".id,\n" +
                 "       title,\n" +
                 "       date,\n" +
                 "       worker_id,\n" +
@@ -118,8 +124,10 @@ public class OrderDAO implements OrderRepository {
                 "       payment_status,\n" +
                 "       performance_status,\n" +
                 "       price\n" +
-                "from orders\n" +
-                "left join users u on worker_id = u.id\n" +
+                "from " + ORDERS_TABLE +
+                " left join user u on worker_id = u.id\n" +
+                "join payment_status on `order`.payment_status_id = payment_status.id\n" +
+                "join performance_status on `order`.performance_status_id = performance_status.id\n"+
                 "where 1=1 " + addFilters(filtersMap) +
                 "order by " + sort + " " + order + " limit ?, " + LIMIT;
         try(Connection connection = dbManager.getConnection();
@@ -163,7 +171,7 @@ public class OrderDAO implements OrderRepository {
         return sb.toString();
     }
 
-    public int amountOfPages(String role, int userID) {
+    public int amountOfPages(Role role, int userID) {
         String sql = amountOfPagesSQLQuery(role, userID);
         ResultSet resultSet = null;
 
@@ -187,17 +195,17 @@ public class OrderDAO implements OrderRepository {
         return 1;
     }
 
-    private String amountOfPagesSQLQuery(String role, int id) {
-        StringBuilder sql = new StringBuilder("select ceiling(count(id) / ?) as pages from orders");
+    private String amountOfPagesSQLQuery(Role role, int id) {
+        StringBuilder sql = new StringBuilder("select ceiling(count(id) / ?) as pages from " + ORDERS_TABLE);
 
-        if (role.equals("Admin")) return sql.toString();
+        if (role == Role.ADMIN) return sql.toString();
 
         switch (role) {
-            case "Customer": {
+            case CUSTOMER: {
                 sql.append(" where customer_id = ").append(id);
                 break;
             }
-            case "Worker": {
+            case WORKER: {
                 sql.append(" where worker_id = ").append(id);
                 break;
             }
@@ -206,10 +214,17 @@ public class OrderDAO implements OrderRepository {
         return sql.toString();
     }
 
-    public Order getOrderById(int orderId) {
-        String sql = "select title, description, payment_status, performance_status," +
-                " price, rating, comment, expected_worker from orders where id = ?;";
-        Order order = null;
+    public OrderDTO getOrderById(int orderId) {
+        String sql = "select " + ORDERS_TABLE +".id, worker_id, login as worker_name, " +
+                "title, description, payment_status, payment_status_id, " +
+                "performance_status, performance_status_id, " +
+                "price, rating, comment, expected_worker_id from " + ORDERS_TABLE +
+                "left join user on " + ORDERS_TABLE + ".worker_id = user.id\n" +
+                "join payment_status on  " + ORDERS_TABLE + ".payment_status_id = payment_status.id\n" +
+                "join performance_status on  " + ORDERS_TABLE + ".performance_status_id = performance_status.id " +
+                "where " + ORDERS_TABLE + ".id = ?";
+
+        OrderDTO order = null;
         ResultSet resultSet = null;
 
         try(Connection connection = dbManager.getConnection();
@@ -219,16 +234,21 @@ public class OrderDAO implements OrderRepository {
             resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                order = new Order();
+                order = new OrderDTO();
 
+                order.setId(resultSet.getInt(ID_COLUMN));
+                order.setWorkerID(resultSet.getInt(WORKER_ID_COLUMN));
+                order.setWorkerName(resultSet.getString(WORKER_NAME_COLUMN));
+                order.setExpectedWorkerID(resultSet.getInt(EXPECTED_WORKER_ID_COLUMN));
                 order.setTitle(resultSet.getString(TITLE_COLUMN));
                 order.setDescription(resultSet.getString(DESCRIPTION_COLUMN));
                 order.setPaymentStatus(resultSet.getString(PAYMENT_STATUS_COLUMN));
+                order.setPaymentStatusId(resultSet.getInt(PAYMENT_STATUS_ID_COLUMN));
                 order.setPerformanceStatus(resultSet.getString(PERFORMANCE_STATUS_COLUMN));
+                order.setPerformanceStatusId(resultSet.getInt(PERFORMANCE_STATUS_ID_COLUMN));
                 order.setPrice(resultSet.getInt(PRICE_COLUMN));
                 order.setRating(resultSet.getInt(RATING_COLUMN));
                 order.setComment(resultSet.getString(COMMENT_COLUMN));
-                order.setExpectedWorker(resultSet.getInt(EXPECTED_WORKER_ID_COLUMN));
             }
 
         } catch (SQLException | NamingException e) {
@@ -241,7 +261,7 @@ public class OrderDAO implements OrderRepository {
     }
 
     public Worker getWorker(int orderId) {
-        String sql = "select login, users.id from users join orders on worker_id = users.id where orders.id = ?";
+        String sql = "select login, user.id from user join 'order' on worker_id = user.id where 'order'.id = ?";
         ResultSet resultSet = null;
         Worker worker = null;
 
@@ -269,26 +289,21 @@ public class OrderDAO implements OrderRepository {
         return null;
     }
 
-    public void updatePaymentStatus(String status, int orderID) {
-        String sql = "update orders set payment_status = ? where id = ?";
+    public void updatePaymentStatus(int status, int orderID) throws SQLException, NamingException {
+        String sql = "update " + ORDERS_TABLE + " set payment_status_id = ? where id = ?";
 
-        try(Connection connection = dbManager.getConnection();
-        PreparedStatement statement = connection.prepareStatement(sql)) {
+        Connection connection = dbManager.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
 
-            statement.setString(1, status);
+            statement.setInt(1, status);
             statement.setInt(2, orderID);
 
             statement.execute();
-
-        } catch (SQLException | NamingException e) {
-            e.printStackTrace();
-        }
     }
 
     public void updatePrice(int price, int orderID) {
-        String sql = "update orders set price = ?,\n" +
-                "payment_status = 'Waiting for payment'\n" +
-                "where id = ?";
+        String sql = "update " + ORDERS_TABLE + " set price = ?,\n" +
+                "payment_status_id = 2 where id = ?";
 
         try(Connection connection = dbManager.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -303,7 +318,7 @@ public class OrderDAO implements OrderRepository {
     }
 
     public void updateFeedback(int rating, String comment, int orderID, int workerID) {
-        String sql = "update orders set rating = ?, comment = ? where id = ?";
+        String sql = "update " + ORDERS_TABLE + " set rating = ?, comment = ? where id = ?";
         Connection connection = null;
 
         try {
@@ -332,7 +347,7 @@ public class OrderDAO implements OrderRepository {
     }
 
     public void updateWorker(int workerId, int orderId) {
-        String sql = "update orders set worker_id = ? where id = ?";
+        String sql = "update " + ORDERS_TABLE + " set worker_id = ? where id = ?";
 
         try(Connection connection = dbManager.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -347,13 +362,13 @@ public class OrderDAO implements OrderRepository {
         }
     }
 
-    public void updateRejectedStatus(String performStatus, int orderID) {
-        String sql = "update orders set performance_status = ? where id = ?";
+    public void updateRejectedStatus(int performStatus, int orderID) {
+        String sql = "update " + ORDERS_TABLE +" set performance_status_id = ? where id = ?";
 
         try(Connection connection = dbManager.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setString(1, performStatus);
+            statement.setInt(1, performStatus);
             statement.setInt(2, orderID);
             statement.execute();
 

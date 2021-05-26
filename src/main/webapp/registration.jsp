@@ -22,7 +22,9 @@
                 <label class="form-text text-muted"
                        for="new_login">Login</label>
                 <input class="form-control" type="text" name="login"
-                       id="new_login" required pattern="^[a-zA-Z]{3,20}$">
+                       id="new_login" required
+<%--                       pattern="^[a-zA-Z]{3,20}$"--%>
+                >
                 <div class="invalid-feedback">
                     Login should be 3-20 characters long and contains letters only.
                 </div>
@@ -64,14 +66,14 @@
 
             <div class="custom-control custom-radio">
                 <input type="radio" class="custom-control-input"
-                       id="customer" name="role" value="Customer"
+                       id="customer" name="role_id" value="2"
                        required>
                 <label class="custom-control-label"
                        for="customer">Customer</label>
             </div>
             <div class="custom-control custom-radio mb-3">
                 <input type="radio" class="custom-control-input"
-                       id="worker" name="role" value="Worker" required>
+                       id="worker" name="role_id" value="3" required>
                 <label class="custom-control-label"
                        for="worker">Worker</label>
                 <div class="invalid-feedback">

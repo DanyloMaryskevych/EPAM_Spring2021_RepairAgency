@@ -4,6 +4,7 @@ import com.example.Broken_Hammer.dao.CustomerDAO;
 import com.example.Broken_Hammer.dao.DAOFactory;
 import com.example.Broken_Hammer.dao.OrderDAO;
 import com.example.Broken_Hammer.dao.UserDAO;
+import com.example.Broken_Hammer.entity.Role;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -23,13 +24,13 @@ public class UserServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         Integer userID = (Integer) session.getAttribute("userID");
-        String role = (String) session.getAttribute("role");
+        Role role = Role.getRoleById((Integer) session.getAttribute(ROLE_ID));
 
         int startPage = Integer.parseInt(request.getParameter("page"));
         int start = (startPage - 1) * OrderDAO.LIMIT;
         int pages = orderDAO.amountOfPages(role, userID);
 
-        if (role.equals(CUSTOMER)) {
+        if (role == Role.CUSTOMER) {
             session.setAttribute("balance", customerDAO.getBalance(userID));
             request.setAttribute("workers_list", userDAO.getWorkers());
         }

@@ -38,7 +38,7 @@ public class RegisterFilter implements Filter {
         boolean loginValidation = userDAO.checkLogin(login);
 
         if (passwordsEquality && passwordValidation && loginValidation) {
-            request.setAttribute(ROLE, request.getParameter(ROLE));
+            request.setAttribute(ROLE_ID, request.getParameter(ROLE_ID));
             chain.doFilter(request, response);
         }
 

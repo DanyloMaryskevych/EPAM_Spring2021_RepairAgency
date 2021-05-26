@@ -5,7 +5,6 @@ import com.example.Broken_Hammer.dao.UserDAO;
 import javax.servlet.*;
 import javax.servlet.annotation.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.example.Broken_Hammer.Constants.*;
@@ -33,7 +32,7 @@ public class LoginFilter implements Filter {
             String userRole = userDAO.checkIfUserExist(login, password);
 
             if (userRole != null) {
-                request.setAttribute(ROLE, userRole);
+                request.setAttribute(ROLE_ID, userRole);
                 chain.doFilter(request, response);
             }
             else {

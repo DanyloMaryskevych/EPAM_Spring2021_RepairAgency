@@ -1,13 +1,9 @@
 package com.example.Broken_Hammer.controller;
 
-import com.example.Broken_Hammer.dao.CustomerDAO;
 import com.example.Broken_Hammer.dao.DAOFactory;
 import com.example.Broken_Hammer.dao.UserDAO;
-import com.example.Broken_Hammer.entity.User;
+import com.example.Broken_Hammer.entity.Role;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
@@ -24,19 +20,19 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String login = request.getParameter(LOGIN);
-        int id = userDAO.getId(login);
+        int userId = userDAO.getId(login);
 
-        String role = (String) request.getAttribute(ROLE);
+        int roleId =  Integer.parseInt(String.valueOf(request.getAttribute(ROLE_ID)));
 
         HttpSession session = request.getSession();
-        session.setAttribute("id", session.getId());
-        session.setAttribute("username", login);
-        session.setAttribute("userID", id);
-        session.setAttribute("role", role);
+        session.setAttribute("session_id", session.getId());
+        session.setAttribute(LOGIN, login);
+        session.setAttribute(USER_ID, userId);
+        session.setAttribute(ROLE_ID, roleId);
 
-        switch (role) {
+        switch (Role.getRoleById(roleId)) {
             case CUSTOMER:
             case WORKER:
                 response.sendRedirect("profile?page=1");

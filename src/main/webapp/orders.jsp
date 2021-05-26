@@ -16,16 +16,16 @@
 <%
     response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 
-    if (session.getAttribute("id") != session.getId()) {
+    if (session.getAttribute("session_id") != session.getId()) {
         response.sendRedirect("index.jsp");
     }
 %>
 <%@ include file="header.jsp" %>
 <%--@elvariable id="orders_list" type="com.example.Broken_Hammer.entity.OrderDTO"--%>
 
-<c:set value="Admin" var="admin"/>
-<c:set value="Customer" var="customer"/>
-<c:set value="Worker" var="worker"/>
+<c:set value="1" var="admin"/>
+<c:set value="2" var="customer"/>
+<c:set value="3" var="worker"/>
 
 <%--Parameters--%>
 <c:set value="page" var="page_param"/>
@@ -35,9 +35,10 @@
 <c:set value="payment" var="payment_param"/>
 <c:set value="worker" var="worker_param"/>
 
+<%--@elvariable id="role_id" type="java.lang.Integer"--%>
 <div style="min-height: 65%; min-width: 75%" class="container">
 
-    <c:if test="${role == admin}">
+    <c:if test="${role_id == admin}">
         <c:url value="admin" var="filter_link">
             <c:param name="${page_param}" value="${param.get(page_param)}"/>
             <c:param name="${sort_param}" value="${param.get(sort_param)}"/>
@@ -55,8 +56,7 @@
         </c:url>
     </c:if>
 
-    <%--@elvariable id="role" type="java.lang.String"--%>
-    <c:if test="${role == customer}">
+    <c:if test="${role_id == customer}">
         <div class="m-2">
             <button class="btn btn-success" data-toggle="modal" data-target="#new_order">New order</button>
         </div>
@@ -97,7 +97,7 @@
                                     <div class="row w-50">
                                         <div class="col">
                                             <div class="input-group mb-3">
-                                                <select class="custom-select" id="workers" name="expected_worker">
+                                                <select class="custom-select" id="workers" name="expected_worker_id">
                                                     <option selected value="0">Choose...</option>
                                                         <%--@elvariable id="workers_list" type="java.util.List"--%>
                                                     <c:forEach var="temp_worker" items="${workers_list}">
@@ -129,7 +129,7 @@
             <div class="col">
                 <h2 class="mb-3">Orders</h2>
             </div>
-            <c:if test="${role == admin}">
+            <c:if test="${role_id == admin}">
                 <div class="col">
                     <a class="btn ${dis}" href="${filter_link}&performance=Done">
                         <button class="btn btn-info btn-sm">Use Filters</button>
@@ -141,7 +141,7 @@
             <thead>
             <tr>
                 <th>Title</th>
-                <c:if test="${role == admin}">
+                <c:if test="${role_id == admin}">
                     <th>
                         Date
                         <jsp:include page="fragments/sorting_arrows.jsp">
@@ -151,7 +151,7 @@
                 </c:if>
                 <th>
                     Performance status
-                    <c:if test="${role == admin}">
+                    <c:if test="${role_id == admin}">
                         <jsp:include page="fragments/sorting_arrows.jsp">
                             <jsp:param name="sort" value="performance_status"/>
                         </jsp:include>
@@ -159,7 +159,7 @@
                 </th>
                 <th>
                     Payment status
-                    <c:if test="${role == admin}">
+                    <c:if test="${role_id == admin}">
                         <jsp:include page="fragments/sorting_arrows.jsp">
                             <jsp:param name="sort" value="payment_status"/>
                         </jsp:include>
@@ -167,13 +167,13 @@
                 </th>
                 <th>
                     Price
-                    <c:if test="${role == admin}">
+                    <c:if test="${role_id == admin}">
                         <jsp:include page="fragments/sorting_arrows.jsp">
                             <jsp:param name="sort" value="price"/>
                         </jsp:include>
                     </c:if>
                 </th>
-                <c:if test="${role == admin}">
+                <c:if test="${role_id == admin}">
                     <th>Worker</th>
                 </c:if>
             </tr>
@@ -195,7 +195,7 @@
                             </button>
                         </a>
                     </td>
-                    <c:if test="${role == admin}">
+                    <c:if test="${role_id == admin}">
                         <td>${order.date}</td>
                     </c:if>
                     <td>${order.performanceStatus}</td>
@@ -208,7 +208,7 @@
                             <td>${order.price} $</td>
                         </c:otherwise>
                     </c:choose>
-                    <c:if test="${role == admin}">
+                    <c:if test="${role_id == admin}">
                         <c:choose>
                             <c:when test="${order.workerName == null}">
                                 <td>&mdash;</td>
@@ -228,11 +228,11 @@
 
 <nav aria-label="Page navigation example">
     <c:choose>
-        <c:when test="${role == customer || role == worker}">
+        <c:when test="${role_id == customer || role_id == worker}">
             <c:set value="profile" var="servlet"/>
         </c:when>
 
-        <c:when test="${role == admin}">
+        <c:when test="${role_id == admin}">
             <c:set value="admin" var="servlet"/>
         </c:when>
     </c:choose>

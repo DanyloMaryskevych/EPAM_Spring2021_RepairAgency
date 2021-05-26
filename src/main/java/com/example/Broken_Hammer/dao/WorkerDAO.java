@@ -26,7 +26,7 @@ public class WorkerDAO implements WorkerRepository {
 
     @Override
     public void addWorker(Connection connection, int id) throws SQLException {
-        String sql = "insert into workers_data values (?, default, default, default, default, default, default, default)";
+        String sql = "insert into workers_data values (?, default, default, default, default, default, default)";
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setInt(1, id);
         statement.execute();
@@ -35,8 +35,8 @@ public class WorkerDAO implements WorkerRepository {
     public List<Worker> getWorkers(String sort) {
         if (sort.equals("rating")) sort = WILSON_SCORE_COLUMN;
 
-        String sql = "select login, worker_id, bio, orders_amount, average, wilson_score " +
-                "from workers_data join users u on u.id = workers_data.worker_id order by " + sort + " desc ";
+        String sql = "select login, worker_id, orders_amount, average, wilson_score " +
+                "from workers_data join user u on u.id = workers_data.worker_id order by " + sort + " desc ";
 
         ResultSet resultSet = null;
         List<Worker> workers = new ArrayList<>();
@@ -89,7 +89,7 @@ public class WorkerDAO implements WorkerRepository {
     }
 
     public String getWorkerById(int workerId) {
-        String sql = "select login from users where id = ?";
+        String sql = "select login from user where id = ?";
         ResultSet resultSet = null;
 
         try(Connection connection = dbManager.getConnection();

@@ -18,7 +18,7 @@
                                 <a class="nav-link btn btn-light" href="workers?sort_by=orders_amount">BH Workers</a>
                             </li>
                             <c:choose>
-                                <c:when test="${role == 'Customer'}">
+                                <c:when test="${role_id == 2}">
                                     <li style="margin-left: 5px" class="nav-item active">
                                         <a class="nav-link btn btn-light" href="profile?page=1">My Orders</a>
                                     </li>
@@ -42,12 +42,13 @@
             <div class="col">
                 <div class="d-flex justify-content-end">
                     <c:choose>
-                        <c:when test="${username != null}">
+                        <%--@elvariable id="login" type="java.lang.String"--%>
+                        <c:when test="${login != null}">
 
                             <div class="row align-items-center w-75">
                                 <div class="col-8">
-                                    <p class="m-0">Hello, ${username}!</p>
-                                    <c:if test="${role == 'Customer'}">
+                                    <p class="m-0">Hello, ${login}!</p>
+                                    <c:if test="${role_id == 2}"><%--@elvariable id="balance" type="java.lang.Integer"--%>
                                         <p class="m-0">Your balance ${balance}$</p>
                                     </c:if>
                                 </div>
