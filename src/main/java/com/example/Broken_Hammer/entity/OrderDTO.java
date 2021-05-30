@@ -129,4 +129,24 @@ public class OrderDTO {
     public void setPerformanceStatusId(int performanceStatusId) {
         this.performanceStatusId = performanceStatusId;
     }
+
+    @Override
+    public String toString() {
+        return "OrderDTO{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", date=" + date +
+                ", workerID=" + workerID +
+                ", expectedWorkerID=" + expectedWorkerID +
+                ", workerName='" + workerName + '\'' +
+                ", paymentStatus='" + paymentStatus + '\'' +
+                ", paymentStatusId=" + paymentStatusId +
+                ", performanceStatus='" + performanceStatus + '\'' +
+                ", performanceStatusId=" + performanceStatusId +
+                ", price=" + price +
+                ", rating=" + rating +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
 }

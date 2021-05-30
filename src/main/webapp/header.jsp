@@ -124,9 +124,4 @@
     </nav>
 </div>
 
-<script type="text/javascript">
-    function setCookie(lang) {
-        document.cookie = "lang=" + lang;
-        window.location.reload();
-    }
-</script>
+<script src="JS/langCookie.js"></script>

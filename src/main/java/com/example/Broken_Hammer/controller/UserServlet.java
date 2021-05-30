@@ -5,6 +5,7 @@ import com.example.Broken_Hammer.dao.DAOFactory;
 import com.example.Broken_Hammer.dao.OrderDAO;
 import com.example.Broken_Hammer.dao.UserDAO;
 import com.example.Broken_Hammer.entity.Role;
+import com.example.Broken_Hammer.filter.LanguageCookieFilter;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -22,6 +23,7 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+        Cookie langCookie = LanguageCookieFilter.getLanguageCookie(request);
 
         Integer userID = (Integer) session.getAttribute("userID");
         Role role = Role.getRoleById((Integer) session.getAttribute(ROLE_ID));
@@ -36,7 +38,7 @@ public class UserServlet extends HttpServlet {
         }
 
         request.setAttribute("pages", pages);
-        request.setAttribute("orders_list", orderDAO.getOrdersByUserId(role, userID, start));
+        request.setAttribute("orders_list", orderDAO.getOrdersByUserId(role, userID, start, langCookie.getValue()));
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/orders.jsp");
         dispatcher.forward(request, response);

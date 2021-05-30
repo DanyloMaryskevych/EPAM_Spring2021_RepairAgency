@@ -3,6 +3,7 @@ package com.example.Broken_Hammer.controller;
 import com.example.Broken_Hammer.dao.DAOFactory;
 import com.example.Broken_Hammer.dao.OrderDAO;
 import com.example.Broken_Hammer.entity.Role;
+import com.example.Broken_Hammer.filter.LanguageCookieFilter;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -17,6 +18,8 @@ public class AdminServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Cookie langCookie = LanguageCookieFilter.getLanguageCookie(request);
+
         int startPage = Integer.parseInt(request.getParameter("page"));
         String sort = request.getParameter("sort");
         String order = request.getParameter("order");
@@ -32,7 +35,7 @@ public class AdminServlet extends HttpServlet {
         request.setAttribute("sort_param", sort);
         request.setAttribute("order_param", order);
         request.setAttribute("pages", pages);
-        request.setAttribute("orders_list", orderDAO.getAllOrders(sort, order, start, filtersMap));
+        request.setAttribute("orders_list", orderDAO.getAllOrders(sort, order, start, filtersMap, langCookie.getValue()));
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/orders.jsp");
         dispatcher.forward(request, response);

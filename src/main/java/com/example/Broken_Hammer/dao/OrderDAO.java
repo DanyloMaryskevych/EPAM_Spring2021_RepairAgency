@@ -65,7 +65,7 @@ public class OrderDAO implements OrderRepository {
         }
     }
 
-    public List<Order> getOrdersByUserId(Role role, int id, int start) {
+    public List<Order> getOrdersByUserId(Role role, int id, int start, String lang) {
         List<Order> orders = new ArrayList<>();
         ResultSet resultSet = null;
 
@@ -75,15 +75,20 @@ public class OrderDAO implements OrderRepository {
 
         String sql = "select `order`.id, worker_id, title, description, payment_status, " +
                 "performance_status, price from " + ORDERS_TABLE +" " +
-                "join payment_status on `order`.payment_status_id = payment_status.id\n" +
-                "join performance_status on `order`.performance_status_id = performance_status.id\n"+
-                "where " + sqlRoleColumn + " = ? order by id desc limit ?, " + LIMIT;
+                "join payment_status on `order`.payment_status_id = payment_status.payment_status_id\n" +
+                "join performance_status on `order`.performance_status_id = performance_status.performance_status_id\n"+
+                "where " + sqlRoleColumn + " = ? " +
+                "and payment_status.lang_id = (select id from language where lang = ?)\n" +
+                "and performance_status.lang_id = (select id from language where lang = ?)" +
+                "order by id desc limit ?, " + LIMIT;
 
         try(Connection connection = dbManager.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
 
             int k = 0;
             statement.setInt(++k, id);
+            statement.setString(++k, lang);
+            statement.setString(++k, lang);
             statement.setInt(++k, start);
 
             resultSet = statement.executeQuery();
@@ -112,7 +117,7 @@ public class OrderDAO implements OrderRepository {
     }
 
     public List<OrderDTO> getAllOrders(String sort, String order, int start,
-                                       Map<String, String> filtersMap) {
+                                       Map<String, String> filtersMap, String lang) {
         List<OrderDTO> orders = new ArrayList<>();
         ResultSet resultSet = null;
 
@@ -126,14 +131,17 @@ public class OrderDAO implements OrderRepository {
                 "       price\n" +
                 "from " + ORDERS_TABLE +
                 " left join user u on worker_id = u.id\n" +
-                "join payment_status on `order`.payment_status_id = payment_status.id\n" +
-                "join performance_status on `order`.performance_status_id = performance_status.id\n"+
+                "join payment_status on `order`.payment_status_id = payment_status.payment_status_id\n" +
+                "join performance_status on `order`.performance_status_id = performance_status.performance_status_id\n"+
                 "where 1=1 " + addFilters(filtersMap) +
                 "order by " + sort + " " + order + " limit ?, " + LIMIT;
         try(Connection connection = dbManager.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, start);
+            int k = 0;
+            statement.setString(++k, lang);
+            statement.setString(++k, lang);
+            statement.setInt(++k, start);
 
             resultSet = statement.executeQuery();
 
@@ -214,15 +222,17 @@ public class OrderDAO implements OrderRepository {
         return sql.toString();
     }
 
-    public OrderDTO getOrderById(int orderId) {
+    public OrderDTO getOrderById(int orderId, String lang) {
         String sql = "select " + ORDERS_TABLE +".id, worker_id, login as worker_name, " +
-                "title, description, payment_status, payment_status_id, " +
-                "performance_status, performance_status_id, " +
+                "title, description, payment_status, `order`.payment_status_id, " +
+                "performance_status, `order`.performance_status_id, " +
                 "price, rating, comment, expected_worker_id from " + ORDERS_TABLE +
                 "left join user on " + ORDERS_TABLE + ".worker_id = user.id\n" +
-                "join payment_status on  " + ORDERS_TABLE + ".payment_status_id = payment_status.id\n" +
-                "join performance_status on  " + ORDERS_TABLE + ".performance_status_id = performance_status.id " +
-                "where " + ORDERS_TABLE + ".id = ?";
+                "join payment_status on  " + ORDERS_TABLE + ".payment_status_id = payment_status.payment_status_id\n" +
+                "join performance_status on  " + ORDERS_TABLE + ".performance_status_id = performance_status.performance_status_id\n" +
+                "where " + ORDERS_TABLE + ".id = ?\n" +
+                "and payment_status.lang_id = (select id from language where lang = ?)\n" +
+                "and performance_status.lang_id = (select id from language where lang = ?)";
 
         OrderDTO order = null;
         ResultSet resultSet = null;
@@ -230,7 +240,11 @@ public class OrderDAO implements OrderRepository {
         try(Connection connection = dbManager.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, orderId);
+            int k = 0;
+            statement.setInt(++k, orderId);
+            statement.setString(++k, lang);
+            statement.setString(++k, lang);
+
             resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
