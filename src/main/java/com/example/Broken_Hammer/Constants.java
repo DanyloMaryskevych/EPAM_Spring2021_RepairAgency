@@ -11,4 +11,8 @@ public interface Constants {
     String ADMIN = "Admin";
     String CUSTOMER = "Customer";
     String WORKER = "Worker";
+
+    String LANGUAGE_COOKIE = "lang";
+    String ENGLISH_LANGUAGE = "en";
+    String UKRAINIAN_LANGUAGE = "ua";
 }

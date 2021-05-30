@@ -17,7 +17,6 @@ import static com.example.Broken_Hammer.dao.UserDAO.close;
 public class WorkerDAO implements WorkerRepository {
     public static final String LOGIN_COLUMN = "login";
     public static final String WORKER_ID_COLUMN = "worker_id";
-    public static final String BIO_COLUMN = "bio";
     public static final String ORDERS_AMOUNT_COLUMN = "orders_amount";
     public static final String AVERAGE_COLUMN = "average";
     public static final String WILSON_SCORE_COLUMN = "wilson_score";
@@ -51,7 +50,6 @@ public class WorkerDAO implements WorkerRepository {
 
                 worker.setLogin(resultSet.getString(LOGIN_COLUMN));
                 worker.setId(resultSet.getInt(WORKER_ID_COLUMN));
-                worker.setBio(resultSet.getString(BIO_COLUMN));
                 worker.setOrdersAmount(resultSet.getInt(ORDERS_AMOUNT_COLUMN));
                 worker.setAverage(resultSet.getDouble(AVERAGE_COLUMN));
                 worker.setWilsonScore(resultSet.getInt(WILSON_SCORE_COLUMN));

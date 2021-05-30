@@ -1,6 +1,7 @@
 <%--@elvariable id="sort_param" type="java.lang.String"--%>
 <%--@elvariable id="order_param" type="java.lang.String"--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -20,6 +21,7 @@
         response.sendRedirect("index.jsp");
     }
 %>
+
 <%@ include file="header.jsp" %>
 <%--@elvariable id="orders_list" type="com.example.Broken_Hammer.entity.OrderDTO"--%>
 
@@ -37,6 +39,7 @@
 
 <%--@elvariable id="role_id" type="java.lang.Integer"--%>
 <div style="min-height: 65%; min-width: 75%" class="container">
+
 
     <c:if test="${role_id == admin}">
         <c:url value="admin" var="filter_link">
