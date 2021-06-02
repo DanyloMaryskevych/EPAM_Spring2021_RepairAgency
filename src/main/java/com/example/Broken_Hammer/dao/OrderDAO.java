@@ -23,6 +23,7 @@ public class OrderDAO implements OrderRepository {
     public static final String ORDERS_TABLE = "`order`";
     public static final String ID_COLUMN = "id";
     public static final String CUSTOMER_ID_COLUMN = "customer_id";
+    public static final String CUSTOMER_NAME_COLUMN = "customer_name";
     public static final String WORKER_ID_COLUMN = "worker_id";
     public static final String WORKER_NAME_COLUMN = "worker_name";
     public static final String DATE_COLUMN = "date";
@@ -122,10 +123,12 @@ public class OrderDAO implements OrderRepository {
         ResultSet resultSet = null;
 
         String sql = "select " + ORDERS_TABLE + ".id,\n" +
-                "title, date, worker_id,\n" +
-                "login as worker_name,\n" +
-                "payment_status, performance_status, price\n" +
-                "from " + ORDERS_TABLE + " left join user u on worker_id = u.id\n" +
+                "title, date, " +
+                "worker_id, u1.login as worker_name,\n" +
+                "customer_id, u2.login as customer_name,\n" +
+                "payment_status, performance_status, price from `order`\n" +
+                "left join user u1 on worker_id = u1.id\n" +
+                "left join user u2 on customer_id = u2.id\n" +
                 "join payment_status on `order`.payment_status_id = payment_status.payment_status_id\n" +
                 "join performance_status on `order`.performance_status_id = performance_status.performance_status_id\n" +
                 "where 1=1 " + addFilters(filtersMap) + "\n" +
@@ -151,6 +154,8 @@ public class OrderDAO implements OrderRepository {
                 orderDTO.setDate(resultSet.getDate(DATE_COLUMN));
                 orderDTO.setWorkerID(resultSet.getInt(WORKER_ID_COLUMN));
                 orderDTO.setWorkerName(resultSet.getString(WORKER_NAME_COLUMN));
+                orderDTO.setCustomerID(resultSet.getInt(CUSTOMER_ID_COLUMN));
+                orderDTO.setCustomerName(resultSet.getString(CUSTOMER_NAME_COLUMN));
                 orderDTO.setPaymentStatus(resultSet.getString(PAYMENT_STATUS_COLUMN));
                 orderDTO.setPerformanceStatus(resultSet.getString(PERFORMANCE_STATUS_COLUMN));
                 orderDTO.setPrice(resultSet.getInt(PRICE_COLUMN));

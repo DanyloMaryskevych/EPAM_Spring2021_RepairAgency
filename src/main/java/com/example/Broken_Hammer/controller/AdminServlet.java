@@ -1,5 +1,6 @@
 package com.example.Broken_Hammer.controller;
 
+import com.example.Broken_Hammer.dao.CustomerDAO;
 import com.example.Broken_Hammer.dao.DAOFactory;
 import com.example.Broken_Hammer.dao.OrderDAO;
 import com.example.Broken_Hammer.dao.UserDAO;
@@ -10,6 +11,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,10 +19,18 @@ import java.util.Map;
 public class AdminServlet extends HttpServlet {
     private final OrderDAO orderDAO = DAOFactory.getOrderDAO();
     private final UserDAO userDAO = DAOFactory.getUserDAO();
+    private final CustomerDAO customerDAO = DAOFactory.getCustomerDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Cookie langCookie = LanguageCookieFilter.getLanguageCookie(request);
+        ServletContext servletContext = getServletContext();
+
+        Enumeration<String> attributeNames = servletContext.getAttributeNames();
+
+        while (attributeNames.hasMoreElements()) {
+            System.out.println(attributeNames.nextElement());
+        }
 
         int startPage = Integer.parseInt(request.getParameter("page"));
         String sort = request.getParameter("sort");
@@ -42,5 +52,13 @@ public class AdminServlet extends HttpServlet {
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/orders.jsp");
         dispatcher.forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        customerDAO.deposit(Integer.parseInt(request.getParameter("customerID")),
+                            Integer.parseInt(request.getParameter("deposit")));
+
+        response.sendRedirect("admin?page=1&sort=date&order=desc");
     }
 }

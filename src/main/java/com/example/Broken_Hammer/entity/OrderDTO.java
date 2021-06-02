@@ -10,6 +10,8 @@ public class OrderDTO {
     private int workerID;
     private int expectedWorkerID;
     private String workerName;
+    private int customerID;
+    private String customerName;
     private String paymentStatus;
     private int paymentStatusId;
     private String performanceStatus;
@@ -56,6 +58,22 @@ public class OrderDTO {
 
     public void setWorkerName(String workerName) {
         this.workerName = workerName;
+    }
+
+    public int getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(int customerID) {
+        this.customerID = customerID;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public String getPaymentStatus() {
@@ -140,6 +158,8 @@ public class OrderDTO {
                 ", workerID=" + workerID +
                 ", expectedWorkerID=" + expectedWorkerID +
                 ", workerName='" + workerName + '\'' +
+                ", customerID=" + customerID +
+                ", customerName='" + customerName + '\'' +
                 ", paymentStatus='" + paymentStatus + '\'' +
                 ", paymentStatusId=" + paymentStatusId +
                 ", performanceStatus='" + performanceStatus + '\'' +

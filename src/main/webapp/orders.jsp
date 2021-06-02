@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="CSS/table.css">
+    <link rel="stylesheet" href="CSS/order_prop.css">
 </head>
 <body>
 
@@ -42,8 +43,11 @@
 <c:set value="worker" var="worker_param"/>
 
 <%--@elvariable id="role_id" type="java.lang.Integer"--%>
-<div style="min-height: 60%; min-width: 85%" class="container">
+<div style="min-height: 60%; min-width: 95%" class="container">
 
+    <form action="PDFGeneratorServlet" method="get">
+        <input type="submit" value="GeneratePDF">
+    </form>
     <c:if test="${role_id == admin}">
         <c:url value="admin" var="filter_link">
             <c:param name="${page_param}" value="${param.get(page_param)}"/>
@@ -141,7 +145,7 @@
     <div class="row">
 
         <%--Filters--%>
-        <div class="col-2 mt-4">
+        <div class="col-2 mt-4 mr-5">
             <c:if test="${role_id == admin}">
                 <h3 class="mb-2"><fmt:message key="orders.filters"/></h3>
                 <c:url value="admin" var="clear_all">
@@ -150,34 +154,42 @@
                     <c:param name="${order_param}" value="${param.get(order_param)}"/>
                 </c:url>
                 <a class="mb-4 p-0 btn" href="${clear_all}">
-                    <button type="button" class="mt-1 btn btn-sm btn-outline-info"><fmt:message key="orders.clear_all"/></button>
+                    <button type="button" class="mt-1 btn btn-sm btn-outline-info"><fmt:message
+                            key="orders.clear_all"/></button>
                 </a>
 
                 <%--Performance status--%>
                 <h4 class="mb-4"><fmt:message key="orders.performance_status"/></h4>
                 <a class="p-0 btn ${dis_perform}" href="${filter_link}&performance=1">
-                    <button type="button" class="mt-1 btn btn-sm btn-outline-secondary"><fmt:message key="orders.not_started"/></button>
+                    <button type="button" class="mt-1 btn btn-sm btn-outline-secondary"><fmt:message
+                            key="orders.not_started"/></button>
                 </a>
                 <a class="p-0 btn ${dis_perform}" href="${filter_link}&performance=2">
-                    <button type="button" class="mt-1 btn btn-sm btn-outline-secondary"><fmt:message key="orders.in_work"/></button>
+                    <button type="button" class="mt-1 btn btn-sm btn-outline-secondary"><fmt:message
+                            key="orders.in_work"/></button>
                 </a>
                 <a class="p-0 btn ${dis_perform}" href="${filter_link}&performance=3">
-                    <button type="button" class="mt-1 btn btn-sm btn-outline-secondary"><fmt:message key="orders.done"/></button>
+                    <button type="button" class="mt-1 btn btn-sm btn-outline-secondary"><fmt:message
+                            key="orders.done"/></button>
                 </a>
                 <a class="p-0 btn ${dis_perform}" href="${filter_link}&performance=4">
-                    <button type="button" class="mt-1 btn btn-sm btn-outline-secondary"><fmt:message key="orders.rejected"/></button>
+                    <button type="button" class="mt-1 btn btn-sm btn-outline-secondary"><fmt:message
+                            key="orders.rejected"/></button>
                 </a>
 
                 <%--Payment status--%>
                 <h4 class="mt-4 mb-4"><fmt:message key="orders.payment_status"/></h4>
                 <a class="p-0 btn ${dis_payment}" href="${filter_link}&payment=1">
-                    <button type="button" class="mt-1 btn btn-sm btn-outline-secondary"><fmt:message key="orders.waiting_for_price"/></button>
+                    <button type="button" class="mt-1 btn btn-sm btn-outline-secondary"><fmt:message
+                            key="orders.waiting_for_price"/></button>
                 </a>
                 <a class="p-0 btn ${dis_payment}" href="${filter_link}&payment=2">
-                    <button type="button" class="mt-1 btn btn-sm btn-outline-secondary"><fmt:message key="orders.waiting_for_payment"/></button>
+                    <button type="button" class="mt-1 btn btn-sm btn-outline-secondary"><fmt:message
+                            key="orders.waiting_for_payment"/></button>
                 </a>
                 <a class="p-0 btn ${dis_payment}" href="${filter_link}&payment=3">
-                    <button type="button" class="mt-1 btn btn-sm btn-outline-secondary"><fmt:message key="orders.paid"/></button>
+                    <button type="button" class="mt-1 btn btn-sm btn-outline-secondary"><fmt:message
+                            key="orders.paid"/></button>
                 </a>
 
                 <%--Workers--%>
@@ -185,14 +197,15 @@
                 <%--@elvariable id="workers_list" type="java.util.List"--%>
                 <c:forEach var="worker_for_filter" items="${workers_list}">
                     <a class="p-0 btn ${dis_worker}" href="${filter_link}&worker=${worker_for_filter.id}">
-                        <button type="button" class="mt-1 btn btn-sm btn-outline-secondary">${worker_for_filter.login}</button>
+                        <button type="button"
+                                class="mt-1 btn btn-sm btn-outline-secondary">${worker_for_filter.login}</button>
                     </a>
                 </c:forEach>
             </c:if>
         </div>
 
-        <div class="col-10">
-            <div class="m-4 w-75">
+        <div class="col-8">
+            <div class="mt-4">
                 <div class="row">
                     <div class="col">
                         <h2 class="mb-3"><fmt:message key="orders"/></h2>
@@ -236,6 +249,7 @@
                         </th>
                         <c:if test="${role_id == admin}">
                             <th><fmt:message key="orders.worker"/></th>
+                            <th><fmt:message key="orders.customer"/></th>
                         </c:if>
                     </tr>
                     </thead>
@@ -244,7 +258,6 @@
 
                     <c:forEach var="order" items="${orders_list}">
                         <tr>
-
                             <c:url var="orderLink" value="order">
                                 <c:param name="orderID" value="${order.id}"/>
                             </c:url>
@@ -278,6 +291,42 @@
                                         <td>${order.workerName}</td>
                                     </c:otherwise>
                                 </c:choose>
+                            </c:if>
+                            <c:if test="${role_id == admin}">
+                                <td>
+                                        ${order.customerName}
+                                    <i data-toggle="modal" data-target="#deposit"
+                                       style="color: green; cursor: pointer"
+                                       class="fas fa-money-bill-alt fa-lg">
+                                    </i>
+
+                                    <div class="modal fade" id="deposit" tabindex="-1" role="dialog">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Deposit money for ${order.customerName}</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <form action="admin" method="post">
+                                                    <div class="modal-body">
+                                                        <label for="deposit_money">Deposit money:</label>
+                                                        <input id="deposit_money" class="form-control" type="text"
+                                                               name="deposit">
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <label>
+                                                            <input class="invisible ghost" name="customerID" value="${order.customerID}">
+                                                        </label>
+                                                        <input type="submit" class="btn btn-primary" value="Save"/>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
                             </c:if>
                         </tr>
                     </c:forEach>
