@@ -10,6 +10,16 @@
     <c:if test="${param.servlet == 'admin'}">
         <c:param name="sort" value="${param.get('sort')}"/>
         <c:param name="order" value="${param.get('order')}"/>
+        <c:if test="${param.get('performance') != null}">
+            <c:param name="performance" value="${param.get('performance')}"/>
+        </c:if>
+        <c:if test="${param.get('payment') != null}">
+            <c:param name="payment" value="${param.get('payment')}"/>
+        </c:if>
+        <c:if test="${param.get('worker') != null}">
+            <c:param name="worker" value="${param.get('worker')}"/>
+        </c:if>
+
     </c:if>
 </c:url>
 
