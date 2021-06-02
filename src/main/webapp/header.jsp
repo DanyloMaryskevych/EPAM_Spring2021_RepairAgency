@@ -34,8 +34,9 @@
                                     </c:otherwise>
                                 </c:choose>
                                 <li style="margin-left: 5px" class="nav-item active">
-                                    <a class="nav-link btn btn-light" href="${link}"><fmt:message
-                                            key="header.orders"/></a>
+                                    <a class="nav-link btn btn-light" href="${link}">
+                                        <fmt:message key="orders"/>
+                                    </a>
                                 </li>
                             </c:if>
 
@@ -82,7 +83,7 @@
                                     <div class="d-flex">
                                         <form class="m-0" action="logout">
                                             <div class="form-group">
-                                                <input class="btn btn-warning" type="submit" value="Logout">
+                                                <input class="btn btn-warning" type="submit" value="<fmt:message key="header.logout"/>">
                                             </div>
                                         </form>
                                     </div>

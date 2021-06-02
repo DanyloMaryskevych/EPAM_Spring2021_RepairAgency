@@ -24,7 +24,6 @@ public class OrderServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         OrderDTO order = orderDAO.getOrderById(Integer.parseInt(request.getParameter("orderID")), langCookie.getValue());
-        System.out.println(order);
 
         Integer userID = (Integer) session.getAttribute("userID");
         request.setAttribute("balance", customerDAO.getBalance(userID));

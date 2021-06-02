@@ -1,5 +1,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:setLocale value="${cookie['lang'].value}"/>
+<fmt:setBundle basename="resources"/>
+
 <html>
 <head>
     <title>Workers</title>
@@ -18,20 +23,20 @@
 
 <div class="container">
 
-    <div class="row w-50 m-4">
-        <div class="col-2">
-            Sort by:
+    <div class="row w-100 m-4">
+        <div class="col-3">
+            <fmt:message key="workers.sort"/> :
         </div>
 
-        <div class="col-2">
+        <div class="col-3">
             <a href="workers?sort_by=orders_amount">
-                <button class="btn btn-secondary">Orders</button>
+                <button class="btn btn-secondary"><fmt:message key="orders"/></button>
             </a>
         </div>
 
         <div class="col-2">
             <a href="workers?sort_by=rating">
-                <button class="btn btn-secondary">Rating</button>
+                <button class="btn btn-secondary"><fmt:message key="workers.rating"/></button>
             </a>
         </div>
 
@@ -45,14 +50,14 @@
             </h4>
 
             <h5 class="col mb-0 d-flex align-items-center">
-                Orders: ${temp_worker.ordersAmount}
+                <fmt:message key="orders"/>: ${temp_worker.ordersAmount}
             </h5>
 
             <div class="col">
                 <span style="font-size: 2em; color: gold"><i class="fas fa-star"></i></span>
                 <c:choose>
                     <c:when test="${temp_worker.average == 0}">
-                        <span style="font-size: 1.5em">None</span>
+                        <span style="font-size: 1.5em"><fmt:message key="workers.none"/></span>
                     </c:when>
                     <c:otherwise>
                         <span style="font-size: 2em">${temp_worker.average}</span>

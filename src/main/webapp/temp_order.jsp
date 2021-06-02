@@ -1,5 +1,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
+
+<fmt:setLocale value="${cookie['lang'].value}"/>
+<fmt:setBundle basename="resources"/>
+
 <html>
 <head>
     <title>Order</title>
@@ -53,7 +58,7 @@
     <c:choose>
         <c:when test="${payment != null && payment == 'false'}">
             <h4 style="color:red;" class="mt-3">
-                Your payment was rejected! Not enough money!
+                <fmt:message key="order.payment_error"/>
             </h4>
         </c:when>
     </c:choose>
@@ -61,7 +66,7 @@
     <%--Orders number and title--%>
     <div class="row mt-5 w-50">
         <div class="col d-flex align-items-center">
-            <h4>Order # ${temp_order.id}</h4>
+            <h4><fmt:message key="order.temp_order"/> # ${temp_order.id}</h4>
         </div>
         <div class="col">
             <h3>&quot;${temp_order.title}&quot;</h3>
@@ -76,7 +81,7 @@
 
             <%--Performance status--%>
             <div class="row">
-                <div class="col">Performance status</div>
+                <div class="col"><fmt:message key="orders.performance_status"/></div>
                 <div class="col d-flex align-items-center justify-content-between">
                     <c:choose>
                         <c:when test="${temp_order.performanceStatusId == not_started_perf_stat}">
@@ -101,8 +106,8 @@
                     <c:if test="${temp_order.performanceStatusId == not_started_perf_stat && role_id == worker}">
                         <jsp:include page="fragments/performance_button.jsp">
                             <jsp:param name="btn_class" value="btn-warning"/>
-                            <jsp:param name="btn_text" value="Start"/>
-                            <jsp:param name="title_text" value="Start working?"/>
+                            <jsp:param name="btn_text" value="order.start_button"/>
+                            <jsp:param name="title_text" value="order.start_button_title"/>
                             <jsp:param name="orderID" value="${temp_order.id}"/>
                             <jsp:param name="status" value="performing"/>
                             <jsp:param name="perform_status" value="${in_work_perf_stat}"/>
@@ -113,8 +118,8 @@
                     <c:if test="${temp_order.performanceStatusId == in_work_perf_stat && role_id == worker}">
                         <jsp:include page="fragments/performance_button.jsp">
                             <jsp:param name="btn_class" value="btn-success"/>
-                            <jsp:param name="btn_text" value="Done"/>
-                            <jsp:param name="title_text" value="Finish working?"/>
+                            <jsp:param name="btn_text" value="order.done_button"/>
+                            <jsp:param name="title_text" value="order.done_button_title"/>
                             <jsp:param name="orderID" value="${temp_order.id}"/>
                             <jsp:param name="status" value="performing"/>
                             <jsp:param name="perform_status" value="${done_perf_stat}"/>
@@ -126,8 +131,8 @@
                                     && temp_order.performanceStatusId != rejected_perf_stat}">
                         <jsp:include page="fragments/performance_button.jsp">
                             <jsp:param name="btn_class" value="btn-danger"/>
-                            <jsp:param name="btn_text" value="Reject"/>
-                            <jsp:param name="title_text" value="Reject order?"/>
+                            <jsp:param name="btn_text" value="order.reject_button"/>
+                            <jsp:param name="title_text" value="order.reject_button_title"/>
                             <jsp:param name="orderID" value="${temp_order.id}"/>
                             <jsp:param name="status" value="performing"/>
                             <jsp:param name="perform_status" value="${rejected_perf_stat}"/>
@@ -139,7 +144,7 @@
 
             <%--Payment status--%>
             <div class="row mt-3">
-                <div class="col">Payment status</div>
+                <div class="col"><fmt:message key="orders.payment_status"/></div>
                 <div class="col d-flex align-items-center">
                     <c:choose>
                         <c:when test="${temp_order.paymentStatusId == price_pay_stat}">
@@ -162,19 +167,19 @@
 
             <%--Worker--%>
             <div class="row mt-3">
-                <div class="col">Worker</div>
+                <div class="col"><fmt:message key="orders.worker"/></div>
                 <div class="col d-flex align-items-center justify-content-between">
                     <c:choose>
                         <c:when test="${temp_order.workerName == null}">
                             <c:if test="${role_id == customer}">
-                                <span class="badge badge-pill badge-secondary">Not specified</span>
+                                <span class="badge badge-pill badge-secondary"><fmt:message key="order.not_specified"/></span>
                             </c:if>
 
                             <c:if test="${role_id == admin}">
 
                                 <button class="btn btn-sm btn-info"
                                         data-toggle="modal" data-target="#set_worker" ${disable_button}>
-                                    Set Worker
+                                    <fmt:message key="order.set_worker"/>
                                 </button>
 
                                 <div class="modal fade" id="set_worker" aria-labelledby="set_worker_aria" tabindex="-1"
@@ -182,7 +187,7 @@
                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="set_worker_aria">Set worker</h5>
+                                                <h5 class="modal-title" id="set_worker_aria"><fmt:message key="order.set_worker"/></h5>
                                             </div>
 
                                             <div class="modal-body">
@@ -190,7 +195,7 @@
                                                 <c:if test="${temp_order.expectedWorkerID != 0}">
                                                     <div class="row mb-4">
                                                         <div class="col-4 d-flex align-items-center">
-                                                            Expected worker:
+                                                            <fmt:message key="orders.expected_worker_form"/>:
                                                         </div>
                                                         <div class="col-3 d-flex align-items-center">
                                                                 ${expected_worker}
@@ -210,7 +215,7 @@
                                                                            value="${temp_order.id}">
                                                                 </label>
                                                                 <input class="btn btn-success" type="submit"
-                                                                       value="Confirm">
+                                                                       value="<fmt:message key="order.confirm"/>">
                                                             </form>
                                                         </div>
                                                     </div>
@@ -220,7 +225,7 @@
                                                     <div class="row">
                                                         <div class="col-4">
                                                             <div class="mb-3">
-                                                                Choose worker
+                                                                <fmt:message key="order.choose_worker"/>
                                                             </div>
                                                         </div>
 
@@ -233,7 +238,7 @@
                                                                         <%--@elvariable id="workers_list" type="java.util.List"--%>
                                                                     <c:forEach var="temp_worker"
                                                                                items="${workers_list}">
-                                                                        <option value="${temp_worker.id}"> ${temp_worker.login} </option>
+                                                                        <option value="${temp_worker.id}">${temp_worker.login}</option>
                                                                     </c:forEach>
                                                                 </select>
                                                             </div>
@@ -247,7 +252,7 @@
                                                                 <input class="invisible ghost" name="orderID"
                                                                        value="${temp_order.id}">
                                                             </label>
-                                                            <input type="submit" class="btn btn-success" value="Save">
+                                                            <input type="submit" class="btn btn-success" value="<fmt:message key="orders.save"/>">
                                                         </div>
                                                     </div>
 
@@ -266,19 +271,19 @@
 
             <%--Price--%>
             <div class="row mt-3">
-                <div class="col">Price</div>
+                <div class="col"><fmt:message key="orders.price"/></div>
                 <div class="col d-flex align-items-center">
                     <c:choose>
                         <c:when test="${temp_order.price == 0}">
 
                             <c:if test="${role_id == customer}">
-                                <span class="badge badge-pill badge-secondary">Not specified</span>
+                                <span class="badge badge-pill badge-secondary"><fmt:message key="order.not_specified"/></span>
                             </c:if>
 
                             <c:if test="${role_id == admin}">
                                 <button class="btn btn-sm btn-success" data-toggle="modal"
                                         data-target="#price" ${disable_button}>
-                                    Set Price
+                                    <fmt:message key="order.set_price"/>
                                 </button>
 
                                 <div class="modal fade" id="price" tabindex="-1" role="dialog"
@@ -286,7 +291,7 @@
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="price_aria">Price</h5>
+                                            <h5 class="modal-title" id="price_aria"><fmt:message key="orders.price"/></h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -296,7 +301,7 @@
                                                 <div class="form-group">
                                                     <div class="row">
                                                         <div class="col-4 d-flex align-items-center">
-                                                            <label class="pl-3 m-0" for="price_set">Enter the price: </label>
+                                                            <label class="pl-3 m-0" for="price_set"><fmt:message key="order.enter_price"/>: </label>
                                                         </div>
 
                                                         <div class="col-3">
@@ -319,7 +324,7 @@
                                                         <input class="invisible ghost" name="orderID"
                                                                value="${temp_order.id}">
                                                     </label>
-                                                    <input type="submit" class="btn btn-primary" value="Save">
+                                                    <input type="submit" class="btn btn-primary" value="<fmt:message key="orders.save"/>">
                                                 </div>
                                             </form>
                                         </div>
@@ -337,8 +342,9 @@
                             <c:if test="${role_id == customer}">
                                 <jsp:include page="fragments/performance_button.jsp">
                                     <jsp:param name="btn_class" value="btn-success ml-3 ${button_v}"/>
-                                    <jsp:param name="btn_text" value="Pay"/>
-                                    <jsp:param name="title_text" value="Confirm payment ${temp_order.price}$ ?"/>
+                                    <jsp:param name="btn_text" value="order.pay_button"/>
+                                    <jsp:param name="title_text" value="order.pay_button_title"/>
+                                    <jsp:param name="price_title" value=" ${temp_order.price}$ ?"/>
                                     <jsp:param name="orderID" value="${temp_order.id}"/>
                                     <jsp:param name="status" value="paid"/>
                                     <jsp:param name="price" value="${temp_order.price}"/>
@@ -362,7 +368,7 @@
     <%--Description--%>
     <div class="row w-50 mt-4">
         <div class="col">
-            <p class="font-italic">Description: </p>
+            <p class="font-italic"><fmt:message key="orders.description"/>: </p>
             ${temp_order.description}
         </div>
     </div>
@@ -370,13 +376,13 @@
     <%--Feedback--%>
     <div class="w-50">
         <c:if test="${feedback_button == 'visible' && temp_order.rating == 0}">
-            <button class="btn btn-info mt-3" data-toggle="modal" data-target="#feedback">Send feedback</button>
+            <button class="btn btn-info mt-3" data-toggle="modal" data-target="#feedback"><fmt:message key="order.send_feedback"/></button>
         </c:if>
         <c:if test="${temp_order.rating > 0}">
             <hr class="mt-3">
             <div class="row">
                 <div class="col">
-                    <p class="font-italic mb-0">Feedback: </p>
+                    <p class="font-italic mb-0"><fmt:message key="order.feedback"/>: </p>
 
                     <div class="row">
                         <div class="mt-2 mb-2 col-1 d-flex align-items-center">
@@ -402,14 +408,14 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="exampleModalLongTitle">Feedback</h4>
+                    <h4 class="modal-title" id="exampleModalLongTitle"><fmt:message key="order.feedback"/></h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <form action="order" method="post">
-                        <h5>Please, evaluate your order quality</h5>
+                        <h5><fmt:message key="order.quality_title"/></h5>
                         <div class="rating">
                             <input type="radio" name="rating" value="5" id="5">
                             <label for="5">☆</label>
@@ -427,7 +433,7 @@
                             <label for="1">☆</label>
                         </div>
 
-                        <label for="comment">Comment:</label>
+                        <label for="comment"><fmt:message key="order.comment"/>:</label>
                         <textarea class="form-control" name="comment" id="comment"></textarea>
 
                         <hr>
@@ -442,7 +448,7 @@
                         </label>
 
                         <div class="row">
-                            <input type="submit" class="mt-3 ml-3 mr-3 col btn btn-success" value="Send">
+                            <input type="submit" class="mt-3 ml-3 mr-3 col btn btn-success" value="<fmt:message key="order.send"/>">
                         </div>
                     </form>
 

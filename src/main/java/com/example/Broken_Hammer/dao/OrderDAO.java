@@ -122,19 +122,17 @@ public class OrderDAO implements OrderRepository {
         ResultSet resultSet = null;
 
         String sql = "select " + ORDERS_TABLE +".id,\n" +
-                "       title,\n" +
-                "       date,\n" +
-                "       worker_id,\n" +
-                "       login as worker_name,\n" +
-                "       payment_status,\n" +
-                "       performance_status,\n" +
-                "       price\n" +
-                "from " + ORDERS_TABLE +
-                " left join user u on worker_id = u.id\n" +
+                "title, date, worker_id,\n" +
+                "login as worker_name,\n" +
+                "payment_status, performance_status, price\n" +
+                "from " + ORDERS_TABLE + " left join user u on worker_id = u.id\n" +
                 "join payment_status on `order`.payment_status_id = payment_status.payment_status_id\n" +
                 "join performance_status on `order`.performance_status_id = performance_status.performance_status_id\n"+
-                "where 1=1 " + addFilters(filtersMap) +
+                "where 1=1 " + addFilters(filtersMap) + "\n" +
+                "and payment_status.lang_id = (select id from language where lang = ?)\n" +
+                "and performance_status.lang_id = (select id from language where lang = ?)\n" +
                 "order by " + sort + " " + order + " limit ?, " + LIMIT;
+        System.out.println(sql);
         try(Connection connection = dbManager.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql)) {
 
@@ -173,7 +171,7 @@ public class OrderDAO implements OrderRepository {
         StringBuilder sb = new StringBuilder();
         for (String s : filtersMap.keySet()) {
             if (filtersMap.get(s) != null) {
-                sb.append("and ").append(s).append(" = '").append(filtersMap.get(s)).append("' ");
+                sb.append("and ").append(ORDERS_TABLE).append(".").append(s).append(" = ").append(filtersMap.get(s)).append(" ");
             }
         }
         return sb.toString();

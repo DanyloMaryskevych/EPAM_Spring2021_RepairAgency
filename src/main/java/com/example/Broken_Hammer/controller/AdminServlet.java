@@ -25,8 +25,8 @@ public class AdminServlet extends HttpServlet {
         String order = request.getParameter("order");
 
         Map<String, String> filtersMap = new HashMap<>();
-        filtersMap.put("performance_status", request.getParameter("performance"));
-        filtersMap.put("payment_status", request.getParameter("payment"));
+        filtersMap.put("performance_status_id", request.getParameter("performance"));
+        filtersMap.put("payment_status_id", request.getParameter("payment"));
         filtersMap.put("login", request.getParameter("worker"));
 
         int start = (startPage - 1) * OrderDAO.LIMIT;

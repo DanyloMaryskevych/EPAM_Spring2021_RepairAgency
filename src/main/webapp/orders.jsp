@@ -2,7 +2,11 @@
 <%--@elvariable id="order_param" type="java.lang.String"--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
+
+<fmt:setLocale value="${cookie['lang'].value}"/>
+<fmt:setBundle basename="resources"/>
+
 <html>
 <head>
     <title>Welcome</title>
@@ -40,7 +44,6 @@
 <%--@elvariable id="role_id" type="java.lang.Integer"--%>
 <div style="min-height: 65%; min-width: 75%" class="container">
 
-
     <c:if test="${role_id == admin}">
         <c:url value="admin" var="filter_link">
             <c:param name="${page_param}" value="${param.get(page_param)}"/>
@@ -61,7 +64,7 @@
 
     <c:if test="${role_id == customer}">
         <div class="m-2">
-            <button class="btn btn-success" data-toggle="modal" data-target="#new_order">New order</button>
+            <button class="btn btn-success" data-toggle="modal" data-target="#new_order"><fmt:message key="orders.new_order"/></button>
         </div>
 
         <%--New order modal window--%>
@@ -71,7 +74,7 @@
                 <div class="modal-content">
 
                     <div class="modal-header">
-                        <h5 class="modal-title">New Order</h5>
+                        <h5 class="modal-title"><fmt:message key="orders.new_order"/></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -80,28 +83,27 @@
                     <div class="modal-body pb-0">
                         <form action="order" method="post" class="needs-validation" novalidate>
                             <div class="form-group">
-                                <label class="form-text text-muted" for="title">Title</label>
+                                <label class="form-text text-muted" for="title"><fmt:message key="orders.title"/></label>
                                 <input type="text" class="form-control" id="title" name="title" required>
                                 <div class="invalid-feedback">
-                                    Please provide some title
+                                    <fmt:message key="orders.title_error"/>
                                 </div>
 
-                                <label class="mt-2 form-text text-muted" for="description">Description</label>
+                                <label class="mt-2 form-text text-muted" for="description"><fmt:message key="orders.description"/></label>
                                 <textarea class="form-control" id="description" name="description" required></textarea>
                                 <div class="invalid-feedback">
-                                    Please provide some description
+                                    <fmt:message key="orders.description_error"/>
                                 </div>
 
                                 <div class="mt-5">
-                                    <label for="workers">Expected worker (optional)</label>
-                                    <small class="form-text text-muted mb-1">You can choose the worker you
-                                        recommend to do your task</small>
+                                    <label for="workers"><fmt:message key="orders.expected_worker"/></label>
+                                    <small class="form-text text-muted mb-1"><fmt:message key="orders.expected_worker_message"/></small>
 
                                     <div class="row w-50">
                                         <div class="col">
                                             <div class="input-group mb-3">
                                                 <select class="custom-select" id="workers" name="expected_worker_id">
-                                                    <option selected value="0">Choose...</option>
+                                                    <option selected value="0"><fmt:message key="orders.choose"/></option>
                                                         <%--@elvariable id="workers_list" type="java.util.List"--%>
                                                     <c:forEach var="temp_worker" items="${workers_list}">
                                                         <option value="${temp_worker.id}"> ${temp_worker.login} </option>
@@ -116,8 +118,10 @@
                             </div>
 
                             <div class="modal-footer pb-0">
-                                <input class="invisible" name="status" value="new_order">
-                                <input class="btn btn-success" type="submit" value="Save">
+                                <label>
+                                    <input class="invisible" name="status" value="new_order">
+                                </label>
+                                <input class="btn btn-success" type="submit" value="<fmt:message key="orders.save"/>">
                             </div>
                         </form>
                     </div>
@@ -130,12 +134,12 @@
     <div class="m-4 w-75">
         <div class="row">
             <div class="col">
-                <h2 class="mb-3">Orders</h2>
+                <h2 class="mb-3"><fmt:message key="orders"/></h2>
             </div>
             <c:if test="${role_id == admin}">
                 <div class="col">
-                    <a class="btn ${dis}" href="${filter_link}&performance=Done">
-                        <button class="btn btn-info btn-sm">Use Filters</button>
+                    <a class="btn ${dis}" href="${filter_link}&performance=1">
+                        <button class="btn btn-info btn-sm"><fmt:message key="orders.filters"/></button>
                     </a>
                 </div>
             </c:if>
@@ -143,17 +147,17 @@
         <table class="table table-hover">
             <thead>
             <tr>
-                <th>Title</th>
+                <th><fmt:message key="orders.title"/></th>
                 <c:if test="${role_id == admin}">
                     <th>
-                        Date
+                        <fmt:message key="orders.date"/>
                         <jsp:include page="fragments/sorting_arrows.jsp">
                             <jsp:param name="sort" value="date"/>
                         </jsp:include>
                     </th>
                 </c:if>
                 <th>
-                    Performance status
+                    <fmt:message key="orders.performance_status"/>
                     <c:if test="${role_id == admin}">
                         <jsp:include page="fragments/sorting_arrows.jsp">
                             <jsp:param name="sort" value="performance_status"/>
@@ -161,7 +165,7 @@
                     </c:if>
                 </th>
                 <th>
-                    Payment status
+                    <fmt:message key="orders.payment_status"/>
                     <c:if test="${role_id == admin}">
                         <jsp:include page="fragments/sorting_arrows.jsp">
                             <jsp:param name="sort" value="payment_status"/>
@@ -169,7 +173,7 @@
                     </c:if>
                 </th>
                 <th>
-                    Price
+                    <fmt:message key="orders.price"/>
                     <c:if test="${role_id == admin}">
                         <jsp:include page="fragments/sorting_arrows.jsp">
                             <jsp:param name="sort" value="price"/>
@@ -177,7 +181,7 @@
                     </c:if>
                 </th>
                 <c:if test="${role_id == admin}">
-                    <th>Worker</th>
+                    <th><fmt:message key="orders.worker"/></th>
                 </c:if>
             </tr>
             </thead>
@@ -249,7 +253,7 @@
         <jsp:include page="fragments/pagination.jsp">
             <jsp:param name="servlet" value="${servlet}"/>
             <jsp:param name="page" value="1"/>
-            <jsp:param name="name" value="First"/>
+            <jsp:param name="name" value="orders.first"/>
         </jsp:include>
 
         <%--Disable 'Previous' page--%>
@@ -262,7 +266,7 @@
             <jsp:param name="disable_pr" value="${disabled_previous}"/>
             <jsp:param name="servlet" value="${servlet}"/>
             <jsp:param name="page" value="${current_page - 1}"/>
-            <jsp:param name="name" value="Previous"/>
+            <jsp:param name="name" value="orders.previous"/>
         </jsp:include>
 
         <%--All pages--%>
@@ -284,14 +288,14 @@
             <jsp:param name="disable_next" value="${disabled_next}"/>
             <jsp:param name="servlet" value="${servlet}"/>
             <jsp:param name="page" value="${current_page + 1}"/>
-            <jsp:param name="name" value="Next"/>
+            <jsp:param name="name" value="orders.next"/>
         </jsp:include>
 
         <%--Last page--%>
         <jsp:include page="fragments/pagination.jsp">
             <jsp:param name="servlet" value="${servlet}"/>
             <jsp:param name="page" value="${pages}"/>
-            <jsp:param name="name" value="Last"/>
+            <jsp:param name="name" value="orders.last"/>
         </jsp:include>
     </ul>
 </nav>
@@ -304,9 +308,9 @@
         'use strict';
         window.addEventListener('load', function () {
             // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms = document.getElementsByClassName('needs-validation');
+            const forms = document.getElementsByClassName('needs-validation');
             // Loop over them and prevent submission
-            var validation = Array.prototype.filter.call(forms, function (form) {
+            const validation = Array.prototype.filter.call(forms, function (form) {
                 form.addEventListener('submit', function (event) {
                     if (form.checkValidity() === false) {
                         event.preventDefault();
