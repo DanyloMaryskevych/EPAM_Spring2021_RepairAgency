@@ -45,7 +45,6 @@
                     <c:set value="block" var="display_login"/>
                 </c:otherwise>
             </c:choose>
-            <%--                aS2#fd35--%>
             <div style="display: ${display_login}">
                 <p style="color: red"><fmt:message key="register.login_server_error"/></p>
             </div>

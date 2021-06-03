@@ -12,7 +12,7 @@ import static com.example.Broken_Hammer.Constants.*;
 @WebFilter(filterName = "LoginFilter", urlPatterns = {"/login"})
 public class LoginFilter implements Filter {
     public static final String USER_VALIDATION_ERROR = "invalidUserError";
-    public static final String USER_VALIDATION_MESSAGE = "Wrong Password or Login! Please, try again.";
+    public static final String USER_VALIDATION_MESSAGE = "false";
     public static final String JSP_PAGE = "/login.jsp";
 
     private UserDAO userDAO;

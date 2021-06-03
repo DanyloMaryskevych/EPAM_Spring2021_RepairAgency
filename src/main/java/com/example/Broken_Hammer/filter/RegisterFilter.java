@@ -1,5 +1,6 @@
 package com.example.Broken_Hammer.filter;
 
+import com.example.Broken_Hammer.dao.DAOFactory;
 import com.example.Broken_Hammer.dao.UserDAO;
 
 import javax.servlet.*;
@@ -17,14 +18,7 @@ public class RegisterFilter implements Filter {
     public static final String PASSWORD_EQUALITY_MESSAGE = "message2";
     public static final String JSP_PAGE = "/registration.jsp";
 
-    private UserDAO userDAO;
-
-    public void init(FilterConfig config) {
-        userDAO = new UserDAO();
-    }
-
-    public void destroy() {
-    }
+    private final UserDAO userDAO = DAOFactory.getUserDAO();
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {

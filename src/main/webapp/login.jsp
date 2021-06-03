@@ -1,5 +1,9 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:setLocale value="${cookie['lang'].value}"/>
+<fmt:setBundle basename="resources"/>
 
 <html lang="${cookie.get('lang')}">
 <head>
@@ -15,21 +19,31 @@
 
 <div style="width: 100%" class="row justify-content-md-center mt-5">
     <div class="col col-lg-3">
-        <h1 class="text-center mb-4">Sign in</h1>
+        <h1 class="text-center mb-4"><fmt:message key="header.login"/></h1>
         <form action="login" method="post">
 
-            <h5 style="color: red"><c:out value="${invalidUserError}"/></h5>
+            <c:choose>
+                <c:when test="${invalidUserError == null}">
+                    <c:set value="none" var="display_login"/>
+                </c:when>
+                <c:otherwise>
+                    <c:set value="block" var="display_login"/>
+                </c:otherwise>
+            </c:choose>
+            <div style="display: ${display_login}">
+                <h5 style="color: red"><fmt:message key="login.login_error"/></h5>
+            </div>
 
-            <label class="form-text text-muted" for="login">Login</label>
+            <label class="form-text text-muted" for="login"><fmt:message key="register.login"/></label>
             <input placeholder = "Enter Login" class="form-control" type="text" name="login" Id="login">
 
-            <label class="mt-3 form-text text-muted" for="password">Password</label>
+            <label class="mt-3 form-text text-muted" for="password"><fmt:message key="register.password"/></label>
             <input class="form-control" type="password" name="password"
                    id="password" placeholder="Enter Password">
             <hr>
             <div class="row">
                 <input class="mt-3 ml-3 mr-3 col btn btn-success"
-                       type="submit" value="Login">
+                       type="submit" value="<fmt:message key="header.login"/>">
             </div>
 
         </form>
