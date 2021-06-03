@@ -140,14 +140,6 @@ public class UserDAO implements UserRepository {
         return password.equals(password1);
     }
 
-    public boolean validatePassword(String p1) {
-        Pattern pattern = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$");
-        Matcher matcher = pattern.matcher(p1);
-
-        return matcher.find();
-
-    }
-
     public String checkIfUserExist(String login, String password) {
         String sql = "select * from user where login = ? and password = ?";
 
