@@ -12,9 +12,9 @@ import static com.example.Broken_Hammer.Constants.*;
 @WebFilter(filterName = "RegisterFilter", urlPatterns = {"/register"})
 public class RegisterFilter implements Filter {
     public static final String LOGIN_VALIDATION_ERROR = "loginError";
-    public static final String LOGIN_VALIDATION_MESSAGE = "message";
+    public static final String LOGIN_VALIDATION_MESSAGE = "message1";
     public static final String PASSWORD_EQUALITY_ERROR = "passwordEqualityError";
-    public static final String PASSWORD_EQUALITY_MESSAGE = "message";
+    public static final String PASSWORD_EQUALITY_MESSAGE = "message2";
     public static final String JSP_PAGE = "/registration.jsp";
 
     private UserDAO userDAO;
