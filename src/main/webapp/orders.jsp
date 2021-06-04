@@ -45,15 +45,6 @@
 <%--@elvariable id="role_id" type="java.lang.Integer"--%>
 <div style="min-height: 60%; min-width: 95%" class="container">
     <c:if test="${role_id == admin}">
-        <form class="m-0" action="PDFGeneratorServlet" method="get">
-            <label>
-                <input class="invisible ghost" type="text" name="params" value="${pageContext.request.queryString}">
-            </label>
-            <input class="btn btn-success" type="submit" value="GeneratePDF">
-        </form>
-    </c:if>
-
-    <c:if test="${role_id == admin}">
         <c:url value="admin" var="filter_link">
             <c:param name="${page_param}" value="${param.get(page_param)}"/>
             <c:param name="${sort_param}" value="${param.get(sort_param)}"/>
@@ -212,8 +203,47 @@
         <div class="col-8">
             <div class="mt-4">
                 <div class="row">
-                    <div class="col">
+                    <div class="col-10">
                         <h2 class="mb-3"><fmt:message key="orders"/></h2>
+                    </div>
+                    <div class="col-2">
+                        <c:if test="${role_id == admin}">
+
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#pdf">
+                                <fmt:message key="order.download_pdf"/>
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="pdf" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title"><fmt:message key="order.report"/></h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form class="m-0" action="PDFGeneratorServlet" method="get">
+                                                <label for="fileName"><fmt:message key="order.file_name"/></label>
+                                                <input id="fileName" type="text" name="fileName" placeholder="orders">
+
+                                                <div class="modal-footer">
+                                                    <label>
+                                                        <input class="invisible ghost" type="text" name="params"
+                                                               value="${pageContext.request.queryString}">
+                                                    </label>
+                                                    <input class="btn btn-success" type="submit"
+                                                           value="<fmt:message key="order.download"/>">
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </c:if>
                     </div>
                 </div>
                 <table class="table table-hover">

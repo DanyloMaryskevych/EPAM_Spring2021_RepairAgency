@@ -38,10 +38,13 @@ public class PDFGeneratorServlet extends HttpServlet {
         filtersMap.put("worker_id", queryMap.get("worker"));
 
         List<OrderDTO> orderDTOList = orderDAO.getAllOrders(queryMap.get("sort"), queryMap.get("order"), -1, filtersMap, "en");
-        System.out.println(request.getHeader("Referer"));
+
+        String nameF = "orders";
+        String fileNameParam = request.getParameter("fileName");
+        if (fileNameParam != "") nameF = fileNameParam;
 
         try {
-            String fileName = "D:\\generatePDF\\orders.pdf";
+            String fileName = "D:\\generatePDF\\" + nameF + ".pdf";
             Document document = new Document();
             PdfWriter.getInstance(document, new FileOutputStream(fileName));
             document.open();
