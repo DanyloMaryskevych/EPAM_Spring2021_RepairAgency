@@ -2,12 +2,17 @@ package com.example.Broken_Hammer.filter;
 
 import com.example.Broken_Hammer.dao.DAOFactory;
 import com.example.Broken_Hammer.dao.UserDAO;
+import com.example.Broken_Hammer.helper.PasswordEncryptor;
 import org.apache.log4j.Logger;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Arrays;
 
 import static com.example.Broken_Hammer.Constants.*;
 
@@ -25,6 +30,17 @@ public class RegisterFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
+
+//        byte[] salt = PasswordEncryptor.createSalt();
+//        System.out.println("Byte salt: " + Arrays.toString(salt));
+//        String saltHex = PasswordEncryptor.bytesToHex(PasswordEncryptor.createSalt());
+//        System.out.println(saltHex);
+//        try {
+//            String hash = PasswordEncryptor.generatedHash("Admin", salt);
+//            System.out.println(hash);
+//        } catch (NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//        }
 
         if(httpRequest.getMethod().equalsIgnoreCase("POST")) {
             String login = request.getParameter(LOGIN);
@@ -56,4 +72,6 @@ public class RegisterFilter implements Filter {
         rd.include(request, response);
 
     }
+
+
 }

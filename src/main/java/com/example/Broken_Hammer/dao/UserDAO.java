@@ -3,9 +3,11 @@ package com.example.Broken_Hammer.dao;
 import com.example.Broken_Hammer.DBManager;
 import com.example.Broken_Hammer.entity.Role;
 import com.example.Broken_Hammer.entity.User;
+import com.example.Broken_Hammer.helper.PasswordEncryptor;
 import com.example.Broken_Hammer.repository.UserRepository;
 
 import javax.naming.NamingException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +26,16 @@ public class UserDAO implements UserRepository {
     private final WorkerDAO workerDAO = DAOFactory.getWorkerDAO();
 
     @Override
-    public void addUser(Map<String, String[]> parametersMap) {
+    public void addUser(Map<String, String[]> parametersMap) throws NoSuchAlgorithmException {
         Connection connection = null;
 
-        String sql = "insert into user values(default, ?, ?, ?)";
+        String sql = "insert into user values(default, ?, ?, ?, ?)";
         int role_id = Integer.parseInt(parametersMap.get(ROLE_ID)[0]);
         Role role = Role.getRoleById(role_id);
+
+        byte[] salt = PasswordEncryptor.createSalt();
+        String hash = PasswordEncryptor.generatedHash(parametersMap.get(PASSWORD)[0], salt);
+        String saltHex = PasswordEncryptor.bytesToHex(salt);
 
         ResultSet resultSet = null;
 
@@ -42,8 +48,9 @@ public class UserDAO implements UserRepository {
 
             int k = 0;
             statement.setString(++k, parametersMap.get(LOGIN)[0]);
-            statement.setString(++k, parametersMap.get(PASSWORD)[0]);
+            statement.setString(++k, hash);
             statement.setInt(++k, role_id);
+            statement.setString(++k, saltHex);
 
             statement.execute();
 
@@ -141,7 +148,7 @@ public class UserDAO implements UserRepository {
     }
 
     public String checkIfUserExist(String login, String password) {
-        String sql = "select * from user where login = ? and password = ?";
+        String sql = "select * from user where login = ?";
 
         ResultSet resultSet = null;
 
@@ -149,16 +156,20 @@ public class UserDAO implements UserRepository {
             PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, login);
-            statement.setString(2, password);
             statement.execute();
 
             resultSet = statement.getResultSet();
 
             if (resultSet.next()) {
-                return resultSet.getString(ROLE_ID);
+                String saltHex = resultSet.getString("salt");
+                byte[] salt = PasswordEncryptor.hexStringToByteArray(saltHex);
+                String generatedPassword = PasswordEncryptor.generatedHash(password, salt);
+                String originalPassword = resultSet.getString("password");
+
+                if (generatedPassword.equals(originalPassword)) return resultSet.getString(ROLE_ID);
             }
 
-        } catch (SQLException | NamingException e) {
+        } catch (SQLException | NamingException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         } finally {
             close(resultSet);
