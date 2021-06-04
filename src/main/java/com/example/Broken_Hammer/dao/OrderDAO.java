@@ -8,10 +8,7 @@ import com.example.Broken_Hammer.entity.Worker;
 import com.example.Broken_Hammer.repository.OrderRepository;
 
 import javax.naming.NamingException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +39,7 @@ public class OrderDAO implements OrderRepository {
     private final WorkerDAO workerDAO = DAOFactory.getWorkerDAO();
 
     @Override
-    public void addOrder(int userID, Map<String, String[]> parametersMap) {
+    public int addOrder(int userID, Map<String, String[]> parametersMap) {
         String sql = "insert into " + ORDERS_TABLE + " (" +
                 CUSTOMER_ID_COLUMN + ", " +
                 TITLE_COLUMN + ", " +
@@ -50,8 +47,10 @@ public class OrderDAO implements OrderRepository {
                 EXPECTED_WORKER_ID_COLUMN +
                 ") value (?, ?, ?, ?)";
 
+        ResultSet resultSet = null;
+
         try (Connection connection = dbManager.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             int k = 0;
             statement.setInt(++k, userID);
@@ -61,9 +60,18 @@ public class OrderDAO implements OrderRepository {
 
             statement.execute();
 
+            resultSet = statement.getGeneratedKeys();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+
         } catch (SQLException | NamingException e) {
             e.printStackTrace();
+        } finally {
+            close(resultSet);
         }
+
+        return 0;
     }
 
     public List<Order> getOrdersByUserId(Role role, int id, int start, String lang) {

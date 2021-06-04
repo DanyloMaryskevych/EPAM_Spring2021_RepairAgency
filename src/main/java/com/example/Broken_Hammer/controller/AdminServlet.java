@@ -4,8 +4,8 @@ import com.example.Broken_Hammer.dao.CustomerDAO;
 import com.example.Broken_Hammer.dao.DAOFactory;
 import com.example.Broken_Hammer.dao.OrderDAO;
 import com.example.Broken_Hammer.dao.UserDAO;
-import com.example.Broken_Hammer.entity.Role;
-import com.example.Broken_Hammer.filter.LanguageCookieFilter;
+import com.example.Broken_Hammer.filter.GlobalFilter;
+import org.apache.log4j.Logger;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -20,17 +20,12 @@ public class AdminServlet extends HttpServlet {
     private final OrderDAO orderDAO = DAOFactory.getOrderDAO();
     private final UserDAO userDAO = DAOFactory.getUserDAO();
     private final CustomerDAO customerDAO = DAOFactory.getCustomerDAO();
+    private final Logger logger = Logger.getRootLogger();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Cookie langCookie = LanguageCookieFilter.getLanguageCookie(request);
+        Cookie langCookie = GlobalFilter.getLanguageCookie(request);
         ServletContext servletContext = getServletContext();
-
-        Enumeration<String> attributeNames = servletContext.getAttributeNames();
-
-        while (attributeNames.hasMoreElements()) {
-            System.out.println(attributeNames.nextElement());
-        }
 
         int startPage = Integer.parseInt(request.getParameter("page"));
         String sort = request.getParameter("sort");
