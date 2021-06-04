@@ -1,7 +1,5 @@
 package com.example.Broken_Hammer.filter;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 

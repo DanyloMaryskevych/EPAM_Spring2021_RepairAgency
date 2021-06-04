@@ -1,8 +1,11 @@
 package com.example.Broken_Hammer.controller;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Paragraph;
+import com.example.Broken_Hammer.dao.DAOFactory;
+import com.example.Broken_Hammer.dao.OrderDAO;
+import com.example.Broken_Hammer.entity.OrderDTO;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import javax.servlet.annotation.*;
@@ -12,6 +15,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
@@ -20,8 +26,19 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "PDFGeneratorServlet", value = "/PDFGeneratorServlet")
 public class PDFGeneratorServlet extends HttpServlet {
+    private final OrderDAO orderDAO = DAOFactory.getOrderDAO();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Map<String, String> queryMap = queryStringParser(request.getParameter("params"));
+
+        Map<String, String> filtersMap = new HashMap<>();
+        filtersMap.put("performance_status_id", queryMap.get("performance"));
+        filtersMap.put("payment_status_id", queryMap.get("payment"));
+        filtersMap.put("worker_id", queryMap.get("worker"));
+
+        List<OrderDTO> orderDTOList = orderDAO.getAllOrders(queryMap.get("sort"), queryMap.get("order"), -1, filtersMap, "en");
+        System.out.println(request.getHeader("Referer"));
 
         try {
             String fileName = "D:\\generatePDF\\orders.pdf";
@@ -29,9 +46,37 @@ public class PDFGeneratorServlet extends HttpServlet {
             PdfWriter.getInstance(document, new FileOutputStream(fileName));
             document.open();
 
-            Paragraph paragraph = new Paragraph("Test PDF");
+//            Header
+            Font headerFont = new Font(Font.FontFamily.TIMES_ROMAN, 35.0f);
+            Paragraph header = new Paragraph("Orders", headerFont);
+            header.setAlignment(Element.ALIGN_CENTER);
+            header.setSpacingAfter(25);
+            document.add(header);
 
-            document.add(paragraph);
+            PdfPTable table = new PdfPTable(new float[] {5, 15, 12, 10, 18, 20, 7, 13});
+            table.setWidthPercentage(95);
+
+            addHeaderToTable(table, "ID");
+            addHeaderToTable(table, "Title");
+            addHeaderToTable(table, "Date");
+            addHeaderToTable(table, "Worker");
+            addHeaderToTable(table, "Performance status");
+            addHeaderToTable(table, "Payment status");
+            addHeaderToTable(table, "Price");
+            addHeaderToTable(table, "Customer");
+
+            for (OrderDTO orderDTO : orderDTOList) {
+                addDataToTable(table, String.valueOf(orderDTO.getId()));
+                addDataToTable(table, orderDTO.getTitle());
+                addDataToTable(table, String.valueOf(orderDTO.getDate()));
+                addDataToTable(table, orderDTO.getWorkerName());
+                addDataToTable(table, orderDTO.getPerformanceStatus());
+                addDataToTable(table, orderDTO.getPaymentStatus());
+                addDataToTable(table, String.valueOf(orderDTO.getPrice()));
+                addDataToTable(table, orderDTO.getCustomerName());
+            }
+
+            document.add(table);
 
             document.close();
 
@@ -73,5 +118,32 @@ public class PDFGeneratorServlet extends HttpServlet {
         } catch (DocumentException e) {
             e.printStackTrace();
         }
+    }
+
+    private void addHeaderToTable(PdfPTable table, String header) {
+        Font font = new Font(Font.FontFamily.TIMES_ROMAN, 13.0f);
+        PdfPCell cell = new PdfPCell(new Paragraph(header, font));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setBackgroundColor(BaseColor.ORANGE);
+        table.addCell(cell);
+    }
+
+    private void addDataToTable(PdfPTable table, String data) {
+        Font font = new Font(Font.FontFamily.TIMES_ROMAN, 10.0f);
+        PdfPCell cell = new PdfPCell(new Paragraph(data, font));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+    }
+
+    private Map<String, String> queryStringParser(String queryString) {
+        Map<String, String> map = new HashMap<>();
+
+        String[] pairs = queryString.split("&");
+        for (String pair : pairs) {
+            String[] keyValue = pair.split("=");
+            map.put(keyValue[0], keyValue[1]);
+        }
+
+        return map;
     }
 }

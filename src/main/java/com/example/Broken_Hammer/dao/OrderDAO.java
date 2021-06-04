@@ -130,6 +130,9 @@ public class OrderDAO implements OrderRepository {
         List<OrderDTO> orders = new ArrayList<>();
         ResultSet resultSet = null;
 
+        String pagination = "";
+        if (start != -1) pagination = " limit " + start + ", " + LIMIT;
+
         String sql = "select " + ORDERS_TABLE + ".id,\n" +
                 "title, date, " +
                 "worker_id, u1.login as worker_name,\n" +
@@ -142,7 +145,7 @@ public class OrderDAO implements OrderRepository {
                 "where 1=1 " + addFilters(filtersMap) + "\n" +
                 "and payment_status.lang_id = (select id from language where lang = ?)\n" +
                 "and performance_status.lang_id = (select id from language where lang = ?)\n" +
-                "order by " + sort + " " + order + " limit ?, " + LIMIT;
+                "order by " + sort + " " + order + pagination;
 
         try (Connection connection = dbManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -150,7 +153,6 @@ public class OrderDAO implements OrderRepository {
             int k = 0;
             statement.setString(++k, lang);
             statement.setString(++k, lang);
-            statement.setInt(++k, start);
 
             resultSet = statement.executeQuery();
 

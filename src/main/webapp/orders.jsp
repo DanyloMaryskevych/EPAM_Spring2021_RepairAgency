@@ -44,10 +44,15 @@
 
 <%--@elvariable id="role_id" type="java.lang.Integer"--%>
 <div style="min-height: 60%; min-width: 95%" class="container">
+    <c:if test="${role_id == admin}">
+        <form class="m-0" action="PDFGeneratorServlet" method="get">
+            <label>
+                <input class="invisible ghost" type="text" name="params" value="${pageContext.request.queryString}">
+            </label>
+            <input class="btn btn-success" type="submit" value="GeneratePDF">
+        </form>
+    </c:if>
 
-    <form action="PDFGeneratorServlet" method="get">
-        <input type="submit" value="GeneratePDF">
-    </form>
     <c:if test="${role_id == admin}">
         <c:url value="admin" var="filter_link">
             <c:param name="${page_param}" value="${param.get(page_param)}"/>
@@ -318,7 +323,8 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                         <label>
-                                                            <input class="invisible ghost" name="customerID" value="${order.customerID}">
+                                                            <input class="invisible ghost" name="customerID"
+                                                                   value="${order.customerID}">
                                                         </label>
                                                         <input type="submit" class="btn btn-primary" value="Save"/>
                                                     </div>
