@@ -4,7 +4,6 @@ import com.example.Broken_Hammer.DBManager;
 import com.example.Broken_Hammer.entity.Order;
 import com.example.Broken_Hammer.entity.OrderDTO;
 import com.example.Broken_Hammer.entity.Role;
-import com.example.Broken_Hammer.entity.Worker;
 import com.example.Broken_Hammer.repository.OrderRepository;
 
 import javax.naming.NamingException;
@@ -253,7 +252,7 @@ public class OrderDAO implements OrderRepository {
         return 0;
     }
 
-    public OrderDTO getOrderById(int orderId, String lang) {
+    public OrderDTO getAllOrderInfoById(int orderId, String lang) {
         String sql = "select " + ORDERS_TABLE + ".id, worker_id, login as worker_name, " +
                 "title, description, payment_status, `order`.payment_status_id, " +
                 "performance_status, `order`.performance_status_id, " +
@@ -305,24 +304,23 @@ public class OrderDAO implements OrderRepository {
         return order;
     }
 
-    public Worker getWorker(int orderId) {
-        String sql = "select login, user.id from user join 'order' on worker_id = user.id where 'order'.id = ?";
+    public Order getBasicOrderInfoById(int orderId) {
+        String sql = "select id, customer_id, worker_id from " + ORDERS_TABLE + " where id = ?";
+        Order order = null;
         ResultSet resultSet = null;
-        Worker worker = null;
 
-        try (Connection connection = dbManager.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try(Connection connection = dbManager.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, orderId);
-
             resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                worker = new Worker();
+                order = new Order();
 
-                worker.setId(resultSet.getInt("id"));
-                worker.setLogin(resultSet.getString("login"));
-                return worker;
+                order.setId(resultSet.getInt(ID_COLUMN));
+                order.setCustomerId(resultSet.getInt(CUSTOMER_ID_COLUMN));
+                order.setWorkerId(resultSet.getInt(WORKER_ID_COLUMN));
             }
 
         } catch (SQLException | NamingException e) {
@@ -331,7 +329,7 @@ public class OrderDAO implements OrderRepository {
             close(resultSet);
         }
 
-        return null;
+        return order;
     }
 
     public void updatePaymentStatus(int status, int orderID) throws SQLException, NamingException {
