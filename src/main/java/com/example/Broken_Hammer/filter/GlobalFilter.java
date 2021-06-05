@@ -13,12 +13,13 @@ import java.util.UUID;
 
 import static com.example.Broken_Hammer.Constants.*;
 
-@WebFilter(filterName = "GlobalFilter", urlPatterns = {"/*"})
+@WebFilter(filterName = "GlobalFilter")
 public class GlobalFilter implements Filter {
     private final Logger logger = Logger.getLogger(GlobalFilter.class);
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
+        System.out.println("Global");
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 

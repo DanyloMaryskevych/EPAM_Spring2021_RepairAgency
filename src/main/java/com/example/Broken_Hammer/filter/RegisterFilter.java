@@ -31,17 +31,6 @@ public class RegisterFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-//        byte[] salt = PasswordEncryptor.createSalt();
-//        System.out.println("Byte salt: " + Arrays.toString(salt));
-//        String saltHex = PasswordEncryptor.bytesToHex(PasswordEncryptor.createSalt());
-//        System.out.println(saltHex);
-//        try {
-//            String hash = PasswordEncryptor.generatedHash("Admin", salt);
-//            System.out.println(hash);
-//        } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();
-//        }
-
         if(httpRequest.getMethod().equalsIgnoreCase("POST")) {
             String login = request.getParameter(LOGIN);
             String password = request.getParameter(PASSWORD);

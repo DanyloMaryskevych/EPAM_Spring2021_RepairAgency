@@ -6,6 +6,7 @@ import java.io.IOException;
 
 @WebServlet(name = "LogoutServlet", value = "/logout")
 public class LogoutServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
@@ -14,6 +15,6 @@ public class LogoutServlet extends HttpServlet {
         session.removeAttribute("role");
         session.invalidate();
 
-        response.sendRedirect("/bh/");
+        response.sendRedirect("index.jsp");
     }
 }

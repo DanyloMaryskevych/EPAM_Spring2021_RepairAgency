@@ -24,6 +24,7 @@ public class AdminServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         Cookie langCookie = GlobalFilter.getLanguageCookie(request);
 
         int startPage = Integer.parseInt(request.getParameter("page"));

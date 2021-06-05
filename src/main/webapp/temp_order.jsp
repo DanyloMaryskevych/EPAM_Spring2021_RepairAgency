@@ -17,13 +17,6 @@
 </head>
 <body>
 
-<%
-    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-
-    if (session.getAttribute("session_id") != session.getId()) {
-        response.sendRedirect("index.jsp");
-    }
-%>
 <%@ include file="header.jsp" %>
 
 <%--CONSTANTS--%>
