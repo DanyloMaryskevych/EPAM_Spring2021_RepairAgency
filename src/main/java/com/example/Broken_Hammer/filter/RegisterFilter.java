@@ -2,17 +2,12 @@ package com.example.Broken_Hammer.filter;
 
 import com.example.Broken_Hammer.dao.DAOFactory;
 import com.example.Broken_Hammer.dao.UserDAO;
-import com.example.Broken_Hammer.helper.PasswordEncryptor;
 import org.apache.log4j.Logger;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.Arrays;
 
 import static com.example.Broken_Hammer.Constants.*;
 

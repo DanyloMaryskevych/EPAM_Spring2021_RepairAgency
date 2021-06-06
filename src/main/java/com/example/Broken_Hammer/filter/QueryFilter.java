@@ -1,9 +1,7 @@
 package com.example.Broken_Hammer.filter;
 
-import com.example.Broken_Hammer.controller.PDFGeneratorServlet;
 import com.example.Broken_Hammer.helper.PDFGenerator;
 import com.example.Broken_Hammer.helper.QueryValidator;
-import org.apache.log4j.Logger;
 
 import javax.servlet.*;
 import javax.servlet.annotation.*;
@@ -21,7 +19,6 @@ public class QueryFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-        System.out.println("QueryFilter " + httpServletRequest.getQueryString());
 
         boolean validQueryString = false;
         Map<String, String> queryString = PDFGenerator.queryStringParser(httpServletRequest.getQueryString());

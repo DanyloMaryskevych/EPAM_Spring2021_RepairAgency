@@ -38,5 +38,14 @@
         <url-pattern>/order</url-pattern>
     </filter-mapping>
 
+    <filter-mapping>
+        <filter-name>OrderFilter</filter-name>
+        <url-pattern>/order</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>AdminFilter</filter-name>
+        <url-pattern>/admin</url-pattern>
+    </filter-mapping>
 
 </web-app>

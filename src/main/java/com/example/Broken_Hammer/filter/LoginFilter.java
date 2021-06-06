@@ -4,7 +4,6 @@ import com.example.Broken_Hammer.dao.DAOFactory;
 import com.example.Broken_Hammer.dao.UserDAO;
 import com.example.Broken_Hammer.entity.Role;
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
 
 import javax.servlet.*;
 import javax.servlet.annotation.*;
