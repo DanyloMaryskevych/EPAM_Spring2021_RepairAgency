@@ -21,6 +21,8 @@ public class QueryValidator {
         SQPMap.put("payment", "\\b(1|2|3)\\b");
         SQPMap.put("worker", "\\d+");
         SQPMap.put("orderID", "\\d+");
+        SQPMap.put("fileName", "\\S+");
+        SQPMap.put("params", "\\S+");
     }
 
     public static boolean queryStringValidator(Map<String, String> queryString) {
@@ -35,13 +37,13 @@ public class QueryValidator {
                     Matcher matcher = pattern.matcher(queryString.get(queryKey));
 
                     if (!matcher.find()) {
-                        logger.error("Wrong value " + queryString.get(queryKey) + " for parameter " + queryKey + " was typed!");
+                        logger.error("Wrong value '" + queryString.get(queryKey) + "' for parameter '" + queryKey + "' was typed!");
                         return false;
                     }
                 }
             }
             if (!exist) {
-                logger.error("Parameter " + queryKey + " does not exist!");
+                logger.error("Parameter '" + queryKey + "' does not exist!");
                 return false;
             }
         }
