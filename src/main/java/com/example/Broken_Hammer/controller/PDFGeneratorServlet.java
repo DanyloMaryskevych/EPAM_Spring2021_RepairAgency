@@ -41,7 +41,7 @@ public class PDFGeneratorServlet extends HttpServlet {
 
         String nameF = "orders";
         String fileNameParam = request.getParameter("fileName");
-        if (fileNameParam != "") nameF = fileNameParam;
+        if (!fileNameParam.equals("")) nameF = fileNameParam;
 
         try {
             String fileName = "D:\\generatePDF\\" + nameF + ".pdf";
@@ -56,7 +56,7 @@ public class PDFGeneratorServlet extends HttpServlet {
             header.setSpacingAfter(25);
             document.add(header);
 
-            PdfPTable table = new PdfPTable(new float[] {5, 15, 12, 10, 18, 20, 7, 13});
+            PdfPTable table = new PdfPTable(new float[]{5, 15, 12, 10, 18, 20, 7, 13});
             table.setWidthPercentage(95);
 
             addHeaderToTable(table, "ID");
@@ -138,13 +138,21 @@ public class PDFGeneratorServlet extends HttpServlet {
         table.addCell(cell);
     }
 
-    private Map<String, String> queryStringParser(String queryString) {
+    public static Map<String, String> queryStringParser(String queryString) {
         Map<String, String> map = new HashMap<>();
 
-        String[] pairs = queryString.split("&");
-        for (String pair : pairs) {
-            String[] keyValue = pair.split("=");
-            map.put(keyValue[0], keyValue[1]);
+        if (queryString != null && !queryString.equals("")) {
+            String[] pairs = queryString.split("&");
+
+            for (String pair : pairs) {
+                String[] keyValue = pair.split("=");
+
+                try {
+                    map.put(keyValue[0], keyValue[1]);
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
         }
 
         return map;

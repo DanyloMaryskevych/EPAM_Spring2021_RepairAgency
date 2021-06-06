@@ -212,7 +212,7 @@ public class OrderDAO implements OrderRepository {
             close(resultSet);
         }
 
-        return 1;
+        return 0;
     }
 
     private String amountOfPagesSQLQuery(Role role, int id) {
