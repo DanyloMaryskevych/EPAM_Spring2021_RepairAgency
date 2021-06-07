@@ -57,11 +57,7 @@ public class OrderFilter implements Filter {
 
             } else chain.doFilter(request, response);
 
-        } else if (httpServletRequest.getMethod().equalsIgnoreCase("POST") && role == Role.CUSTOMER) {
-            chain.doFilter(request, response);
-        } else {
-            logger.error("User# " + userId + " trying to create new order. No permission!");
-            httpServletResponse.sendRedirect(ERROR_PAGE);
-        }
+        } else chain.doFilter(request, response);
+
     }
 }

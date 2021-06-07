@@ -215,18 +215,27 @@
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <div class="modal-body">
-                                            <form class="m-0" action="PDFGenerator" method="get">
+                                        <div class="modal-body pb-0">
+                                            <form class="needs-validation m-0" novalidate action="PDFGenerator"
+                                                  method="get">
                                                 <label for="fileName"><fmt:message key="order.file_name"/></label>
-                                                <input id="fileName" type="text" name="fileName" placeholder="orders">
+                                                <input class="form-control mb-3" id="fileName" type="text"
+                                                       name="fileName"
+                                                       placeholder="<fmt:message key="order.file_name"/>" required>
+                                                <div class="invalid-feedback mb-2">
+                                                    <fmt:message key="order.file_name_error"/>
+                                                </div>
 
                                                 <div class="modal-footer">
-                                                    <label>
-                                                        <input class="invisible ghost" type="text" name="params"
-                                                               value="${pageContext.request.queryString}">
-                                                    </label>
-                                                    <input class="btn btn-success" type="submit"
-                                                           value="<fmt:message key="order.download"/>">
+                                                    <div class="row w-100">
+                                                        <label>
+                                                            <input class="invisible ghost" type="text" name="params"
+                                                                   value="${pageContext.request.queryString}">
+                                                        </label>
+                                                        <input class="col btn btn-success" type="submit"
+                                                               value="<fmt:message key="order.download"/>">
+                                                    </div>
+
                                                 </div>
                                             </form>
                                         </div>
@@ -331,29 +340,43 @@
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">Deposit money for ${order.customerName}</h5>
+                                                    <h5 class="modal-title"><fmt:message
+                                                            key="orders.deposit_money_for"/> ${order.customerName}</h5>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                             aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
-                                                <form action="admin" method="post">
-                                                    <div class="modal-body">
-                                                        <label for="deposit_money">Deposit money:</label>
-                                                        <input id="deposit_money" class="form-control" type="text"
-                                                               name="deposit">
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <label>
-                                                            <input class="invisible ghost" name="customerID"
-                                                                   value="${order.customerID}">
-                                                        </label>
-                                                        <input type="submit" class="btn btn-primary" value="Save"/>
-                                                    </div>
-                                                </form>
+
+                                                <div class="modal-body pb-0">
+                                                    <form class="needs-validation" novalidate action="admin"
+                                                          method="post">
+
+                                                        <label for="deposit_money"></label>
+                                                        <input id="deposit_money" class="form-control mb-3" type="text" name="deposit"
+                                                               placeholder="<fmt:message key="orders.provide_sum"/>" required pattern="\d+">
+
+                                                        <div style="text-align: left" class="invalid-feedback mb-2">
+                                                            <fmt:message key="orders.sum_error"/>
+                                                        </div>
+
+                                                        <div class="modal-footer pb-0">
+                                                            <div class="row w-100">
+                                                                <label>
+                                                                    <input class="invisible ghost" name="customerID"
+                                                                           value="${order.customerID}">
+                                                                </label>
+                                                                <input type="submit" class="col btn btn-success"
+                                                                       value="<fmt:message key="orders.save"/>"/>
+                                                            </div>
+                                                        </div>
+
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+
                                 </td>
                             </c:if>
                         </tr>
@@ -435,26 +458,7 @@
 
 <%@ include file="footer.jsp" %>
 
-<script>
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-    (function () {
-        'use strict';
-        window.addEventListener('load', function () {
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            const forms = document.getElementsByClassName('needs-validation');
-            // Loop over them and prevent submission
-            const validation = Array.prototype.filter.call(forms, function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (form.checkValidity() === false) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                }, false);
-            });
-        }, false);
-    })();
-</script>
+<script rel="script" src="JS/fieldsValidation.js"></script>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

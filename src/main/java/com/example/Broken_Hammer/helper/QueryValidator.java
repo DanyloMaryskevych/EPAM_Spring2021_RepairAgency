@@ -23,6 +23,7 @@ public class QueryValidator {
         SQPMap.put("orderID", "\\d+");
         SQPMap.put("fileName", "\\S+");
         SQPMap.put("params", "\\S+");
+        SQPMap.put("payment_confirm", "\\b(true|false)\\b");
     }
 
     public static boolean queryStringValidator(Map<String, String> queryString) {

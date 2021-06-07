@@ -50,7 +50,7 @@ public class OrderServlet extends HttpServlet {
         try {
              orderID = Integer.parseInt(request.getParameter("orderID"));
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
 
         String status = request.getParameter("status");
@@ -72,7 +72,7 @@ public class OrderServlet extends HttpServlet {
                     payment = false;
                     logger.error("Order# " + orderID + ". Payment (" + price + "$) was rejected by User# " + userId);
                 }
-                response.sendRedirect("order?orderID=" + orderID + "&payment=" + payment);
+                response.sendRedirect("order?orderID=" + orderID + "&payment_confirm=" + payment);
                 break;
             }
             case "feedback": {

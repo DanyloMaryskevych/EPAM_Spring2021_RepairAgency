@@ -105,8 +105,8 @@
 
                                     <li style="margin-left: 5px" class="nav-item active">
                                         <a style="text-decoration: none" href="register">
-                                            <button style="background-color: #33cabb; color: aliceblue; font-weight: bold; font-size: 1rem; border: none"
-                                                    type="button" class="nav-link btn btn-primary btn-sm">
+                                            <button style="color: aliceblue; font-weight: bold; font-size: 1rem; border: none"
+                                                    type="button" class="nav-link btn btn-secondary btn-sm">
                                                 <fmt:message key="header.register"/>
                                             </button>
                                         </a>
