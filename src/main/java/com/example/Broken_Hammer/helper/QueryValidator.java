@@ -29,6 +29,7 @@ public class QueryValidator {
 
         for (String queryKey : queryString.keySet()) {
             boolean exist = false;
+
             for (String sqp : SQPMap.keySet()) {
 
                 if (queryKey.equals(sqp)) {

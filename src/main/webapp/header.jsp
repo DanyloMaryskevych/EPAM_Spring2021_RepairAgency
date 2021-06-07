@@ -17,7 +17,7 @@
                     <div class="w-auto my-auto d-none d-sm-flex">
                         <ul class="navbar-nav mr-auto">
                             <li style="margin-left: 5px" class="nav-item active">
-                                <a class="nav-link btn btn-light" href="index.jsp"><fmt:message key="header.home"/></a>
+                                <a class="nav-link btn btn-light" href="home"><fmt:message key="header.home"/></a>
                             </li>
                             <li style="margin-left: 5px" class="nav-item active">
                                 <a class="nav-link btn btn-light" href="workers?sort_by=orders_amount">BH <fmt:message

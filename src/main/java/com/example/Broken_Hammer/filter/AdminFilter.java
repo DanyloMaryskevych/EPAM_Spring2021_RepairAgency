@@ -26,7 +26,7 @@ public class AdminFilter implements Filter {
 
         if (role != Role.ADMIN) {
             logger.error("User# " + session.getAttribute(USER_ID) + " (" + role + ") trying to access Admin page!");
-            httpServletResponse.sendRedirect("error.jsp");
+            httpServletResponse.sendRedirect("error");
         }
         else chain.doFilter(request, response);
 

@@ -26,7 +26,7 @@ public class UserServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Cookie langCookie = GlobalFilter.getLanguageCookie(request);
 
-        Integer userID = (Integer) session.getAttribute("userID");
+        Integer userID = (Integer) session.getAttribute(USER_ID);
         Role role = Role.getRoleById((Integer) session.getAttribute(ROLE_ID));
 
         int startPage = Integer.parseInt(request.getParameter("page"));

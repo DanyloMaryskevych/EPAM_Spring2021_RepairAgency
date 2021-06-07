@@ -16,7 +16,7 @@ public class DBManager {
         DATA_SOURCE_LOOKUP = "jdbc/mysql";
     }
 
-    private DataSource getDataSource() throws NamingException {
+    public DataSource getDataSource() throws NamingException {
         Context context = (Context) new InitialContext().lookup(CONTEXT_LOOKUP);
         return (DataSource) context.lookup(DATA_SOURCE_LOOKUP);
     }

@@ -20,7 +20,8 @@
 <div style="width: 100%" class="row justify-content-md-center mt-5">
     <div class="col col-lg-3">
         <h1 class="text-center mb-4"><fmt:message key="header.login"/></h1>
-        <form action="login" method="post">
+        <form class="needs-validation m-2" novalidate
+              action="login" method="post">
 
             <c:choose>
                 <c:when test="${invalidUserError == null}">
@@ -35,11 +36,17 @@
             </div>
 
             <label class="form-text text-muted" for="login"><fmt:message key="register.login"/></label>
-            <input placeholder = "Enter Login" class="form-control" type="text" name="login" Id="login">
+            <input placeholder = "Enter Login" class="form-control" type="text" name="login" id="login" required>
+            <div class="invalid-feedback">
+                <fmt:message key="login.login_validation"/>
+            </div>
 
             <label class="mt-3 form-text text-muted" for="password"><fmt:message key="register.password"/></label>
             <input class="form-control" type="password" name="password"
-                   id="password" placeholder="Enter Password">
+                   id="password" placeholder="Enter Password" required>
+            <div class="invalid-feedback">
+                <fmt:message key="login.password_validation"/>
+            </div>
             <hr>
             <div class="row">
                 <input class="mt-3 ml-3 mr-3 col btn btn-success"
@@ -51,6 +58,8 @@
 </div>
 
 <%@ include file="footer.jsp" %>
+
+<script rel="script" src="JS/fieldsValidation.js"></script>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

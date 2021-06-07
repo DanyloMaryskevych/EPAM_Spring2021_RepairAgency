@@ -20,6 +20,6 @@ public class WorkersServlet extends HttpServlet {
         List<Worker> workers = workerDAO.getWorkers(sort);
 
         request.setAttribute("bh_workers_list", workers);
-        request.getRequestDispatcher("/workers.jsp").forward(request, response);
+        request.getRequestDispatcher("workers.jsp").forward(request, response);
     }
 }

@@ -27,7 +27,7 @@ public class AuthFilter implements Filter {
             chain.doFilter(request, response);
         } catch (NullPointerException e) {
             logger.error("Page needs authorization!");
-            httpServletResponse.sendRedirect("login.jsp");
+            httpServletResponse.sendRedirect("login");
         }
     }
 }

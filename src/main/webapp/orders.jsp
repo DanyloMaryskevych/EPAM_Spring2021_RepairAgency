@@ -216,7 +216,7 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <form class="m-0" action="PDFGeneratorServlet" method="get">
+                                            <form class="m-0" action="PDFGenerator" method="get">
                                                 <label for="fileName"><fmt:message key="order.file_name"/></label>
                                                 <input id="fileName" type="text" name="fileName" placeholder="orders">
 

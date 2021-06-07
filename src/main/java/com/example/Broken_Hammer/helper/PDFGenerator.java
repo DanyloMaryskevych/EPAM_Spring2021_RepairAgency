@@ -19,12 +19,8 @@ public class PDFGenerator {
     private static final Logger logger = Logger.getLogger(PDFGenerator.class);
 
     public static void generatePDF(HttpServletResponse response, HttpServletRequest request, ServletContext context, List<OrderDTO> orderDTOList) {
-        String name = "orders";
-        String fileNameParam = request.getParameter("fileName");
-        if (!fileNameParam.equals("")) name = fileNameParam;
-
         try {
-            String fileName = "D:\\generatePDF\\" + name + ".pdf";
+            String fileName = "D:\\generatePDF\\" + request.getParameter("fileName") + ".pdf";
             Document document = new Document();
             PdfWriter.getInstance(document, new FileOutputStream(fileName));
             document.open();

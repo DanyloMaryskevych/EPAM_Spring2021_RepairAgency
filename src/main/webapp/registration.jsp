@@ -125,43 +125,7 @@
 
 <%@ include file="footer.jsp" %>
 
-<script>
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-    (function () {
-        'use strict';
-        window.addEventListener('load', function () {
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            const forms = document.getElementsByClassName('needs-validation');
-            // Loop over them and prevent submission
-            const validation = Array.prototype.filter.call(forms, function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (form.checkValidity() === false) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                }, false);
-            });
-        }, false);
-    })();
-</script>
-
-<script>
-    const password = document.getElementsByClassName("pass")
-        , confirm_password = document.getElementById("new_password1");
-
-    function validatePassword() {
-        if (password.value !== confirm_password.value) {
-            document.getElementById("confirm").style.setProperty("color", "red");
-            document.getElementById("confirm").innerHTML = <fmt:message key="register.confirm_password_error"/>;
-        } else {
-            document.getElementById("confirm").innerHTML = "";
-        }
-    }
-
-    password.onchange = validatePassword;
-    confirm_password.onkeyup = validatePassword;
-</script>
+<script rel="script" src="JS/fieldsValidation.js"></script>
 
 <script>
     const myInput = document.getElementById("new_password");

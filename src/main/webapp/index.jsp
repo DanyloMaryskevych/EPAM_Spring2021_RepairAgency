@@ -11,10 +11,29 @@
 </head>
 <body>
 
-<%
-    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-%>
 <%@ include file="header.jsp" %>
+
+<div class="container p-0">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-3">
+            <img height="750" width="500" src="https://c0.wallpaperflare.com/preview/443/996/1001/switzerland-neon-light-wall-lights.jpg" alt="repair">
+        </div>
+    </div>
+<%--    <div style="height: 100%; width: 100%; background-image: url(--%>
+<%--    https://c0.wallpaperflare.com/preview/443/996/1001/switzerland-neon-light-wall-lights.jpg--%>
+<%--    ); opacity: 0.5">--%>
+</div>
+
+<%--<div style="height: 85%; width: 100%; background-image: url(https://en3yksrguy-flywheel.netdna-ssl.com/wp-content/uploads/16-Repair-Branding-Print-Design-Studio-Round-Australia-BPO.jpg); opacity: 0.5">--%>
+
+<%--<div class="container h-100" style="opacity: 0.2">--%>
+<%--    <div class="row mt-5">--%>
+<%--&lt;%&ndash;        <div class="col-3"></div>&ndash;%&gt;--%>
+<%--        <div class="col">--%>
+<%--        </div>--%>
+<%--    </div>--%>
+<%--</div>--%>
 
 <%@ include file="footer.jsp" %>
 </body>

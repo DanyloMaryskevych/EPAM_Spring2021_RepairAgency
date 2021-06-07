@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "PDFGeneratorServlet", value = "/PDFGeneratorServlet")
+@WebServlet(name = "PDFGeneratorServlet", value = "/PDFGenerator")
 public class PDFGeneratorServlet extends HttpServlet {
     private final OrderDAO orderDAO = DAOFactory.getOrderDAO();
 
