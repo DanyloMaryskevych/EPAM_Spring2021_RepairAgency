@@ -49,7 +49,8 @@
             <!-- Center elements -->
             <div class="col">
                 <div class="d-flex justify-content-center">
-                    <h1 class="mt-2" style="font-family: 'Akaya Telivigala', cursive; font-size: 36px">Broken Hammer</h1>
+                    <h1 class="mt-2" style="font-family: 'Akaya Telivigala', cursive; font-size: 36px">Broken
+                        Hammer</h1>
                 </div>
             </div>
 
@@ -81,11 +82,33 @@
 
                                 <div class="col-2">
                                     <div class="d-flex">
-                                        <form class="m-0" action="logout">
-                                            <div class="form-group">
-                                                <input class="btn btn-warning" type="submit" value="<fmt:message key="header.logout"/>">
+
+
+                                        <button class="btn btn-secondary" data-toggle="modal"
+                                                data-target="#logout">
+                                            <fmt:message key="header.logout"/>
+                                        </button>
+
+                                        <div class="modal fade" id="logout" tabindex="-1" role="dialog">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title"><fmt:message key="header.confirm_logout"/></h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <form class="m-0" action="logout">
+                                                            <div class="form-group">
+                                                                <input class="btn btn-success" type="submit" value="<fmt:message key="order.yes"/>">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </form>
+                                        </div>
                                     </div>
 
                                 </div>

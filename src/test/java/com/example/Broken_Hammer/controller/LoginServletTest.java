@@ -7,6 +7,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -29,7 +30,7 @@ public class LoginServletTest {
     }
 
     @Test
-    public void testGet() throws IOException {
+    public void testGet() throws IOException, ServletException {
         loginServlet.doGet(request, response);
         ArgumentCaptor<String> dispatcherArgument = ArgumentCaptor.forClass(String.class);
         verify(request).getRequestDispatcher(dispatcherArgument.capture());

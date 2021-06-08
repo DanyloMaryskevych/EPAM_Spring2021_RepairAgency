@@ -5,6 +5,7 @@ import com.example.Broken_Hammer.dao.UserDAO;
 import com.example.Broken_Hammer.entity.Role;
 import org.apache.log4j.Logger;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
@@ -17,8 +18,8 @@ public class LoginServlet extends HttpServlet {
     private final Logger logger = Logger.getLogger(LoginServlet.class);
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.sendRedirect("/login.jsp");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 
     @Override

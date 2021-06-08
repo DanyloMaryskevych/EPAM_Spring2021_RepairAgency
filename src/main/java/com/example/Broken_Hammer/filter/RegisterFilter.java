@@ -31,8 +31,15 @@ public class RegisterFilter implements Filter {
             String password = request.getParameter(PASSWORD);
             String password1 = request.getParameter(CONFIRMED_PASSWORD);
 
+            System.out.println(login);
+            System.out.println(password);
+            System.out.println(password1);
+
             boolean passwordsEquality = userDAO.passwordsEquality(password, password1);
             boolean loginValidation = userDAO.checkLogin(login);
+
+            System.out.println(passwordsEquality);
+            System.out.println(loginValidation);
 
             if (passwordsEquality && loginValidation) {
                 request.setAttribute(ROLE_ID, request.getParameter(ROLE_ID));
@@ -52,7 +59,7 @@ public class RegisterFilter implements Filter {
         response.setContentType("text/html; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        RequestDispatcher rd = request.getRequestDispatcher(JSP_PAGE);
+        RequestDispatcher rd = request.getRequestDispatcher("/registration.jsp");
         rd.include(request, response);
 
     }

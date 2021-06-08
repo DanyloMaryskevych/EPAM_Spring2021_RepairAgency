@@ -296,7 +296,7 @@
                                                     <input id="price_set" class="form-control mb-3" type="text"
                                                            name="price"
                                                            placeholder="<fmt:message key="orders.price"/>" required
-                                                           pattern="\d+">
+                                                           pattern="^[1-9][0-9]*$">
 
                                                     <div style="text-align: left" class="invalid-feedback mb-2">
                                                         <fmt:message key="orders.sum_error"/>

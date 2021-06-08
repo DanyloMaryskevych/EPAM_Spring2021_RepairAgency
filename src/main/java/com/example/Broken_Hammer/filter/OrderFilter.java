@@ -37,7 +37,7 @@ public class OrderFilter implements Filter {
                 orderId = Integer.parseInt(httpServletRequest.getParameter("orderID"));
             } catch (Exception e) {
                 logger.error("Missing orderID parameter!");
-                httpServletResponse.sendRedirect(ERROR_PAGE);
+                httpServletResponse.sendRedirect(ERROR_SERVLET);
                 return;
             }
 
@@ -46,13 +46,13 @@ public class OrderFilter implements Filter {
 
             if (order == null) {
                 logger.error("Order# " + orderId + " does not exist!");
-                httpServletResponse.sendRedirect(ERROR_PAGE);
+                httpServletResponse.sendRedirect(ERROR_SERVLET);
             } else if (role != Role.ADMIN) {
 
                 // Check if user has access to order
                 if ((role == Role.CUSTOMER && userId != order.getCustomerId()) || (role == Role.WORKER && userId != order.getWorkerId())) {
                     logger.error("User# " + userId + " trying to access Order# " + orderId + ". No permission!");
-                    httpServletResponse.sendRedirect(ERROR_PAGE);
+                    httpServletResponse.sendRedirect(ERROR_SERVLET);
                 } else chain.doFilter(request, response);
 
             } else chain.doFilter(request, response);

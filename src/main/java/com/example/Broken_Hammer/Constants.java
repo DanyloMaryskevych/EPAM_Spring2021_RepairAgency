@@ -10,5 +10,6 @@ public interface Constants {
     String LANGUAGE_COOKIE = "lang";
     String ENGLISH_LANGUAGE = "en";
 
-    String ERROR_PAGE = "error.jsp";
+    String ERROR_SERVLET = "error";
+    String LOGIN_SERVLET = "login";
 }

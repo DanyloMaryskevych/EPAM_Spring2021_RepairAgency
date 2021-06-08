@@ -1,22 +1,23 @@
-alter table customers_data
-    drop foreign key customers_data_ibfk_1;
-alter table workers_data
-    drop foreign key workers_data_ibfk_1;
-alter table `order`
-    drop foreign key order_ibfk_1;
-alter table `order`
-    drop foreign key order_ibfk_2;
-alter table `order`
-    drop foreign key order_ibfk_3;
-alter table `order`
-    drop foreign key order_ibfk_4;
-alter table user
-    drop foreign key user_ibfk_1;
+# alter table customers_data
+#     drop foreign key customers_data_ibfk_1;
+# alter table workers_data
+#     drop foreign key workers_data_ibfk_1;
+# alter table `order`
+#     drop foreign key order_ibfk_1;
+# alter table `order`
+#     drop foreign key order_ibfk_2;
+# alter table `order`
+#     drop foreign key order_ibfk_3;
+# alter table `order`
+#     drop foreign key order_ibfk_4;
+# alter table user
+#     drop foreign key user_ibfk_1;
 
 drop table if exists role;
 drop table if exists user;
 drop table if exists customers_data;
 drop table if exists workers_data;
+drop table if exists language;
 drop table if exists payment_status;
 drop table if exists performance_status;
 drop table if exists `order`;
@@ -38,8 +39,9 @@ create table user
 (
     id       int PRIMARY KEY AUTO_INCREMENT,
     login    varchar(45) UNIQUE,
-    password varchar(45),
     role_id  int,
+    salt varchar(40),
+    password varchar(64),
     foreign key (role_id) references role (id)
         on delete cascade
         on update cascade
@@ -69,26 +71,70 @@ create table workers_data
         on update cascade
 );
 
-create table payment_status
+create table language
 (
-    id     int primary key auto_increment,
-    payment_status enum ('Waiting for price', 'Waiting for payment', 'Paid')
+    id   int primary key auto_increment,
+    lang varchar(2) unique
 );
 
-insert into payment_status values (default, 'Waiting for price');
-insert into payment_status values (default, 'Waiting for payment');
-insert into payment_status values (default, 'Paid');
+insert into language
+values (default, 'en');
+insert into language
+values (default, 'ua');
 
 create table performance_status
 (
-    id     int primary key auto_increment,
-    performance_status enum ('Not started', 'In work', 'Done', 'Rejected')
-);
+    id                    int primary key auto_increment,
+    performance_status_id int,
+    lang_id               int,
+    performance_status    varchar(25),
+    foreign key (lang_id) references language (id)
+)
+    default charset = utf8mb4
+    collate = utf8mb4_0900_ai_ci
+;
 
-insert into performance_status values (default, 'Not started');
-insert into performance_status values (default, 'In work');
-insert into performance_status values (default, 'Done');
-insert into performance_status values (default, 'Rejected');
+insert into performance_status
+values (default, 1, 1, 'Not started');
+insert into performance_status
+values (default, 1, 2, 'Не розпочато');
+insert into performance_status
+values (default, 2, 1, 'In work');
+insert into performance_status
+values (default, 2, 2, 'В роботі');
+insert into performance_status
+values (default, 3, 1, 'Done');
+insert into performance_status
+values (default, 3, 2, 'Виконано');
+insert into performance_status
+values (default, 4, 1, 'Rejected');
+insert into performance_status
+values (default, 4, 2, 'Відхилено');
+
+create table payment_status
+(
+    id                int primary key auto_increment,
+    payment_status_id int,
+    lang_id           int,
+    payment_status    varchar(25),
+    foreign key (lang_id) references language (id)
+)
+    default charset = utf8mb4
+    collate = utf8mb4_0900_ai_ci
+;
+
+insert into payment_status
+values (default, 1, 1, 'Waiting for price');
+insert into payment_status
+values (default, 1, 2, 'Очікування ціни');
+insert into payment_status
+values (default, 2, 1, 'Waiting for payment');
+insert into payment_status
+values (default, 2, 2, 'Очікування оплати');
+insert into payment_status
+values (default, 3, 1, 'Paid');
+insert into payment_status
+values (default, 3, 2, 'Оплачено');
 
 create table `order`
 (
@@ -105,9 +151,9 @@ create table `order`
     rating                int      default 0,
     comment               varchar(100),
     foreign key (customer_id) references customers_data (customer_id),
-    foreign key (worker_id) references workers_data (worker_id),
-    foreign key (payment_status_id) references payment_status (id),
-    foreign key (performance_status_id) references performance_status (id)
+    foreign key (worker_id) references workers_data (worker_id)
+#     foreign key (payment_status_id) references payment_status (payment_status_id),
+#     foreign key (performance_status_id) references performance_status (performance_status_id)
         on delete cascade
         on update cascade
 )
@@ -116,4 +162,6 @@ create table `order`
 ;
 
 insert into user
-values (default, 'Admin', 'Admin', 1);
+values (default, 'Admin', 1,
+        '4826256FFBE73E72D94CC1C72763F53C35B2509C',
+        'B868321770D77ABFEFB72CC427EC79C2E909109A10912A68F25A22345CA0E93D');

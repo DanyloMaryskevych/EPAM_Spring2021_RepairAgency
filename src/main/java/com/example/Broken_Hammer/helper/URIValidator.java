@@ -12,9 +12,7 @@ public class URIValidator {
     static {
         URISet.add("/bh/home");
         URISet.add("/bh/error");
-        URISet.add("/bh/JS/error");
-        URISet.add("/bh/JS/langCookie.js");
-        URISet.add("/bh/CSS/error");
+        URISet.add("/bh/error.jsp");
         URISet.add("/bh/workers");
         URISet.add("/bh/login");
         URISet.add("/bh/register");

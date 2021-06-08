@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+import static com.example.Broken_Hammer.Constants.LOGIN_SERVLET;
 import static com.example.Broken_Hammer.Constants.ROLE_ID;
 
 @WebFilter(filterName = "AuthFilter")
@@ -27,7 +28,7 @@ public class AuthFilter implements Filter {
             chain.doFilter(request, response);
         } catch (NullPointerException e) {
             logger.error("Page needs authorization!");
-            httpServletResponse.sendRedirect("login");
+            httpServletResponse.sendRedirect(LOGIN_SERVLET);
         }
     }
 }

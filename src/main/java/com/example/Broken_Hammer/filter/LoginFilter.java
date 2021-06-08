@@ -16,7 +16,6 @@ import static com.example.Broken_Hammer.Constants.*;
 public class LoginFilter implements Filter {
     public static final String USER_VALIDATION_ERROR = "invalidUserError";
     public static final String USER_VALIDATION_MESSAGE = "Wrong Password or Login! Please, try again";
-    public static final String JSP_PAGE = "/login.jsp";
 
     private final UserDAO userDAO = DAOFactory.getUserDAO();
     private final Logger logger = Logger.getLogger(LoginFilter.class);
@@ -45,7 +44,7 @@ public class LoginFilter implements Filter {
         response.setContentType("text/html; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        RequestDispatcher rd = request.getRequestDispatcher(JSP_PAGE);
+        RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
         rd.include(request, response);
     }
 }

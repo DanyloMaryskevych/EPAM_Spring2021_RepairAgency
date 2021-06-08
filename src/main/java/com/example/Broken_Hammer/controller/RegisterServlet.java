@@ -14,8 +14,8 @@ public class RegisterServlet extends HttpServlet {
     private final UserDAO userDAO = DAOFactory.getUserDAO();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.sendRedirect("registration.jsp");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        request.getRequestDispatcher("registration.jsp").forward(request, response);
     }
 
     @Override

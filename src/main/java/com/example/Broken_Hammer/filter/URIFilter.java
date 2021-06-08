@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.example.Broken_Hammer.Constants.ERROR_SERVLET;
 import static com.example.Broken_Hammer.helper.URIValidator.URIValidation;
 
 @WebFilter(filterName = "URIFilter")
@@ -25,7 +26,7 @@ public class URIFilter implements Filter {
         if (validURI) chain.doFilter(request, response);
         else {
             logger.error("Invalid URI: " + requestURI);
-            httpResponse.sendRedirect("error");
+            httpResponse.sendRedirect(ERROR_SERVLET);
         }
 
     }

@@ -48,9 +48,9 @@ public class UserDAO implements UserRepository {
 
             int k = 0;
             statement.setString(++k, parametersMap.get(LOGIN)[0]);
-            statement.setString(++k, hash);
             statement.setInt(++k, role_id);
             statement.setString(++k, saltHex);
+            statement.setString(++k, hash);
 
             statement.execute();
 

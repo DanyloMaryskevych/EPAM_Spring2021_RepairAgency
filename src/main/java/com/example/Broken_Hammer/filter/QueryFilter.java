@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
-import static com.example.Broken_Hammer.Constants.ERROR_PAGE;
+import static com.example.Broken_Hammer.Constants.ERROR_SERVLET;
 
 @WebFilter(filterName = "QueryFilter")
 public class QueryFilter implements Filter {
@@ -26,6 +26,6 @@ public class QueryFilter implements Filter {
         if (queryString != null) validQueryString = QueryValidator.queryStringValidator(queryString);
 
         if (validQueryString) chain.doFilter(request, response);
-        else httpServletResponse.sendRedirect(ERROR_PAGE);
+        else httpServletResponse.sendRedirect(ERROR_SERVLET);
     }
 }
