@@ -34,6 +34,7 @@
 <c:set value="1" var="price_pay_stat"/>
 <c:set value="2" var="payment_pay_stat"/>
 <c:set value="3" var="paid_pay_stat"/>
+<c:set value="${param.get('payment_confirm')}" var="payment_confirm_param"/>
 
 <%--Other--%>
 <c:set value="badge_class" var="badge_class_var"/>
@@ -49,7 +50,7 @@
 
     <%--Error payment message--%>
     <c:choose>
-        <c:when test="${payment_confirm != null && payment_confirm == 'false'}">
+        <c:when test="${payment_confirm_param != null && payment_confirm_param == 'false'}">
             <h4 style="color:red;" class="mt-3">
                 <fmt:message key="order.payment_error"/>
             </h4>

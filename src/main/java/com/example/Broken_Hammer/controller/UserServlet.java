@@ -1,9 +1,6 @@
 package com.example.Broken_Hammer.controller;
 
-import com.example.Broken_Hammer.dao.CustomerDAO;
-import com.example.Broken_Hammer.dao.DAOFactory;
-import com.example.Broken_Hammer.dao.OrderDAO;
-import com.example.Broken_Hammer.dao.UserDAO;
+import com.example.Broken_Hammer.dao.*;
 import com.example.Broken_Hammer.entity.Role;
 import com.example.Broken_Hammer.filter.GlobalFilter;
 
@@ -17,7 +14,7 @@ import static com.example.Broken_Hammer.Constants.*;
 @WebServlet(name = "UserServlet", value = "/profile")
 public class UserServlet extends HttpServlet {
     private final CustomerDAO customerDAO = DAOFactory.getCustomerDAO();
-    private final UserDAO userDAO = DAOFactory.getUserDAO();
+    private final WorkerDAO workerDAO = DAOFactory.getWorkerDAO();
     private final OrderDAO orderDAO = DAOFactory.getOrderDAO();
 
     @Override
@@ -35,7 +32,7 @@ public class UserServlet extends HttpServlet {
 
         if (role == Role.CUSTOMER) {
             session.setAttribute("balance", customerDAO.getBalance(userID));
-            request.setAttribute("workers_list", userDAO.getWorkers());
+            request.setAttribute("workers_list", workerDAO.getWorkers());
         }
 
         request.setAttribute("pages", pages);

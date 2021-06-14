@@ -9,25 +9,32 @@ import com.example.Broken_Hammer.repository.UserRepository;
 import javax.naming.NamingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 
 public class UserDAO implements UserRepository {
+    private static final String ID = "id";
     private static final String LOGIN = "login";
-    private static final String PASSWORD = "password";
     private static final String ROLE_ID = "role_id";
+    private static final String SALT = "salt";
+    private static final String PASSWORD = "password";
 
     private final DBManager dbManager = DBManager.getDBManager();
     private final CustomerDAO customerDAO = DAOFactory.getCustomerDAO();
     private final WorkerDAO workerDAO = DAOFactory.getWorkerDAO();
 
+
+    /**
+     * Returns nothing.
+     * Adds user to db and depending of their role adds customer or worker to db. Use transaction.
+     *
+     * @param parametersMap takes such parameters from URL like 'login', 'password' and 'role_id'
+     * @throws NoSuchAlgorithmException if no Provider supports a MessageDigestSpi implementation for the specified algorithm.
+     */
     @Override
     public void addUser(Map<String, String[]> parametersMap) throws NoSuchAlgorithmException {
+        System.out.println("addUser");
         Connection connection = null;
+        ResultSet resultSet = null;
 
         String sql = "insert into user values(default, ?, ?, ?, ?)";
         int role_id = Integer.parseInt(parametersMap.get(ROLE_ID)[0]);
@@ -37,12 +44,9 @@ public class UserDAO implements UserRepository {
         String hash = PasswordEncryptor.generatedHash(parametersMap.get(PASSWORD)[0], salt);
         String saltHex = PasswordEncryptor.bytesToHex(salt);
 
-        ResultSet resultSet = null;
-
         try {
             connection = dbManager.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
             connection.setAutoCommit(false);
             connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
@@ -88,35 +92,7 @@ public class UserDAO implements UserRepository {
 
     }
 
-    public List<User> getWorkers() {
-        String sql = "select id, login from user where role_id = 3";
-        List<User> workers = new ArrayList<>();
-
-        ResultSet resultSet = null;
-
-        try(Connection connection = dbManager.getConnection();
-        Statement statement = connection.createStatement()) {
-
-            resultSet = statement.executeQuery(sql);
-
-            while (resultSet.next()) {
-                User user = new User();
-                user.setLogin(resultSet.getString("login"));
-                user.setId(resultSet.getLong("id"));
-
-                workers.add(user);
-            }
-
-        } catch (SQLException | NamingException e) {
-            e.printStackTrace();
-        } finally {
-            close(resultSet);
-        }
-
-        return workers;
-    }
-
-    // Registration validation:
+    @Override
     public boolean checkLogin(String login) {
         String sql = "select * from user where login = ?";
 
@@ -161,11 +137,11 @@ public class UserDAO implements UserRepository {
             resultSet = statement.getResultSet();
 
             if (resultSet.next()) {
-                String saltHex = resultSet.getString("salt");
+                String saltHex = resultSet.getString(SALT);
                 byte[] salt = PasswordEncryptor.hexStringToByteArray(saltHex);
                 String generatedPassword = PasswordEncryptor.generatedHash(password, salt);
-                String originalPassword = resultSet.getString("password");
-
+                String originalPassword = resultSet.getString(PASSWORD);
+                System.out.println("if");
                 if (generatedPassword.equals(originalPassword)) return resultSet.getString(ROLE_ID);
             }
 
@@ -176,19 +152,6 @@ public class UserDAO implements UserRepository {
         }
 
         return null;
-    }
-
-
-
-    // Privat methods
-    public static void close(AutoCloseable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public int getId(String login) {
@@ -203,7 +166,7 @@ public class UserDAO implements UserRepository {
             resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                return resultSet.getInt("id");
+                return resultSet.getInt(ID);
             }
 
         } catch (SQLException | NamingException e) {
@@ -214,4 +177,15 @@ public class UserDAO implements UserRepository {
 
         return 0;
     }
+
+    public static void close(AutoCloseable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

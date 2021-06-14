@@ -354,7 +354,7 @@
 
                                                         <label for="deposit_money"></label>
                                                         <input id="deposit_money" class="form-control mb-3" type="text" name="deposit"
-                                                               placeholder="<fmt:message key="orders.provide_sum"/>" required pattern="\d+">
+                                                               placeholder="<fmt:message key="orders.provide_sum"/>" required pattern="^[1-9][0-9]*$">
 
                                                         <div style="text-align: left" class="invalid-feedback mb-2">
                                                             <fmt:message key="orders.sum_error"/>

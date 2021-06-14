@@ -1,9 +1,6 @@
 package com.example.Broken_Hammer.controller;
 
-import com.example.Broken_Hammer.dao.CustomerDAO;
-import com.example.Broken_Hammer.dao.DAOFactory;
-import com.example.Broken_Hammer.dao.OrderDAO;
-import com.example.Broken_Hammer.dao.UserDAO;
+import com.example.Broken_Hammer.dao.*;
 import com.example.Broken_Hammer.filter.GlobalFilter;
 import org.apache.log4j.Logger;
 
@@ -18,7 +15,7 @@ import java.util.Map;
 @WebServlet(name = "AdminServlet", value = "/admin")
 public class AdminServlet extends HttpServlet {
     private final OrderDAO orderDAO = DAOFactory.getOrderDAO();
-    private final UserDAO userDAO = DAOFactory.getUserDAO();
+    private final WorkerDAO workerDAO = DAOFactory.getWorkerDAO();
     private final CustomerDAO customerDAO = DAOFactory.getCustomerDAO();
     private final Logger logger = Logger.getRootLogger();
 
@@ -39,7 +36,7 @@ public class AdminServlet extends HttpServlet {
         int start = (startPage - 1) * OrderDAO.LIMIT;
         int pages = orderDAO.amountOfPagesForAdmin(filtersMap);
 
-        request.setAttribute("workers_list", userDAO.getWorkers());
+        request.setAttribute("workers_list", workerDAO.getWorkers());
         request.setAttribute("sort_param", sort);
         request.setAttribute("order_param", order);
         request.setAttribute("pages", pages);

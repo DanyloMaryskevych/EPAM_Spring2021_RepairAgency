@@ -1,14 +1,12 @@
 package com.example.Broken_Hammer.dao;
 
 import com.example.Broken_Hammer.DBManager;
+import com.example.Broken_Hammer.entity.User;
 import com.example.Broken_Hammer.repository.WorkerRepository;
 import com.example.Broken_Hammer.entity.Worker;
 
 import javax.naming.NamingException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +15,7 @@ import static com.example.Broken_Hammer.dao.UserDAO.close;
 public class WorkerDAO implements WorkerRepository {
     public static final String LOGIN_COLUMN = "login";
     public static final String WORKER_ID_COLUMN = "worker_id";
+    public static final String ID_COLUMN = "id";
     public static final String ORDERS_AMOUNT_COLUMN = "orders_amount";
     public static final String AVERAGE_COLUMN = "average";
     public static final String WILSON_SCORE_COLUMN = "wilson_score";
@@ -55,6 +54,34 @@ public class WorkerDAO implements WorkerRepository {
                 worker.setWilsonScore(resultSet.getInt(WILSON_SCORE_COLUMN));
 
                 workers.add(worker);
+            }
+
+        } catch (SQLException | NamingException e) {
+            e.printStackTrace();
+        } finally {
+            close(resultSet);
+        }
+
+        return workers;
+    }
+
+    public List<User> getWorkers() {
+        String sql = "select id, login from user where role_id = 3";
+        List<User> workers = new ArrayList<>();
+
+        ResultSet resultSet = null;
+
+        try(Connection connection = dbManager.getConnection();
+            Statement statement = connection.createStatement()) {
+
+            resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                User user = new User();
+                user.setLogin(resultSet.getString(LOGIN_COLUMN));
+                user.setId(resultSet.getLong(ID_COLUMN));
+
+                workers.add(user);
             }
 
         } catch (SQLException | NamingException e) {

@@ -36,7 +36,7 @@ public class OrderServlet extends HttpServlet {
         String payment = request.getParameter("payment");
 
         request.setAttribute("expected_worker", workerDAO.getWorkerById(order.getExpectedWorkerID()));
-        request.setAttribute("workers_list", userDAO.getWorkers());
+        request.setAttribute("workers_list", workerDAO.getWorkers());
         request.setAttribute("payment", payment);
         request.setAttribute("temp_order", order);
         request.getRequestDispatcher("temp_order.jsp").forward(request, response);

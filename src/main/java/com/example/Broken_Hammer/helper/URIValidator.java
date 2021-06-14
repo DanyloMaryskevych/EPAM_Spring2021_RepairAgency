@@ -10,6 +10,7 @@ public class URIValidator {
     public static final String JS_CSS_PATTERN = "\\b(JS|CSS)\\b";
 
     static {
+        URISet.add("/bh/");
         URISet.add("/bh/home");
         URISet.add("/bh/error");
         URISet.add("/bh/error.jsp");

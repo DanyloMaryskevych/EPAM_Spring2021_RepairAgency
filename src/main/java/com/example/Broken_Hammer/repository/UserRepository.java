@@ -6,4 +6,6 @@ import java.util.Map;
 
 public interface UserRepository {
     void addUser(Map<String, String[]> stringMap) throws SQLException, NoSuchAlgorithmException;
+
+    boolean checkLogin(String login);
 }
